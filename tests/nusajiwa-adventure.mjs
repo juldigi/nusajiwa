@@ -59,7 +59,7 @@ test('iPhone controls, pause, 3D dominance and accessible buttons remain present
  for(const control of ['left','right','jump','special'])assert.match(source,new RegExp('data-hold="'+control+'"'));
  assert.match(source,/pause\(\)/);
  assert.match(source,/Escape/);
- assert.match(source,/aria-label="Jelajah Evolusi/);
+ assert.match(source,/setAttribute\('aria-label','Jelajah Evolusi/);
  assert.match(source,/document\.hidden/);
  assert.match(css,/#nja \.nja-pad button/);
  assert.match(css,/#nja #njaCanvas\{display:block;width:100%;height:100%/);
