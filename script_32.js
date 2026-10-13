@@ -901,6 +901,23 @@ function njtRewardCodexReading(id,experience=6,spirit=5){
 }
 /* Platformer rewards are granted through one controlled 3D-save bridge; the
    Tamagotchi layer enforces first-clear and daily claim limits. */
+/* Return a deep cloned 3D avatar, independent of the habitat renderer.
+   Geometry and materials are duplicated to prevent the platformer from
+   disposing the 300-creature Tamagotchi model when a level is closed. */
+function njtAdventureAvatar(id){
+ if(!THREE||!world||!avatar)return null;
+ const pos=CREATURES.findIndex(c=>c[0]===id);
+ if(pos<0||!nj37.pets[id])return null;
+ if(pos!==index)setRecord(pos);
+ if(!avatar)return null;
+ const copy=avatar.clone(true);
+ copy.traverse(node=>{
+  if(node.geometry)node.geometry=node.geometry.clone();
+  if(node.material)node.material=Array.isArray(node.material)?
+    node.material.map(m=>m.clone()):node.material.clone();
+ });
+ return copy;
+}
 function njtRewardAdventure(id,experience,spirit,stone){
  const p=nj37.pets[id];
  if(!p||p.phase===0)return false;
@@ -921,7 +938,7 @@ function njtRestartGeneration(id){
  return true;
 }
 
-window.NJ35={version:'7.4',saveKey:NJ36_PETS_KEY,getCurrentId:()=>record()[0],selectTamaSpecies:(id)=>{const pos=CREATURES.findIndex(c=>c[0]===id);if(pos<0)return false;if(pos!==index)setRecord(pos);return true;},setTamaEnvironment:njtSetLiving,restartTamaGeneration:njtRestartGeneration,rewardTamaCodexReading:njtRewardCodexReading,rewardTamaAdventure:njtRewardAdventure,getTamaCodexProfile:njtCodexRecord,setTamaMood:(mode,ms=1600)=>{if(!['idle','feed','play','clean','bond','sleep','sick'].includes(mode))return false;actionName=mode;actionUntil=ms===0?Infinity:performance.now()+Math.max(0,Math.min(9000,ms));return true;},getTamaRenderStatus:()=>({creature:record()[0],quality,webgl:!!three,phase:gamePet()?.phase??null}),getSignaturePets:()=>Object.keys(novelState.pets),returnTo3D:return3D,creatures:CREATURES.map(r=>({id:r[0],name:r[1],category:r[2],origin:r[3]})),getGameProgress:()=>JSON.parse(JSON.stringify(nj37)),getMode:()=>quality,is3D:()=>!!three,edition58:()=>({total:CREATURES.length,releases:{"5.1": 6, "5.2": 8, "5.3": 6, "5.4": 8, "5.6": 8}}),edition47:()=>({newIds:[...NJ47_IDS],total:CREATURES.length,modelsReady:[...NJ47_IDS].every(id=>typeof nj47Sculptors[id]==='function')}),edition46:()=>({newIds:[...NJ46_IDS],total:CREATURES.length,modelsReady:[...NJ46_IDS].every(id=>typeof nj46Sculptors[id]==='function')}),edition42:()=>({newIds:[...NJ42_IDS],total:CREATURES.length,modelsReady:[...NJ42_IDS].every(x=>typeof nj42Sculptors[x]==='function')})};
+window.NJ35={version:'7.4',saveKey:NJ36_PETS_KEY,getCurrentId:()=>record()[0],selectTamaSpecies:(id)=>{const pos=CREATURES.findIndex(c=>c[0]===id);if(pos<0)return false;if(pos!==index)setRecord(pos);return true;},setTamaEnvironment:njtSetLiving,restartTamaGeneration:njtRestartGeneration,rewardTamaCodexReading:njtRewardCodexReading,rewardTamaAdventure:njtRewardAdventure,getAdventureAvatar:njtAdventureAvatar,getTamaCodexProfile:njtCodexRecord,setTamaMood:(mode,ms=1600)=>{if(!['idle','feed','play','clean','bond','sleep','sick'].includes(mode))return false;actionName=mode;actionUntil=ms===0?Infinity:performance.now()+Math.max(0,Math.min(9000,ms));return true;},getTamaRenderStatus:()=>({creature:record()[0],quality,webgl:!!three,phase:gamePet()?.phase??null}),getSignaturePets:()=>Object.keys(novelState.pets),returnTo3D:return3D,creatures:CREATURES.map(r=>({id:r[0],name:r[1],category:r[2],origin:r[3]})),getGameProgress:()=>JSON.parse(JSON.stringify(nj37)),getMode:()=>quality,is3D:()=>!!three,edition58:()=>({total:CREATURES.length,releases:{"5.1": 6, "5.2": 8, "5.3": 6, "5.4": 8, "5.6": 8}}),edition47:()=>({newIds:[...NJ47_IDS],total:CREATURES.length,modelsReady:[...NJ47_IDS].every(id=>typeof nj47Sculptors[id]==='function')}),edition46:()=>({newIds:[...NJ46_IDS],total:CREATURES.length,modelsReady:[...NJ46_IDS].every(id=>typeof nj46Sculptors[id]==='function')}),edition42:()=>({newIds:[...NJ42_IDS],total:CREATURES.length,modelsReady:[...NJ42_IDS].every(x=>typeof nj42Sculptors[x]==='function')})};
 const back=document.createElement('button');back.textContent='◈ Kembali ke Dunia 3D';back.id='nj35Return';back.style.cssText='position:fixed;right:16px;top:max(86px,env(safe-area-inset-top));z-index:45;background:#103641;color:#f2d28b;border:1px solid #dcbd7a;padding:13px 18px;border-radius:27px;box-shadow:0 8px 30px #0017;font-weight:700;cursor:pointer';back.addEventListener('click',return3D);back.hidden=true;document.body.append(back);
 const input3d=document.createElement('input');input3d.type='file';input3d.accept='application/json,.json';input3d.id='nj37ImportFile';input3d.hidden=true;document.body.append(input3d);input3d.addEventListener('change',e=>import3d(e.target.files?.[0]));
 // Controls stay functional on touch and mouse, including the fallback when WebGL isn't available.
