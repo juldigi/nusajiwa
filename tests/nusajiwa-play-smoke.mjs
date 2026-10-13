@@ -28,6 +28,7 @@ function boot(old={}){
   selectTamaSpecies:id=>(selected=id,true),getCurrentId:()=>selected,
   setTamaEnvironment:s=>{api.environment=s},setTamaMood(){},
   restartTamaGeneration:id=>{engine.pets[id].phase=0;engine.pets[id].xp=0;return true},
+  rewardTamaAdventure:(id,xp,spirit,stone)=>{const p=engine.pets[id];if(!p||p.phase===0)return false;p.xp+=xp;engine.spirit+=spirit;if(stone)engine.stones[stone]=(engine.stones[stone]||0)+1;return true},
   is3D:()=>true};
  const window={NJ35:api,NJ45_CODEX:{},addEventListener(){}};
  const document={getElementById:id=>id==='nj35'?scene:null,createElement:()=>el(),
@@ -40,7 +41,7 @@ function boot(old={}){
 }
 test('boots 3D Tamagotchi with beginner eggs and physical A/B/C',()=>{
  const a=boot();
- assert.equal(a.game.version,'7.4');
+ assert.equal(a.game.version,'8.0');
  assert.match(a.scene.child.innerHTML,/njt-three-buttons/);
  assert.match(a.scene.child.querySelector('#njtPanel').innerHTML,/Telur Pertamamu/);
  assert.match(a.scene.child.querySelector('#njtPanel').innerHTML,/Harimau Sumatra/);
@@ -74,4 +75,28 @@ test('retired character begins a new generation with album unchanged',()=>{
  assert.equal(b.game.getSave().pets.komodo.stage,0);
  assert.equal(b.engine.pets.komodo.phase,0);
  assert.equal(b.game.getSave().album.length,1);
+});
+
+test('Adventure rewards connect to the same pet without duplicate XP farming',()=>{
+ const a=boot();a.click('choose',{id:'komodo'});a.click('hatch');
+ const before=a.engine.pets.komodo.xp;
+ const reward={id:'komodo',level:0,stars:3,gem:true,element:'tanah'};
+ const first=a.game.awardAdventure(reward);
+ assert.equal(first.earned,true);
+ assert.equal(first.xp,27);
+ assert.equal(first.spirit,14);
+ assert.equal(first.stone,true);
+ assert.equal(a.engine.pets.komodo.xp,before+27);
+ assert.equal(a.engine.stones.tanah,1);
+ assert.equal(a.game.awardAdventure(reward).earned,false,'A second clear today must not duplicate XP');
+ assert.equal(a.game.awardAdventure({...reward,id:'tiger'}).earned,false,'Cannot reward a different pet');
+ assert.ok(a.game.getSave().pets.komodo.happy>=3);
+});
+test('Main menu includes optional platformer without losing classic tebak arah',()=>{
+ const a=boot();a.click('choose',{id:'komodo'});a.click('hatch');
+ a.game.open('game');
+ assert.match(a.scene.child.querySelector('#njtPanel').innerHTML,/Tebak Arah/);
+ assert.match(a.scene.child.querySelector('#njtPanel').innerHTML,/Jelajah Evolusi/);
+ a.click('quickGame');
+ assert.match(a.scene.child.querySelector('#njtPanel').innerHTML,/RONDE/);
 });
