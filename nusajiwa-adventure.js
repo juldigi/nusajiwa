@@ -176,7 +176,7 @@ function setupVisual(){
  if(render3d){render3d.dispose();render3d=null;swapCanvas()}
  if(!THREE){set2D();return}
  if(ctx){swapCanvas();ctx=null;}
- const T=THREE,l=run.level,scene=new T.Scene();
+ const T=THREE,l=run.level,isJava=l.world==='jawa',scene=new T.Scene();
  scene.background=new T.Color(l.sky);scene.fog=new T.Fog(l.sky,18,56);
  const camera=new T.OrthographicCamera(-8,8,4.9,-4.9,.1,100);
  camera.position.set(0,4,18);camera.lookAt(0,2.6,0);
@@ -187,24 +187,49 @@ function setupVisual(){
  const sun=new T.DirectionalLight(0xffe6b4,2.6);sun.position.set(-6,12,10);scene.add(sun);
  const geo=[],materials=[];
  const material=(color,metalness=0)=>{const m=new T.MeshStandardMaterial({color,roughness:.7,metalness});materials.push(m);return m};
- const soil=material(0x4b6a56),grass=material(0x6fbc75),wood=material(0x7b573b),leaf=material(0x2a8059),leaf2=material(0x68a678),gold=material(0xf4d586,.25),rock=material(0x748f88),danger=material(0xe67b62),white=material(0xfbf3dc),dark=material(0x25434b),orange=material(0xd98848);
- const shapes={};
+ const soil=material(isJava?0x80624f:0x4b6a56),grass=material(isJava?0x83ac6b:0x6fbc75),wood=material(0x7b573b),leaf=material(0x2a8059),leaf2=material(0x68a678),gold=material(0xf4d586,.25),rock=material(isJava?0x857d76:0x748f88),danger=material(0xe67b62),white=material(0xfbf3dc),dark=material(0x25434b),orange=material(0xd98848);
+
  function mesh(g,m,x,y,z,sz){geo.push(g);const o=new T.Mesh(g,m);o.position.set(x,y,z);if(sz)o.scale.set(...sz);scene.add(o);return o}
  const box=(m,x,y,z,w,h,d)=>mesh(new T.BoxGeometry(w,h,d),m,x,y,z);
  for(const g of l.ground){const w=g[1]-g[0];box(soil,(g[0]+g[1])/2,-1.12,-1.3,w,2.25,3);box(grass,(g[0]+g[1])/2,-.06,-1.1,w,.2,3.3);}
  for(const p of l.ledges){box(wood,p[0],p[1]-.18,-.65,p[2],.35,1.7);box(grass,p[0],p[1],-.65,p[2],.14,1.85)}
  for(const h of l.hazards){mesh(new T.ConeGeometry(.42,.84,4),danger,h,.42,.2).rotation.y=Math.PI/4;}
+
+ if(isJava){
+  /* Stylized Java-inspired stone terraces, roofs and vegetation. These are
+     fantasy level props, not archaeological reconstructions of a monument. */
+  for(let x=-4;x<l.length+10;x+=7){
+   box(rock,x,-.55,-8.1,5,.55,2.4);
+   box(soil,x+2,-1.4,-9,6,1.4,3);
+   for(const dx of [-1.4,1.4]){
+    box(rock,x+dx,1.0,-7.2,.45,2.3,.55);
+    mesh(new T.ConeGeometry(.44,.55,4),rock,x+dx,2.4,-7.2).rotation.y=Math.PI/4;
+   }
+   box(rock,x,2.35,-7.2,3.65,.5,.65);
+   const roof=mesh(new T.ConeGeometry(2.1,1,4),dark,x,3.05,-7.2);roof.rotation.y=Math.PI/4;
+   mesh(new T.ConeGeometry(.9,2.1,6),leaf,x+4,2.2,-6.6);
+  }
+ }else{
  for(let x=-3;x<l.length+9;x+=4.5){const n=1+Math.sin(x*7.1)*.23;
   const trunk=mesh(new T.CylinderGeometry(.23,.38,2.2,6),wood,x,1.1,-5);
   mesh(new T.ConeGeometry(1.7,3.8,7),x%2?leaf:leaf2,x,3.35,-5,[n,n,1]);
   const b=mesh(new T.IcosahedronGeometry(1.6,0),rock,x+2,-1.65,-9,[2.8,1.45,1.1]);b.material=rock;
   trunk.rotation.z=.03*Math.sin(x);
  }
+ }
+ const patrolVisuals=run.patrols.map(e=>mesh(new T.DodecahedronGeometry(.39,0),danger,patrolX(e,0),e.y,.8));
+ const sealVisuals=run.sigils.map(s=>mesh(new T.TorusGeometry(.43,.12,8,12),gold,s.x,s.y,.55));
  const collect=[];
  for(const c of run.coins){const o=mesh(new T.TorusGeometry(.23,.083,7,12),gold,c.x,c.y,-.05);collect.push({o,c})}
  const gemObj=mesh(new T.OctahedronGeometry(.4),gold,l.gem,2.1,.0);
  const checkpoints=l.checkpoints.map(x=>{box(white,x,.92,-.4,.08,1.8,.1);return mesh(new T.ConeGeometry(.28,.55,4),gold,x+.25,1.53,-.4)});
  box(gold,l.length-1,1.65,-.6,.15,3.3,.15);const portal=mesh(new T.TorusGeometry(1.17,.17,10,24),gold,l.length-1,2,-.6);
+ if(run.sigils.length){
+  box(rock,l.length-3.9,1,-3,2.5,2,1.4);
+  box(dark,l.length-3.9,2.2,-3,3.1,.5,1.7);
+  mesh(new T.ConeGeometry(.6,.95,4),gold,l.length-3.9,2.9,-3);
+  for(const dx of [-.65,.65])mesh(new T.OctahedronGeometry(.24),gold,l.length-3.9+dx,1.3,-2.15);
+ }
  const hero=new T.Group();scene.add(hero);
  const nativeModel=window.NJ35?.getAdventureAvatar?.(pet.id);
  if(nativeModel){
@@ -247,6 +272,9 @@ function setupVisual(){
   hero.position.set(run.x,run.y+(pet.type==='spirit'?.08:0),1.2);hero.scale.x=run.heroFacing;
   hero.rotation.z=run.vx*.015;hero.visible=run.hurtUntil<=0||Math.floor(run.seconds*13)%2===0;
   portal.rotation.z=run.seconds*.3;
+  portal.visible=run.sigils.every(s=>s.got);
+  patrolVisuals.forEach((o,i)=>{o.position.x=patrolX(run.patrols[i],run.seconds);o.rotation.y=run.seconds*2});
+  sealVisuals.forEach((o,i)=>{o.visible=!run.sigils[i].got;o.rotation.z=run.seconds*.9});
   collect.forEach(({o,c})=>{o.visible=!c.got;o.rotation.y=run.seconds*1.75});
   gemObj.visible=!run.gem.got;gemObj.rotation.y=run.seconds*1.5;
   renderer.render(scene,camera);
