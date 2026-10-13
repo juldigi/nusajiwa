@@ -517,11 +517,12 @@ function awardAdventure(result){
  const firstKey='first:'+lvl,stoneKey='stone:'+lvl;
  const dailyKey='daily:'+new Date().toLocaleDateString('en-CA')+':'+lvl;
  const first=!p.adventureMarks.includes(firstKey);
- if(!first&&p.adventureMarks.includes(dailyKey))return {earned:false,reason:'Sudah mendapat hadiah hari ini'};
- const stars=clamp(result.stars,1,3);
- const xp=first?18+3*stars:4,spirit=first?8+2*stars:2;
+ const dailyAvailable=!p.adventureMarks.includes(dailyKey);
  const element=['api','air','angin','tanah','cahaya','bayangan'].includes(result.element)?result.element:null;
  const stone=!!result.gem&&!!element&&!p.adventureMarks.includes(stoneKey);
+ if(!first&&!dailyAvailable&&!stone)return {earned:false,reason:'Sudah mendapat hadiah hari ini'};
+ const stars=clamp(result.stars,1,3);
+ const xp=first?18+3*stars:dailyAvailable?4:0,spirit=first?8+2*stars:dailyAvailable?2:0;
  if(!API.rewardTamaAdventure?.(p.id,xp,spirit,stone?element:null))return {earned:false,reason:'Progres 3D belum siap'};
  if(first)p.adventureMarks.push(firstKey);
  if(stone)p.adventureMarks.push(stoneKey);
