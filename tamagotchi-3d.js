@@ -63,6 +63,19 @@ function nativePick(id){
  const b=document.createElement('button');b.dataset.njpick=String(idx);b.type='button';b.hidden=true;
  SCENE.append(b);b.click();b.remove();
 }
+const began3D=Date.now();
+function check3d(){
+ const hint=$('#njtRenderHint');if(!hint)return;
+ if(API.is3D?.()){hint.hidden=true;return;}
+ const fallback=SCENE.querySelector('.nj-fallback');
+ const elapsed=Date.now()-began3D;
+ if(fallback||elapsed>16000){
+  hint.hidden=false;
+  hint.innerHTML='Mode 3D belum tersedia.<small>Periksa koneksi, muat ulang game, atau mainkan versi klasik melalui Pengaturan.</small>';
+ }else{
+  hint.hidden=false;hint.textContent='✧ Menyiapkan dunia 3D…';
+ }
+}
 function heart(n){return '<span class="njt-hearts">'+Array.from({length:4},(_,i)=>'<span class="'+(i<clamp(n)?'filled':'')+'">♥</span>').join('')+'</span>'}
 function aged(p){return p?(p.age<1440?Math.floor(p.age/60)+' jam':Math.floor(p.age/1440)+' hari'):'—'}
 function character(p){return p.mistakes>=8?'Nakal':p.discipline>=3&&p.mistakes<=2?'Teladan':p.studied>=6?'Cendekia':p.games>=9?'Ceria':'Penjelajah'}
@@ -108,7 +121,7 @@ element.id='njt';
 element.innerHTML='<div class="njt-shell">'+
  '<div class="njt-top"><div class="njt-brand"><small>THE LIVING LEGENDS</small><strong>NUSA<span>JIWA</span></strong><i>TAMAGOTCHI 3D</i></div>'+
  '<div class="njt-top-tools"><button data-tama="help" aria-label="Petunjuk">?</button><button data-tama="sound" aria-label="Pengaturan suara">♪</button></div></div>'+
- '<div class="njt-window"><div class="njt-glass"></div><div class="njt-status-strip"><span id="njtCreatureName"></span><span id="njtAge"></span></div><div class="njt-thought" id="njtThought"></div><div class="njt-age-track" id="njtAgeTrack"></div><div class="njt-alert" id="njtAlert" aria-live="polite"></div></div>'+
+ '<div class="njt-window"><div class="njt-glass"></div><div class="njt-render-hint" id="njtRenderHint" aria-live="polite">✧ Menyiapkan dunia 3D…</div><div class="njt-status-strip"><span id="njtCreatureName"></span><span id="njtAge"></span></div><div class="njt-thought" id="njtThought"></div><div class="njt-age-track" id="njtAgeTrack"></div><div class="njt-alert" id="njtAlert" aria-live="polite"></div></div>'+
  '<div class="njt-console"><div class="njt-console-label"><span>✦ PILIH TINDAKAN</span><span id="njtPrompt">A PILIH · B OK · C KEMBALI</span></div>'+
  '<div class="njt-menu" id="njtMenu"></div><div class="njt-three-buttons">'+
  '<button data-tama="a" aria-label="Tombol A, pilih ikon"><i>A</i><small>PILIH</small></button>'+
@@ -357,7 +370,9 @@ function markPanelCursor(){
 function render(){
  const p=active();
  if(store.active&&!SCENE.querySelector('#nj35Side.open'))nativePick(store.active);
- API.setTamaEnvironment?.({dirty:p?.dirty||0,sick:!!p?.sick,sleep:!!p?.sleep,attention:!!p?.attention});
+ const same=store.active&&API.getCurrentId?.()===store.active;
+ API.setTamaEnvironment?.({dirty:same?(p?.dirty||0):0,sick:same&&!!p?.sick,sleep:same&&!!p?.sleep,attention:same&&!!p?.attention});
+ check3d();
  $('#njtMenu').innerHTML=ACTIONS.map((a,i)=>'<button class="njt-menu-item '+(store.selected===i?'selected':'')+'" data-tama="menu" data-value="'+a[0]+'" aria-pressed="'+(store.selected===i)+'"><span class="njt-menu-art '+a[2]+'">'+a[3]+'</span><small>'+a[1]+'</small></button>').join('');
  $('#njtCreatureName').textContent=p?breed().name+' · '+STAGES[p.stage]:'Pilih telur pertamamu';
  $('#njtAge').textContent=p?aged(p)+' · '+Math.round(p.weight)+' g':'✦ NUSANTARA';
@@ -427,6 +442,7 @@ document.addEventListener('keydown',e=>{
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){needs();synchronize();if(active())growth(active());render()}});
 window.addEventListener('pageshow',()=>{needs();synchronize();render()});
 setInterval(()=>{if(!document.hidden){needs();synchronize();if(active())growth(active());render()}},60000);
+setInterval(()=>{if(!document.hidden)check3d()},1800);
 needs();if(active()){nativePick(store.active);if(active().sleep)API.setTamaMood?.('sleep',0);}pressNative('#nj35ZoomIn');pressNative('#nj35ZoomIn');render();
 if(!active())show('starter');
 else if(!store.introduced){store.introduced=true;save();show('help');}
