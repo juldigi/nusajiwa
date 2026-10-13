@@ -36,10 +36,10 @@ function load(){try{
  o.selected=clamp(o.selected,0,8);o.reads=Array.isArray(o.reads)?o.reads:[];o.album=Array.isArray(o.album)?o.album.slice(-40):[];
  return o;
 }catch(_){return blank();}}
-let store=load(),screen='home',query='',filter='all',focused='',mini=null,lastInteract=0,toastTimeout=0,panelCursor=0;
+let store=load(),screen='home',query='',filter='all',focused='',mini=null,lastInteract=0,toastTimeout=0,panelCursor=0,pendingGeneration=null;
 function newLife(id,stage){return {id,stage:clamp(stage,0,7),born:Date.now(),age:0,weight:5,hunger:3,happy:3,discipline:1,health:4,
  dirty:0,sick:false,sleep:false,lightsOff:false,attention:false,callAt:0,missed:0,mistakes:0,
- count:{hunger:0,happy:0,toilet:0},meals:0,games:0,studied:0,character:'Penjelajah',retired:false};}
+ count:{hunger:0,happy:0,toilet:0,mischief:0},meals:0,games:0,studied:0,character:'Penjelajah',retired:false};}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(store))}catch(_){if(window.console)console.warn('NUSAJIWA: local save unavailable')}}
 function synchronize(){
  const raw=progress();let changed=false;
@@ -76,7 +76,7 @@ function needs(now=Date.now()){
   if(p.retired||p.stage===0)continue;
   p.age+=mins;
   p.count=p.count||{hunger:0,happy:0,toilet:0};
-  p.count.hunger+=mins;p.count.happy+=mins;p.count.toilet+=mins;
+  p.count.hunger+=mins;p.count.happy+=mins;p.count.toilet+=mins;p.count.mischief=(p.count.mischief||0)+mins;
   let d=Math.floor(p.count.hunger/43);p.count.hunger%=43;p.hunger=clamp(p.hunger-d);
   d=Math.floor(p.count.happy/61);p.count.happy%=61;p.happy=clamp(p.happy-d);
   d=Math.floor(p.count.toilet/108);p.count.toilet%=108;p.dirty=clamp(p.dirty+d);
@@ -87,12 +87,14 @@ function needs(now=Date.now()){
   else if(p.dirty>=2)call(p,'Tolong bersihkan toilet.');
   else if(p.happy<=1)call(p,'Ayo bermain!');
   else if(night&&!p.lightsOff)call(p,'Aku mengantuk. Matikan lampu.');
+  else if(!night&&!p.sleep&&!p.attention&&p.hunger>=2&&p.happy>=2&&p.dirty<2&&p.count.mischief>=205){p.count.mischief%=205;call(p,'Aku ingin perhatian!');}
   if(p.attention&&p.callAt&&now-p.callAt>150*60000){
    const count=Math.min(3,Math.floor((now-p.callAt)/(150*60000)));
    if(count>p.missed){p.mistakes+=count-p.missed;p.missed=count;}
   }
   if((p.dirty>=3||p.hunger===0)&&p.mistakes>=3)p.sick=true;
   if(p.sick)p.health=clamp(p.health-mins/320);
+  if(p.sick&&p.health===0&&p.age>1440){p.retired=true;p.character=character(p);store.album.push({id:p.id,name:find(p.id)?.name||p.id,age:p.age,character:p.character,date:now,mistakes:p.mistakes,reason:'Pulang ke alam'});store.album=store.album.slice(-40);}
   if(p.stage>=6&&p.age>10*24*60){
    p.retired=true;p.character=character(p);
    store.album.push({id:p.id,name:find(p.id)?.name||p.id,age:p.age,character:p.character,date:now,mistakes:p.mistakes});
@@ -184,7 +186,7 @@ function select(id){
  nativePick(id);
  if(!progress().pets?.[id])pressNative('#nj35Adopt');
  if(!progress().pets?.[id]){toast('Jiwa belum cukup. Jelajah Nusantara untuk mendapatkannya.');return;}
- if(store.pets[id]?.retired){toast('Siklus makhluk ini telah selesai. Pilih sahabat generasi berikutnya.');return;}
+ if(store.pets[id]?.retired){pendingGeneration=id;screen='generation';render();return;}
  if(!store.pets[id])store.pets[id]=newLife(id,progress().pets[id].phase);
  store.active=id;screen='home';save();render();toast(find(id).name+' kini sahabatmu!');
 }
@@ -211,7 +213,7 @@ function care(kind,mode){
   else{API.setTamaMood?.('idle',800);toast('Lampu menyala, selamat pagi!');}
  }else if(kind==='discipline'){
   if(mode==='praise'){p.happy=clamp(p.happy+1);if(p.attention&&p.hunger>=2&&p.happy>=2)p.discipline=clamp(p.discipline+1);toast('Ia senang mendapat pujian.');}
-  else if(p.attention&&p.hunger>=2&&p.happy>=2){p.discipline=clamp(p.discipline+1);toast('Ia belajar memahami aturan.');}
+  else if(p.attention&&p.reason==='Aku ingin perhatian!'&&p.hunger>=2&&p.happy>=2&&p.dirty<2){p.discipline=clamp(p.discipline+1);toast('Ia belajar memahami aturan.');}
   else{p.happy=clamp(p.happy-1);p.mistakes++;toast('Teguran tanpa alasan membuatnya sedih.');}
   nativeCare('bond');
  }
@@ -245,7 +247,7 @@ function thought(p){
 }
 function show(key){
  panelCursor=0;
- if(!active()&&!['collection','codex','help','settings','status'].includes(key))key='collection';
+ if(!active()&&!['starter','collection','codex','help','settings','status'].includes(key))key='collection';
  if(key==='feed')screen='food';
  else if(key==='light')screen='light';
  else if(key==='game'){beginMini();return}
@@ -253,7 +255,7 @@ function show(key){
  else if(key==='status')screen='status';
  else if(key==='discipline')screen='discipline';
  else if(key==='codex'){screen='codex';focused=store.active||LIST[0]?.id||'';query='';}
- else if(key==='collection'){screen='collection';query='';}
+ else if(key==='collection'||key==='starter'){screen=key;query='';}
  else if(key==='help'||key==='settings')screen=key;
  else if(key==='expedition'||key==='evolution'){
   pressNative('[data-njtab="'+(key==='expedition'?'explore':'ritual')+'"]');screen='home';
@@ -301,6 +303,21 @@ function drawPanel(){
     '<div class="njt-pick-grid">'+LIST.filter(r=>(r.name+' '+r.origin).toLocaleLowerCase('id').includes(query.toLocaleLowerCase('id'))).slice(0,65).map(r=>
       '<button data-tama="focus" data-id="'+esc(r.id)+'" class="'+(focused===r.id?'selected':'')+'">'+esc(r.name)+'</button>').join('')+'</div>';
  }
+ else if(screen==='starter'){
+  title='✦ Telur Pertamamu';
+  const starters=['komodo','tiger','kuyang'];
+  content='<p>Pilih satu jiwa Nusantara untuk memulai perjalanan klasik merawat sahabat 3D dari telur.</p>'+
+    '<div class="njt-starter-eggs">'+starters.map(id=>{const r=find(id);return r?'<button type="button" data-tama="choose" data-id="'+esc(id)+'"><span class="njt-egg">🥚</span><b>'+esc(r.name)+'</b><small>'+esc(r.origin)+'</small></button>':''}).join('')+'</div>'+
+    '<p class="njt-starter-note">Rawat, bermain, dan saksikan evolusi. Makhluk lain dapat dicari dari Suaka dan Kodex.</p>'+
+    choices([['collection','◈ Lihat semua '+LIST.length+' makhluk'],['help','? Cara bermain']]);
+ }
+ else if(screen==='generation'){
+  title='✧ Telur Generasi Baru';
+  const rec=find(pendingGeneration);
+  content='<p>Perjalanan '+esc(rec?.name||'sahabat')+' terdahulu tercatat di Album Kenangan. Mulai lagi dengan telur yang baru?</p>'+
+    '<p>Fase, XP, dan batu elemen Legenda pada makhluk ini kembali ke awal. Koleksi makhluk lain, total batu, dan Album Kenangan tidak berubah.</p>'+
+    choices([['restart','🥚 Mulai generasi baru'],['collection','Kembali ke Suaka']]);
+ }
  else if(screen==='collection'){
   title='◈ Suaka · '+Object.keys(store.pets).length+' Sahabat';
   const list=LIST.filter(r=>(r.name+' '+r.origin).toLocaleLowerCase('id').includes(query.toLocaleLowerCase('id'))&&
@@ -339,7 +356,8 @@ function markPanelCursor(){
 }
 function render(){
  const p=active();
- if(store.active)nativePick(store.active);
+ if(store.active&&!SCENE.querySelector('#nj35Side.open'))nativePick(store.active);
+ API.setTamaEnvironment?.({dirty:p?.dirty||0,sick:!!p?.sick,sleep:!!p?.sleep,attention:!!p?.attention});
  $('#njtMenu').innerHTML=ACTIONS.map((a,i)=>'<button class="njt-menu-item '+(store.selected===i?'selected':'')+'" data-tama="menu" data-value="'+a[0]+'" aria-pressed="'+(store.selected===i)+'"><span class="njt-menu-art '+a[2]+'">'+a[3]+'</span><small>'+a[1]+'</small></button>').join('');
  $('#njtCreatureName').textContent=p?breed().name+' · '+STAGES[p.stage]:'Pilih telur pertamamu';
  $('#njtAge').textContent=p?aged(p)+' · '+Math.round(p.weight)+' g':'✦ NUSANTARA';
@@ -378,10 +396,17 @@ element.addEventListener('click',ev=>{
  if(a==='hatch'){hatch();screen='home';render();return}
  if(a==='expedition'||a==='evolution'){show(a);return}
  if(a==='choose'){select(b.dataset.id);return}
+ if(a==='restart'){
+  const id=pendingGeneration;
+  if(!id||!store.pets[id]?.retired||typeof API.restartTamaGeneration!=='function'){toast('Generasi belum siap.');return;}
+  nativePick(id);
+  if(!API.restartTamaGeneration(id)){toast('Tidak dapat memulai generasi.');return;}
+  store.pets[id]=newLife(id,0);store.active=id;pendingGeneration=null;screen='home';save();render();toast('Telur generasi baru telah tiba!');return;
+ }
  if(a==='filter'){filter=b.dataset.filter;panelCursor=0;drawPanel();return}
  if(a==='focus'){focused=b.dataset.id;panelCursor=0;drawPanel();return}
  if(a==='read'){const id=focused;if(!id)return;if(!store.reads.includes(id))store.reads.push(id);if(store.pets[id])store.pets[id].studied++;
-   save();nativePick(id);pressNative('[data-njtab="archive"]');screen='home';render();return;}
+   save();screen='home';render();nativePick(id);pressNative('[data-njtab="archive"]');return;}
  if(a==='album'){screen='album';render();return}
  if(a==='export'){exportWholeGame();return}
  if(a==='import'){importWholeGame();return}
@@ -403,7 +428,7 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden){needs();s
 window.addEventListener('pageshow',()=>{needs();synchronize();render()});
 setInterval(()=>{if(!document.hidden){needs();synchronize();if(active())growth(active());render()}},60000);
 needs();if(active()){nativePick(store.active);if(active().sleep)API.setTamaMood?.('sleep',0);}pressNative('#nj35ZoomIn');pressNative('#nj35ZoomIn');render();
-if(!active())show('collection');
+if(!active())show('starter');
 else if(!store.introduced){store.introduced=true;save();show('help');}
-window.NUSAJIWA_TAMAGOTCHI={version:'7.0',creatureCount:LIST.length,getSave:()=>JSON.parse(JSON.stringify(store)),refresh:()=>{synchronize();render()},open:show};
+window.NUSAJIWA_TAMAGOTCHI={version:'7.2',creatureCount:LIST.length,getSave:()=>JSON.parse(JSON.stringify(store)),refresh:()=>{synchronize();render()},open:show};
 })();
