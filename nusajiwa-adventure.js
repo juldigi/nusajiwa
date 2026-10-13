@@ -179,6 +179,19 @@ function setupVisual(){
  const checkpoints=l.checkpoints.map(x=>{box(white,x,.92,-.4,.08,1.8,.1);return mesh(new T.ConeGeometry(.28,.55,4),gold,x+.25,1.53,-.4)});
  box(gold,l.length-1,1.65,-.6,.15,3.3,.15);const portal=mesh(new T.TorusGeometry(1.17,.17,10,24),gold,l.length-1,2,-.6);
  const hero=new T.Group();scene.add(hero);
+ const nativeModel=window.NJ35?.getAdventureAvatar?.(pet.id);
+ if(nativeModel){
+  const bounds=new T.Box3().setFromObject(nativeModel);
+  const center=bounds.getCenter(new T.Vector3()),size=bounds.getSize(new T.Vector3());
+  const factor=1.65/Math.max(.1,size.y);
+  nativeModel.scale.multiplyScalar(factor);
+  nativeModel.position.set(-center.x*factor,-bounds.min.y*factor,-center.z*factor);
+  hero.add(nativeModel);
+  nativeModel.traverse(o=>{
+   if(o.geometry)geo.push(o.geometry);
+   if(o.material)for(const m of (Array.isArray(o.material)?o.material:[o.material]))materials.push(m);
+  });
+ }else{
  function part(g,m,x,y,z,scale){const o=new T.Mesh(g,m);o.position.set(x,y,z);if(scale)o.scale.set(...scale);hero.add(o);geo.push(g);return o}
  const sphere=(m,x,y,z,sx,sy,sz)=>part(new T.SphereGeometry(1,11,8),m,x,y,z,[sx,sy,sz]);
  if(pet.type==='tiger'){
@@ -198,6 +211,7 @@ function setupVisual(){
   sphere(gold,-.22,.41,.12,.14,.35,.16);
  }
  const eyes=part(new T.SphereGeometry(.055,9,6),dark,.34,1.13,.35);eyes.scale.set(1,1,.7);
+ }
  function draw(){
   if(!run)return;
   const viewportW=Math.max(200,canvas.clientWidth||window.innerWidth),viewportH=Math.max(140,canvas.clientHeight||window.innerHeight),aspect=viewportW/viewportH,hh=aspect<.88?5.8:4.8;
