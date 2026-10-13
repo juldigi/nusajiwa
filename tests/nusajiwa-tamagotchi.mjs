@@ -87,3 +87,18 @@ test('In-game Codex shows sources, searchable categories, and all 300 identities
  assert.ok(tama.includes("store.reads.includes(id)"),'Repeated pages must not grant infinite one-time rewards');
  assert.ok(tama.includes("if(a==='nativeCodex')"),'Optional detailed 3D reference navigation must survive');
 });
+
+
+test('iPhone layout regression: action buttons never consume the 3D pet screen',()=>{
+ const fix=css.slice(css.indexOf('/* 7.5 — iPhone layout hotfix'));
+ assert.ok(fix.length>2000,'Mobile grid hotfix must be present');
+ assert.match(html,/tamagotchi-3d\.css\?v=7\.5\.0/,'iPhone must request fresh CSS instead of cached broken layout');
+ assert.match(fix,/grid-template-rows:auto minmax\(110px,1fr\) auto/,'3D scene must get flexible center area');
+ assert.match(fix,/grid-template-rows:repeat\(2,50px\)/,'Actions should occupy exactly two short rows');
+ assert.match(fix,/grid-auto-rows:50px/,'Implicit action rows must not stretch vertically');
+ assert.match(fix,/height:105px;[\s\S]*?max-height:105px/,'Menu itself must have bounded height');
+ assert.match(fix,/height:50px;[\s\S]*?min-height:50px;[\s\S]*?max-height:50px/,'Each action tile must have fixed compact height');
+ assert.match(fix,/nth-child\(6\)\{grid-column:2\/span 2\}/,'The second row stays centered');
+ assert.match(fix,/env\(safe-area-inset-bottom\)/,'iPhone browser safe areas must remain supported');
+ assert.match(fix,/max-height:620px/,'Short iPhone views need a compact fallback');
+});
