@@ -190,3 +190,11 @@ body.nj35-playing>a[href*="atlas-evolusi"]{display:none!important}
 #njt.njt-sick .njt-alert{background:#bb6c78}
 @media(max-width:380px){#njt .njt-starter-eggs{gap:5px}#njt .njt-starter-eggs button{padding:11px 3px}#njt .njt-starter-eggs b{font-size:11px}}
 @media(prefers-reduced-motion:reduce){#njt .njt-alert,#njt .njt-egg{animation:none}}
+
+/* 7.2: 3D boot guidance is lightweight, honest and accessible. */
+#njt .njt-render-hint{position:absolute;top:48%;left:50%;transform:translate(-50%,-50%);
+ width:min(79%,280px);text-align:center;pointer-events:none;border-radius:17px;
+ color:#f9e7b6;background:linear-gradient(130deg,#123844de,#08252ce8);border:1px solid #d4b9818c;
+ padding:14px 16px;font-size:13px;font-weight:800;line-height:1.45;box-shadow:0 9px 34px #0018}
+#njt .njt-render-hint small{display:block;font-size:11px;font-weight:500;color:#d5e5d8;line-height:1.5;margin-top:9px}
+#njt .njt-render-hint[hidden]{display:none!important}
