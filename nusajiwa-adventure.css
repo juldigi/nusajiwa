@@ -1,0 +1,87 @@
+/* NUSAJIWA 8.0 — pocket side-scroller: full-width 3D stage, lightweight game HUD. */
+#nja{--gold:#ffe0a1;--ink:#10343d;position:fixed;inset:0;z-index:160000;background:#061c26;color:#fff1d5;
+ font-family:system-ui,-apple-system,"Trebuchet MS",sans-serif;overscroll-behavior:none;touch-action:none}
+#nja[hidden],#nja .nja-overlay[hidden]{display:none!important}
+#nja *,#nja *:before,#nja *:after{box-sizing:border-box}
+#nja .nja-stage{position:absolute;inset:0;overflow:hidden;background:linear-gradient(180deg,#a8e0cb,#4a8873)}
+#nja #njaCanvas{display:block;width:100%;height:100%;object-fit:cover;touch-action:none}
+#nja .nja-hud{position:absolute;top:calc(env(safe-area-inset-top) + 7px);left:12px;right:12px;z-index:3;
+ display:flex;align-items:center;gap:10px;justify-content:space-between;color:#fff0c3;
+ text-shadow:0 2px 6px #173d43;pointer-events:none}
+#nja .nja-title{display:grid;gap:1px;min-width:0}
+#nja .nja-title b{font-size:clamp(13px,2.6vw,19px);letter-spacing:.17em;line-height:1}
+#nja .nja-title small{font-size:9px;letter-spacing:.11em;white-space:nowrap}
+#nja .nja-stats{display:flex;gap:8px;align-items:center;white-space:nowrap;font-size:12px;font-weight:900}
+#nja .nja-stats span{padding:8px 11px;background:#123f49cc;border:1px solid #ffe5ab72;border-radius:16px}
+#nja .nja-hud-btn{pointer-events:auto;border:1px solid #f5daa5;background:#174452ea;color:#ffe3a1;
+ border-radius:50%;width:44px;height:44px;font-size:21px;flex:0 0 44px;touch-action:manipulation}
+#nja .nja-message{position:absolute;z-index:4;top:clamp(65px,13%,115px);left:50%;transform:translateX(-50%) translateY(-5px);
+ padding:8px 14px;font-size:12px;text-align:center;border-radius:18px;color:#163840;background:#fff1c5ee;
+ pointer-events:none;max-width:85%;font-weight:850;box-shadow:0 7px 28px #0e242c51;opacity:0;transition:.2s}
+#nja .nja-message.on{opacity:1;transform:translateX(-50%)}
+#nja .nja-progress{position:absolute;top:calc(env(safe-area-inset-top) + 67px);left:16px;right:16px;z-index:2;
+ height:5px;border-radius:50px;background:#113c4f73;box-shadow:0 1px 8px #0b232f44;pointer-events:none;overflow:hidden}
+#nja .nja-progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,#f8d990,#aef2c5);border-radius:50px}
+#nja .nja-pad{position:absolute;z-index:3;bottom:calc(env(safe-area-inset-bottom) + 15px);left:15px;right:15px;
+ display:flex;justify-content:space-between;align-items:flex-end;pointer-events:none}
+#nja .nja-dir,#nja .nja-act{display:flex;gap:12px;align-items:center}
+#nja .nja-pad button{pointer-events:auto;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;
+ touch-action:none;width:66px;height:60px;border-radius:20px;background:linear-gradient(155deg,#1a5668e5,#10333ee0);
+ border:1.5px solid #fce9b3c9;color:#ffefc6;font-size:24px;font-weight:850;display:flex;flex-direction:column;
+ align-items:center;justify-content:center;box-shadow:0 5px 0 #07303fc2,0 7px 17px #0006;gap:0}
+#nja .nja-pad button small{font-size:9px;letter-spacing:.06em}
+#nja .nja-pad button:active{transform:translateY(3px);box-shadow:0 2px 0 #0a3440a8}
+#nja .nja-act button:last-child{background:linear-gradient(155deg,#e7d09cd9,#937343db);color:#1c3b40}
+#nja .nja-overlay{position:absolute;inset:0;z-index:5;display:grid;place-items:center;
+ padding:calc(env(safe-area-inset-top) + 20px) 14px calc(env(safe-area-inset-bottom) + 20px);
+ background:linear-gradient(135deg,#06232fdb,#0a4144dd);backdrop-filter:blur(7px);overflow:auto;touch-action:pan-y}
+#nja .nja-menu{width:min(100%,620px);max-height:100%;overflow:auto;touch-action:pan-y;border:1px solid #e5cc90b5;
+ background:linear-gradient(145deg,#123d47,#092a3a);box-shadow:0 19px 55px #03161bd9;
+ border-radius:25px;padding:25px 23px;text-align:center;-webkit-overflow-scrolling:touch}
+#nja .nja-kicker{color:#ffdc95;letter-spacing:.26em;font-size:10px;font-weight:850}
+#nja .nja-menu h1{font-size:clamp(25px,6vw,38px);margin:8px 0 15px;color:#ffebbb;letter-spacing:-.025em}
+#nja .nja-menu-body p{font-size:13px;line-height:1.6;color:#dce9db;margin:10px 0}
+#nja .nja-menu-body b{color:#fff0bb}
+#nja .nja-menu-buttons{display:grid;gap:9px;margin:18px 0 0}
+#nja .nja-menu-buttons button{border:1px solid #f6dda2;border-radius:13px;
+ background:linear-gradient(125deg,#edd7a4,#bfa16a);color:#173b40;min-height:48px;
+ font-size:14px;font-weight:850;padding:12px 14px;cursor:pointer;touch-action:manipulation}
+#nja .nja-menu-buttons button:last-child:not(:first-child){background:#1a4650;color:#f7e9c8}
+#nja .nja-levels{display:grid;gap:7px;margin:13px 0}
+#nja .nja-level{min-width:0;width:100%;background:#164650;color:#f8e7bf;
+ border:1px solid #d8bd82aa;border-radius:13px;display:grid;grid-template-columns:1fr auto;gap:3px 8px;
+ padding:12px 13px;text-align:left;cursor:pointer;touch-action:manipulation;align-items:center}
+#nja .nja-level b{font-size:12px;grid-column:1}
+#nja .nja-level small{grid-column:1;color:#cfe2d4;font-size:10px}
+#nja .nja-level em{grid-column:2;grid-row:1/span 2;color:#f7d48a;font-style:normal;font-size:10px;text-align:right}
+#nja .nja-level.locked{opacity:.50;cursor:not-allowed}
+#nja .nja-reward{color:#ffe9b8;background:#1f5c5a;border:1px solid #caad76;padding:15px 8px;border-radius:12px;
+ font-weight:900;letter-spacing:.035em;margin:15px 0}
+#nja .nja-tip{font-size:11px!important;color:#c2d8ca!important}
+#nja button:focus-visible{outline:3px solid #ffe5a1;outline-offset:3px}
+@media(max-width:650px){
+ #nja .nja-hud{top:calc(env(safe-area-inset-top) + 5px);left:8px;right:8px;gap:5px}
+ #nja .nja-title b{font-size:14px;letter-spacing:.1em}
+ #nja .nja-title small{font-size:7px;letter-spacing:.035em}
+ #nja .nja-stats{gap:3px;font-size:10px}
+ #nja .nja-stats span{padding:7px 6px;border-radius:10px}
+ #nja .nja-hud-btn{width:40px;height:40px;flex-basis:40px;font-size:17px}
+ #nja .nja-progress{top:calc(env(safe-area-inset-top) + 52px);left:9px;right:9px}
+ #nja .nja-pad{left:11px;right:11px;bottom:calc(env(safe-area-inset-bottom) + 16px)}
+ #nja .nja-dir,#nja .nja-act{gap:8px}
+ #nja .nja-pad button{width:57px;height:58px;border-radius:18px}
+ #nja .nja-menu{padding:19px 13px;border-radius:19px}
+ #nja .nja-menu h1{margin:5px 0 8px}
+ #nja .nja-menu-body p{font-size:12px;margin:6px 0}
+ #nja .nja-level{padding:10px}
+ #nja .nja-levels{gap:5px;margin:8px 0}
+}
+@media(max-width:380px){#nja .nja-title small{display:none}#nja .nja-stats{font-size:9px}#nja .nja-stats span{padding:6px 4px}}
+@media(max-height:570px){
+ #nja .nja-pad{bottom:calc(env(safe-area-inset-bottom) + 8px)}
+ #nja .nja-pad button{height:49px;width:52px}
+ #nja .nja-menu{padding:13px 14px}
+ #nja .nja-level{padding:7px 9px}
+ #nja .nja-menu h1{font-size:23px}
+}
+@media(prefers-reduced-motion:reduce){#nja .nja-message{transition:none}}
