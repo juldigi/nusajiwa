@@ -117,3 +117,18 @@ test('Hidden elemental stone can still be found on a same-day replay with no dup
  assert.equal(a.engine.pets.komodo.xp,currentXP);
  assert.equal(a.game.awardAdventure({...reward,gem:true}).earned,false);
 });
+
+test('Java guardian trial grants evolution XP and one permanent milestone to this pet',()=>{
+ const a=boot();a.click('choose',{id:'komodo'});a.click('hatch');
+ const before=a.engine.pets.komodo.xp;
+ const trial=a.game.awardAdventure({id:'komodo',level:9,stars:3,gem:true,element:'cahaya'});
+ assert.equal(trial.earned,true);
+ assert.equal(trial.xp,27);
+ assert.equal(a.engine.pets.komodo.xp,before+27);
+ assert.equal(a.engine.stones.cahaya,1);
+ const p=a.game.getSave().pets.komodo;
+ assert.ok(p.adventureMarks.includes('trial:9'));
+ const oldStudied=p.studied;
+ assert.equal(a.game.awardAdventure({id:'komodo',level:9,stars:3,gem:true,element:'cahaya'}).earned,false);
+ assert.equal(a.game.getSave().pets.komodo.studied,oldStudied);
+});
