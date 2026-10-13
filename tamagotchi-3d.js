@@ -47,6 +47,7 @@ function breed(){return find(store.active)||{name:'Sahabat Nusantara',origin:'In
 function nativePick(id){
  const idx=LIST.findIndex(c=>c.id===id);
  if(idx<0)return;
+ if(typeof API.selectTamaSpecies==='function'){API.selectTamaSpecies(id);return;}
  let saved={};try{saved=JSON.parse(localStorage.getItem('nusajiwa-3d-ui-v36')||'{}')}catch(_){}
  if(saved.index===idx)return;
  const b=document.createElement('button');b.dataset.njpick=String(idx);b.type='button';b.hidden=true;
@@ -71,7 +72,7 @@ function needs(now=Date.now()){
   d=Math.floor(p.count.toilet/108);p.count.toilet%=108;p.dirty=clamp(p.dirty+d);
   const night=new Date(now).getHours()>=21||new Date(now).getHours()<7;
   if(night&&p.lightsOff)p.sleep=true;
-  if(!night&&p.sleep){p.sleep=false;p.lightsOff=false;}
+  if(!night&&p.sleep){p.sleep=false;p.lightsOff=false;if(p.id===store.active)API.setTamaMood?.('idle',800);}
   if(p.hunger<=1)call(p,'Aku lapar…');
   else if(p.dirty>=2)call(p,'Tolong bersihkan toilet.');
   else if(p.happy<=1)call(p,'Ayo bermain!');
@@ -196,8 +197,8 @@ function care(kind,mode){
   p.sick=false;p.health=clamp(p.health+2);nativeCare('bond');toast('Sudah membaik. ♡');
  }else if(kind==='light'){
   p.lightsOff=(mode==='off');p.sleep=p.lightsOff;
-  if(p.sleep){nativeCare('sleep');toast('Selamat tidur… zzz');}
-  else toast('Lampu menyala, selamat pagi!');
+  if(p.sleep){nativeCare('sleep');API.setTamaMood?.('sleep',0);toast('Selamat tidur… zzz');}
+  else{API.setTamaMood?.('idle',800);toast('Lampu menyala, selamat pagi!');}
  }else if(kind==='discipline'){
   if(mode==='praise'){p.happy=clamp(p.happy+1);if(p.attention&&p.hunger>=2&&p.happy>=2)p.discipline=clamp(p.discipline+1);toast('Ia senang mendapat pujian.');}
   else if(p.attention&&p.hunger>=2&&p.happy>=2){p.discipline=clamp(p.discipline+1);toast('Ia belajar memahami aturan.');}
@@ -391,7 +392,7 @@ document.addEventListener('keydown',e=>{
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){needs();synchronize();if(active())growth(active());render()}});
 window.addEventListener('pageshow',()=>{needs();synchronize();render()});
 setInterval(()=>{if(!document.hidden){needs();synchronize();if(active())growth(active());render()}},60000);
-needs();if(active())nativePick(store.active);pressNative('#nj35ZoomIn');pressNative('#nj35ZoomIn');render();
+needs();if(active()){nativePick(store.active);if(active().sleep)API.setTamaMood?.('sleep',0);}pressNative('#nj35ZoomIn');pressNative('#nj35ZoomIn');render();
 if(!active())show('collection');
 else if(!store.introduced){store.introduced=true;save();show('help');}
 window.NUSAJIWA_TAMAGOTCHI={version:'7.0',creatureCount:LIST.length,getSave:()=>JSON.parse(JSON.stringify(store)),refresh:()=>{synchronize();render()},open:show};
