@@ -1,0 +1,22 @@
+
+/* Character animation compositor — sprite-frame crossfade and living micro-motion */
+.nj24-figure{overflow:visible;touch-action:manipulation}
+.nj24-figure img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;will-change:opacity,transform;transition:opacity .18s ease;filter:contrast(1.035) saturate(1.08)}
+.nj24-figure .nj25-incoming{opacity:0}
+.nj24-figure .nj25-incoming.nj25-visible{opacity:1}
+.nj24-figure .nj25-outgoing{opacity:0}
+.nj24-figure[data-motion="walk"] img{animation:nj25-stride .32s ease-in-out infinite alternate}
+.nj24-figure[data-motion="sleep"] img{animation:nj25-breathe 3.4s ease-in-out infinite}
+.nj24-figure[data-motion="play"] img{animation:nj25-pounce .52s cubic-bezier(.25,.75,.35,1) infinite alternate}
+.nj24-figure[data-motion="eat"] img{animation:nj25-nibble .36s ease-in-out infinite alternate}
+.nj24-figure[data-motion="clean"] img{animation:nj25-scrub .32s ease-in-out infinite alternate}
+.nj24-figure[data-motion="bond"] img{animation:nj25-heart .75s ease-in-out infinite alternate}
+.nj25-pet-message{position:absolute;left:50%;top:-11px;transform:translateX(-50%);padding:6px 12px;border:1px solid #f1d18b77;border-radius:30px;background:#132923d9;color:#ffefc7;font-size:12px;white-space:nowrap;z-index:4;pointer-events:none;animation:nj25-msg 1.6s ease forwards}
+@keyframes nj25-msg{0%{opacity:0;transform:translate(-50%,8px)}20%,70%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,-8px)}}
+@keyframes nj25-stride{to{transform:translateY(-5px) rotate(1deg)}}
+@keyframes nj25-breathe{50%{transform:scale(1.025,.975) translateY(3px)}}
+@keyframes nj25-pounce{to{transform:translateY(-11px) rotate(3deg)}}
+@keyframes nj25-nibble{to{transform:translateY(4px) rotate(-2deg)}}
+@keyframes nj25-scrub{to{transform:rotate(3deg)}}
+@keyframes nj25-heart{to{transform:scale(1.035)}}
+@media(prefers-reduced-motion:reduce){.nj24-figure img,.nj25-pet-message{animation:none!important;transition:none!important}}

@@ -1,0 +1,10 @@
+/* NUSAJIWA 6.3 */
+#nj35 .nj63-summary{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}#nj35 .nj63-summary span{padding:8px 10px;border:1px solid #5b796d;border-radius:10px;color:#f6db9c;background:#14383a;font-size:12px}#nj35 .nj63-regions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:16px}#nj35 .nj63-region{background:#143638;border:1px solid #49695d;border-radius:12px;padding:10px;display:grid;gap:6px}#nj35 .nj63-region small{color:#e8d4a7}#nj35 .nj63-region b{color:#fff}#nj35 .nj63-region>span{height:5px;background:#314b4a;border-radius:5px;overflow:hidden}#nj35 .nj63-region i{display:block;height:100%;background:#d8ba6d}#nj35 .nj63-controls{display:grid;grid-template-columns:minmax(0,1fr) 120px;gap:8px;margin:12px 0}#nj35 .nj63-controls input,#nj35 .nj63-controls select{min-width:0;width:100%;min-height:44px;background:#102e32;color:#f7ead0;border:1px solid #8b8461;border-radius:10px;padding:8px;font:inherit}@media(max-width:370px){#nj35 .nj63-controls{grid-template-columns:1fr}}
+
+/* NUSAJIWA 6.12 — folklore evidence, compact mobile-friendly codex */
+#nj35 .nj612-evidence{margin:14px 0;padding:15px;border:1px solid #8d815b;border-radius:14px;background:linear-gradient(145deg,#183a3d,#112b30);color:#f4e9ce}
+#nj35 .nj612-evidence h3{margin:0 0 10px;font-size:16px;color:#f2d895}
+#nj35 .nj612-evidence p{margin:8px 0;font-size:13px;line-height:1.55}
+#nj35 .nj612-evidence small{display:block;line-height:1.55;color:#cbd3ca}
+#nj35 .nj612-sources{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+#nj35 .nj612-sources a{display:inline-flex;align-items:center;min-height:44px;padding:8px 12px;border:1px solid #ad9464;border-radius:10px;color:#ffe4aa;text-decoration:none;font-size:12px;background:#1e4446}

@@ -1,0 +1,5 @@
+
+.nj17-art-direction{position:absolute;bottom:25%;left:50%;transform:translateX(-50%);font:700 9px 'DM Sans',sans-serif;letter-spacing:2px;text-transform:uppercase;color:#ffe9b8;text-shadow:0 2px 12px #0a2631;pointer-events:none;opacity:.75;white-space:nowrap}
+.pet-spot .creature-wrap{animation:nj17-breathe 4.3s ease-in-out infinite!important}
+@keyframes nj17-breathe{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-4px) scale(1.012)}}
+@media(prefers-reduced-motion:reduce){.pet-spot .creature-wrap{animation:none!important}}

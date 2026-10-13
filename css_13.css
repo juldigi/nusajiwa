@@ -1,0 +1,14 @@
+
+/* Accessible cinematic production polish, no generic emoji HUD over artwork */
+:root{--nj18-focus:#ffe7a4}
+button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--nj18-focus)!important;outline-offset:4px!important}
+.nj18-tag{display:flex;align-items:center;gap:7px;justify-content:center;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#f6e1b2;text-shadow:0 2px 12px #122b38;margin-top:5px}
+.nj18-tag::before,.nj18-tag::after{content:'✦';font-size:9px;opacity:.65}
+.nj18-care-feedback{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);z-index:40;pointer-events:none;display:grid;place-items:center;padding:12px 22px;border:1px solid rgba(255,226,158,.52);border-radius:24px;background:linear-gradient(160deg,rgba(11,43,54,.93),rgba(22,57,61,.86));box-shadow:0 18px 40px #051d2c88,0 0 32px #e2b96522;animation:nj18Pop .9s ease both;white-space:nowrap;color:#fff3d8;font-size:14px;font-weight:700}
+@keyframes nj18Pop{0%{opacity:0;transform:translate(-50%,-20%) scale(.85)}18%{opacity:1;transform:translate(-50%,-50%) scale(1.05)}78%{opacity:1}100%{opacity:0;transform:translate(-50%,-70%) scale(1)}}
+.nj18-perf{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px;margin:12px 0;border-radius:16px;border:1px solid #d4bc844d;background:#0a2735b0;color:#f9e5bf;font-size:12px}
+.nj18-perf button{background:#b89153;color:#091e2a;border:0;border-radius:999px;padding:10px 14px;font-weight:800;min-width:95px}
+body.nj18-low-motion .pet-spot .creature-wrap,body.nj18-low-motion .nj13-mist,body.nj18-low-motion .nj13-orbs i,body.nj18-low-motion .nj14-evo-orbit::after{animation:none!important}
+body.nj18-low-motion .nj14-sparkle,body.nj18-low-motion .nj14-evolution *{animation-duration:.01ms!important;animation-iteration-count:1!important}
+@media(prefers-reduced-motion:reduce){.nj18-care-feedback{animation:none;opacity:1}}
+@media(max-width:480px){.nj18-care-feedback{font-size:12px;padding:9px 14px}}

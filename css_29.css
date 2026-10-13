@@ -1,0 +1,12 @@
+/* NUSAJIWA 4.2 | Better mobile collection legibility, minimum touch targets */
+#nj35 .nj-filters{display:flex;gap:7px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;scrollbar-width:none;padding-bottom:10px}
+#nj35 .nj-filters button{white-space:nowrap;flex:0 0 auto;min-height:42px;scroll-snap-align:start;border-radius:11px}
+#nj35 .nj-item{min-height:90px;line-height:1.43;outline-offset:3px}
+#nj35 .nj-item:focus-visible,#nj35 .nj-filters button:focus-visible{outline:2px solid #f1ce81}
+#nj35 .nj39-new{font-weight:750;letter-spacing:.04em}
+#nj35 .nj-item small{display:block;line-height:1.4}
+#nj35 .nj-result-count{color:#dec99f;line-height:1.5}
+#nj35 button:focus-visible{outline:2px solid #f1ce81;outline-offset:2px}
+#nj35 input.nj-search{font-size:16px!important;min-height:46px}
+@media(max-width:480px){#nj35 .nj-grid{grid-template-columns:1fr 1fr;gap:8px}#nj35 .nj-item{padding:11px 9px}#nj35 .nj-item b{font-size:12.5px}#nj35 .nj-item small{font-size:11px}}
+@media(prefers-reduced-motion:reduce){#nj35 .nj-item,#nj35 .nj-filters button{transition:none!important}}

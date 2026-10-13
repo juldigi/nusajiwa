@@ -1,0 +1,20 @@
+
+.nj21-profile-button{position:fixed;bottom:calc(88px + env(safe-area-inset-bottom));right:14px;z-index:40;border:1px solid rgba(255,229,171,.42);border-radius:22px;background:linear-gradient(140deg,rgba(35,64,62,.96),rgba(17,35,43,.98));color:#fff2d5;box-shadow:0 10px 28px #0008, inset 0 1px #ffffff1c;padding:12px 17px;font:600 12px/1.2 system-ui;letter-spacing:.03em;backdrop-filter:blur(12px);cursor:pointer}
+.nj21-profile-button:focus-visible{outline:3px solid #ffe2a4;outline-offset:3px}
+.nj21-profile-button b{display:block;font-size:15px;letter-spacing:0;margin-bottom:2px}
+.nj21-profile{color:#f9ecd5;max-width:540px;margin:auto}
+.nj21-kicker{color:#eac98a;letter-spacing:.24em;font-size:10px;font-weight:800}
+.nj21-profile h2{font:normal clamp(29px,6vw,40px)/1.2 Georgia,serif;margin:8px 0;color:#fff3d9}
+.nj21-profile p{font-size:13px;line-height:1.65;color:#e1d7c2}
+.nj21-portrait{width:220px;max-width:80%;height:190px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 16px 20px #0007)}
+.nj21-portrait svg{max-width:100%;max-height:100%}
+.nj21-stat{display:grid;grid-template-columns:85px 1fr 38px;gap:8px;align-items:center;margin:12px 0;font-size:12px;color:#f5e5c5}
+.nj21-stat-track{height:8px;background:#ffffff20;border-radius:99px;overflow:hidden;border:1px solid #ffffff16}
+.nj21-stat-track i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#a5ddbb,#f4d08d);width:var(--progress);transition:width .35s}
+.nj21-info{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:18px 0}
+.nj21-info div{border:1px solid #fff2d02c;border-radius:14px;background:#ffffff0a;padding:11px;text-align:left;font-size:12px;color:#f7e4bf}
+.nj21-info small{display:block;font-size:10px;color:#bcb4a5;margin-bottom:5px}
+.nj21-hint{border-left:2px solid #f4d08d;padding:10px 12px;background:#fff2d00a;border-radius:0 12px 12px 0;margin:15px 0}
+.nj21-profile-button[data-hide="yes"]{display:none}
+@media(min-width:850px){.nj21-profile-button{right:28px;bottom:24px}}
+@media(prefers-reduced-motion:reduce){.nj21-stat-track i{transition:none}}

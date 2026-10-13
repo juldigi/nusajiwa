@@ -1,0 +1,41 @@
+
+/* NUSAJIWA 3.0 — cinematic game art direction; existing game logic retained */
+:root{--ink:#f5ead0;--gold:#efc985;--forest:#112d2d;--glass:rgba(9,30,33,.72)}
+html,body{background:#071b21!important;color:var(--ink);font-family:Georgia,'Times New Roman',serif!important}
+.game{background:#071b21!important;isolation:isolate}
+.game-screen{background:#071b21!important}
+.hud{height:78px!important;background:linear-gradient(180deg,rgba(4,19,23,.92),rgba(4,19,23,.12))!important;border:0!important;padding:13px clamp(14px,3vw,45px)!important}
+.hud-logo{letter-spacing:.13em!important;text-shadow:0 2px 12px #061a1d!important}
+.hud-logo small{font-size:8px!important;letter-spacing:.28em!important;color:#d8caa8!important}
+.hud-money,.icon-glass{background:rgba(7,25,30,.55)!important;border:1px solid #f0d4a15e!important;backdrop-filter:blur(15px)!important;box-shadow:inset 0 1px #ffffff12!important}
+.home-screen{background:#0c2828!important;min-height:100%!important}
+.home-screen .scene-bg{background:#0d3033!important;overflow:hidden!important}
+.home-screen .scene-bg svg{opacity:0!important}
+.home-screen .scene-bg::before{content:'';position:absolute;inset:-2%;background-image:var(--nj-biome);background-size:cover;background-position:center 57%;transform:scale(1.05);filter:saturate(.92) contrast(1.09) brightness(.8);animation:nj30Ken 30s ease-in-out infinite alternate}
+.home-screen .scene-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,22,24,.43) 0%,transparent 27%,transparent 49%,rgba(5,19,18,.28) 69%,rgba(3,15,19,.92) 100%),radial-gradient(ellipse at 50% 49%,transparent 14%,#051a2077 95%);pointer-events:none}
+.home-content{justify-content:flex-start!important;padding-top:clamp(82px,12vh,130px)!important;gap:4px!important}
+.chapter-kicker{font-family:system-ui,sans-serif!important;font-size:9px!important;letter-spacing:.35em!important;color:#f1d59d!important;text-shadow:0 2px 9px #102c30!important}
+.hero-name{font-family:Georgia,serif!important;font-size:clamp(37px,7vw,79px)!important;line-height:1.05!important;letter-spacing:-.045em!important;color:#fff3d8!important;text-shadow:0 3px 22px #07191c,0 2px 5px #07191c!important;margin:9px 0 5px!important}
+.hero-sub{font-family:system-ui,sans-serif!important;letter-spacing:.16em!important;text-transform:uppercase!important;font-size:10px!important;color:#f1ddbb!important;text-shadow:0 2px 8px #102c30!important}
+.pet-spot{width:min(76vw,520px)!important;height:clamp(230px,42vh,485px)!important;margin:clamp(5px,2vh,22px) auto 0!important;filter:drop-shadow(0 28px 17px #071915ad)!important;outline-offset:5px!important}
+.pet-ground{background:radial-gradient(ellipse,#06140f8a,transparent 70%)!important;filter:blur(12px)!important;opacity:.7!important}
+.nj30-pet-art{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;z-index:2}
+.nj30-pet-art img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 14px 9px #031b1d91) saturate(1.13) contrast(1.04);animation:nj30Alive 4.1s ease-in-out infinite;transform-origin:50% 80%}
+.pet-spot .speech{z-index:5!important;max-width:70%!important;background:rgba(10,29,31,.75)!important;color:#fff1d7!important;border:1px solid #f1d49b55!important;border-radius:17px!important;backdrop-filter:blur(10px)!important;font-family:system-ui,sans-serif!important;font-size:12px!important;box-shadow:0 9px 25px #06161970!important}
+.status-pearls{background:rgba(7,29,28,.6)!important;border:1px solid #e8ce9450!important;border-radius:25px!important;padding:10px 13px!important;backdrop-filter:blur(18px)!important;box-shadow:0 14px 38px #051b2160!important;max-width:min(92vw,580px)!important}
+.home-bottom{z-index:6!important;background:linear-gradient(0deg,#06191de6,transparent)!important}
+.story-ribbon{background:rgba(7,30,29,.64)!important;border:1px solid #dfbd7952!important;backdrop-filter:blur(15px)!important;border-radius:20px!important}
+.game-dock{background:rgba(6,24,27,.88)!important;border:1px solid #e8c88c69!important;border-radius:24px!important;box-shadow:0 15px 55px #021217aa,inset 0 1px #ffffff12!important;padding:7px 9px!important;backdrop-filter:blur(26px)!important;max-width:calc(100% - 20px)!important}
+.game-dock button{min-width:51px!important;min-height:51px!important;border-radius:16px!important;font-family:system-ui,sans-serif!important}
+.game-dock button.selected{background:linear-gradient(140deg,#e3c68b,#9e7644)!important;color:#112b2c!important;box-shadow:0 3px 15px #d7b97c45!important}
+.game-dock button small{font-size:9px!important;letter-spacing:.025em!important}
+.game-dock .dock-symbol{font-size:20px!important}
+.screen:not(.home-screen){background:linear-gradient(155deg,#16383a,#081e26 65%,#06181e)!important}
+.screen:not(.home-screen) .scene-bg{opacity:.65!important}
+.screen:not(.home-screen) h1,.screen:not(.home-screen) h2{font-family:Georgia,serif!important;color:#f5dfb3!important}
+button{touch-action:manipulation}
+button:focus-visible{outline:3px solid #ffe4a3!important;outline-offset:3px!important}
+@keyframes nj30Ken{to{transform:scale(1.14) translate(-1.5%,1%)}}
+@keyframes nj30Alive{0%,100%{transform:translateY(0) rotate(-.4deg) scale(1)}50%{transform:translateY(-6px) rotate(.6deg) scale(1.013)}}
+@media(max-width:600px){.home-content{padding-top:93px!important}.hero-name{font-size:clamp(36px,10vw,58px)!important}.pet-spot{height:clamp(230px,37vh,385px)!important;width:min(93vw,430px)!important}.game-dock{bottom:max(8px,env(safe-area-inset-bottom))!important;gap:1px!important;padding:6px!important}.game-dock button{min-width:48px!important;padding:5px!important}.hud{height:67px!important}.status-pearls{max-width:96vw!important}.nj30-pet-art img{width:96%}}
+@media(prefers-reduced-motion:reduce){.home-screen .scene-bg::before,.nj30-pet-art img{animation:none!important}}

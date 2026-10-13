@@ -1,0 +1,2 @@
+/* NUSAJIWA 6.0 discovery controls */
+#nj35 .nj60-discovery{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:13px 0}#nj35 .nj60-discovery button{background:linear-gradient(145deg,#1c4549,#102b33);color:#f6dfa9;border:1px solid #8d7650;border-radius:14px;padding:12px 10px;font-weight:750;cursor:pointer;min-height:48px}#nj35 .nj60-discovery button:active{transform:scale(.98)}@media(max-width:450px){#nj35 .nj60-discovery{grid-template-columns:1fr}}

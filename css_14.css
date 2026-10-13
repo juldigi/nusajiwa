@@ -1,0 +1,8 @@
+
+.nj19-art-toggle{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px 14px;border:1px solid #d9b87369;border-radius:18px;background:linear-gradient(135deg,#143d4bf0,#092634eb);margin:12px 0;color:#f9e9c8}
+.nj19-art-toggle b{font-size:13px}.nj19-art-toggle small{display:block;color:#d5c6a4;margin-top:4px;font-size:11px}
+.nj19-art-toggle button{background:linear-gradient(145deg,#f5d78e,#b9934b);color:#102b38;border:0;border-radius:24px;font-weight:800;padding:10px 15px;white-space:nowrap}
+.nj19-art-caption{font-size:11px;letter-spacing:1px;text-align:center;color:#ffe3ac;text-shadow:0 2px 10px #102b38;opacity:.85}
+.nj19-breath{animation:nj19Breath 4s ease-in-out infinite;transform-origin:50% 70%}
+@keyframes nj19Breath{50%{transform:translateY(-3px) scale(1.012)}}
+@media(prefers-reduced-motion:reduce){.nj19-breath{animation:none}}

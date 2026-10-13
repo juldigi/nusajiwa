@@ -1,0 +1,77 @@
+/* NUSAJIWA 1.0 — Living World. Playable ritual, cinematic biomes and tactile moments. */
+:root{--world-ink:#061927;--world-gold:#f5d99c;--world-cream:#fff3d2}
+body.nj-dusk .premium-scene{filter:sepia(.12) hue-rotate(-13deg) saturate(1.17) brightness(.94)}
+body.nj-night .premium-scene{filter:hue-rotate(15deg) saturate(.9) brightness(.76)}
+body.nj-day .premium-scene{filter:brightness(1.06) saturate(1.04)}
+body.nj-night .premium-scene::before{background:linear-gradient(#06101ea8,#050c2269 45%,#051020d7)}
+body.nj-dusk .premium-scene::before{background:linear-gradient(#2113228c,#5c2d1815 30%,#10202520 55%,#061927c9)}
+.nj-sky-haze{position:absolute;inset:-12%;pointer-events:none;background:radial-gradient(ellipse 42% 27% at 65% 35%,#fff2b437,transparent 84%),linear-gradient(95deg,transparent 26%,#c8ead00a,transparent 77%);mix-blend-mode:screen;animation:njBreathe 8s ease-in-out infinite alternate}
+.nj-world-mist{position:absolute;bottom:12%;left:-20%;width:140%;height:35%;pointer-events:none;background:radial-gradient(ellipse at 40% 70%,#d9dfce1b,transparent 66%);filter:blur(11px);animation:njDriftFog 24s ease-in-out infinite alternate}
+.nj-cloud{position:absolute;border-radius:50%;height:10%;width:60%;left:-35%;background:radial-gradient(ellipse,#e2eac32c,transparent 70%);filter:blur(13px);pointer-events:none;animation:njCloudMove 45s linear infinite}
+.nj-cloud.two{top:28%;height:7%;left:22%;animation-duration:66s;animation-direction:reverse;opacity:.45}
+.nj-cloud.one{top:15%;opacity:.55}
+.nj-canopy{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.nj-canopy .frond{position:absolute;transform-origin:top center;will-change:transform;animation:njLeafSway var(--spd,9s) ease-in-out infinite alternate;opacity:.85;filter:drop-shadow(0 6px 7px #04172196)}
+.nj-canopy .frond.left{left:-12px;top:12%;width:100px;height:130px}
+.nj-canopy .frond.right{right:-20px;top:4%;width:110px;height:143px;transform:scaleX(-1);animation-direction:alternate-reverse}
+.nj-canopy .frond.bottom{right:-12px;top:auto;bottom:16%;width:85px;height:95px;opacity:.58;animation-duration:12s}
+.nj-canopy svg{height:100%;width:100%}
+.nj-weather{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.nj-weather .nj-leaf{position:absolute;left:var(--x);top:-7%;height:10px;width:5px;background:linear-gradient(145deg,#d5c88b,#5e9470);border-radius:95% 10% 85% 8%;opacity:.64;filter:drop-shadow(0 1px 2px #123f3b);animation:njLeafFall var(--dur) linear infinite;animation-delay:var(--delay)}
+.nj-weather .nj-rain{position:absolute;left:var(--x);top:-7%;height:19px;width:1px;background:linear-gradient(transparent,#b3dcdf72);transform:rotate(14deg);animation:njRainFall var(--dur) linear infinite;animation-delay:var(--delay)}
+.nj-night .premium-glimmer i{box-shadow:0 0 13px 4px #f4c67eaa}
+@keyframes njBreathe{from{opacity:.55;transform:scale(1)}to{opacity:1;transform:scale(1.06)}}
+@keyframes njDriftFog{from{transform:translateX(-8%)}to{transform:translateX(8%)}}
+@keyframes njCloudMove{from{transform:translateX(-15%)}to{transform:translateX(185%)}}
+@keyframes njLeafSway{0%{transform:rotate(-5deg)}100%{transform:rotate(5deg)}}
+@keyframes njLeafFall{from{transform:translate3d(-15px,-15px,0) rotate(0);opacity:0}15%{opacity:.7}to{transform:translate3d(66px,103vh,0) rotate(730deg);opacity:0}}
+@keyframes njRainFall{to{transform:translate3d(-60px,107vh,0) rotate(14deg)}}
+.premium-scene.land-bara .nj-leaf{background:#e2b17b}
+.premium-scene.land-rembulan .nj-leaf{background:#accfe1}
+.nj-world-gesture{position:absolute!important;left:4%;top:36%;z-index:5;display:grid;justify-items:center;gap:4px;padding:7px;background:none;border:0;color:#fff1cd;cursor:pointer;text-shadow:0 3px 10px #000;font-size:10px;font-weight:700;letter-spacing:.3px;max-width:84px}
+.nj-world-gesture svg{height:54px;width:54px;filter:drop-shadow(0 0 14px #e6b6659c);animation:njLanternHover 4s ease-in-out infinite;transition:transform .3s}
+.nj-world-gesture:focus-visible{outline:2px solid #f9d99d;outline-offset:3px;border-radius:14px}
+.nj-world-gesture:active svg{transform:scale(.88)}
+@keyframes njLanternHover{0%,100%{translate:0 0}50%{translate:0 -8px}}
+.nj-world-gesture .lantern-daily{display:block;color:#eec992;font-size:9px;letter-spacing:0;font-weight:500}
+.nj-capture-btn{position:absolute!important;top:36%;right:5%;z-index:5;width:47px;height:47px;border-radius:50%;display:grid;place-items:center;background:#0b2738b8;color:#f5d99c;border:1px solid #e9ca945c;box-shadow:0 0 25px #ffd18e1f,inset 0 1px #ffefc244;backdrop-filter:blur(14px);cursor:pointer}
+.nj-capture-btn svg{width:23px;height:23px}
+.nj-capture-btn:active{transform:scale(.95)}
+.nj-scene-hour{position:absolute;top:0;left:50%;transform:translateX(-50%);z-index:2;color:#fff6d7c2;text-shadow:0 1px 9px #0009;font-size:9px;letter-spacing:2px;text-transform:uppercase;white-space:nowrap}
+.nj-sky-indicator{display:inline-block;width:5px;height:5px;border-radius:50%;background:#e7ce93;vertical-align:2px;box-shadow:0 0 9px #ffd88c;margin-right:5px}
+body.nj-ritual-open{overflow:hidden}
+.nj-ritual{position:fixed;inset:0;z-index:99;background:#081723;overflow:hidden;display:flex;flex-direction:column;color:#fff2d5;isolation:isolate}
+.nj-ritual canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;z-index:0;cursor:crosshair}
+.nj-ritual::after{content:'';position:absolute;inset:0;box-shadow:inset 0 0 110px 35px #010d17a0;pointer-events:none;z-index:1}
+.nj-ritual-top{display:flex;align-items:center;justify-content:space-between;padding:calc(17px + env(safe-area-inset-top)) clamp(18px,4vw,35px) 15px;z-index:3;gap:10px}
+.nj-ritual-head{text-align:center;min-width:0}
+.nj-ritual-head small{display:block;color:#e7c88a;font-size:9px;letter-spacing:2.5px;font-weight:800}
+.nj-ritual-head h2{font:normal clamp(24px,6vw,40px)/1.2 Georgia,serif;margin:5px 0;color:#fce9bd}
+.nj-ritual-exit{min-width:43px;height:43px;border-radius:50%;background:#092a38cc;border:1px solid #e2ca94a6;color:#ffedcd;backdrop-filter:blur(12px);font-size:19px}
+.nj-ritual-meter{min-width:75px;text-align:right;font-variant-numeric:tabular-nums}
+.nj-ritual-meter strong{display:block;font-family:Georgia,serif;font-size:22px;color:#fff1c8}.nj-ritual-meter small{display:block;color:#dbcea9;font-size:10px}
+.nj-ritual-tip{position:absolute;z-index:2;top:23%;left:50%;transform:translateX(-50%);text-align:center;background:#062633a3;border:1px solid #e3c68e55;backdrop-filter:blur(12px);padding:12px 19px;border-radius:22px;font-size:13px;max-width:calc(100vw - 46px);width:max-content;line-height:1.6;animation:njTipFloat 2s ease-in-out infinite alternate}
+@keyframes njTipFloat{to{transform:translate(-50%,-6px)}}
+.nj-ritual-footer{position:absolute;bottom:max(30px,env(safe-area-inset-bottom) + 16px);left:0;right:0;z-index:3;display:flex;justify-content:center;align-items:center;gap:14px;flex-wrap:wrap;color:#e1d2ac;font-size:12px;text-align:center;padding:0 15px}
+.nj-ritual-score{font:normal 30px Georgia,serif;color:#ffeab0}.nj-ritual-streak{color:#edce83}
+.nj-ritual-done{position:absolute;inset:0;z-index:8;background:radial-gradient(circle at 50% 35%,#1d626394,#02141bea 65%),#02141bdc;display:grid;place-items:center;padding:25px;text-align:center;backdrop-filter:blur(8px)}
+.nj-done-card{max-width:460px;padding:clamp(20px,5vw,42px);border-radius:28px;background:linear-gradient(153deg,#1a4b53ee,#092a39f5);border:1px solid #f0d79ea6;box-shadow:0 35px 85px #0008,inset 0 1px #fff2}
+.nj-done-mark{font-size:65px;display:block;color:#ffdfa2;text-shadow:0 0 35px #eac583}
+.nj-done-card h2{font:normal clamp(27px,7vw,40px)/1.13 Georgia,serif;margin:12px 0;color:#fff0d0}
+.nj-done-card p{color:#d6e1d4;line-height:1.6;font-size:14px}
+.nj-done-reward{display:flex;align-items:center;justify-content:center;gap:14px;margin:23px 0;color:#ffe4a9;font-weight:800}
+.nj-done-card button{padding:13px 27px;background:linear-gradient(140deg,#ffe9b8,#d4a65e);border:0;border-radius:13px;color:#17333d;font-weight:850}
+.nj-photo-actions{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin:10px 0}.nj-photo-actions a,.nj-photo-actions button{font:inherit;padding:12px 18px;border:1px solid #edd29a8c;background:#e1c18b;color:#14313b;text-decoration:none;border-radius:14px;font-weight:800}
+.nj-photo-stage img{display:block;width:min(60vw,205px);max-height:52vh;object-fit:contain;margin:auto;border:2px solid #e9cb8b;border-radius:14px;box-shadow:0 15px 35px #0008}
+.nj-photo-stage h2{font-family:Georgia,serif;font-weight:400;font-size:29px;color:#ffeed0;margin:8px 0}.nj-photo-stage p{font-size:12px;color:#d9d6bf}
+.nj-photoload{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:#071c28ca;color:#ffe8b9;backdrop-filter:blur(10px);font-size:16px}
+.nj-photo-helper{font-size:10px;color:#b5c7c1!important}
+body.nj-economy .nj-sky-haze,body.nj-economy .nj-world-mist,body.nj-economy .nj-cloud,body.nj-economy .nj-canopy,body.nj-economy .nj-weather{display:none!important}
+@media (prefers-reduced-motion: reduce){.nj-weather,.nj-canopy,.nj-cloud{display:none!important}.nj-world-gesture svg{animation:none}}
+@media(max-width:600px){
+ .nj-world-gesture{top:37%;left:0;width:72px;font-size:9px}.nj-world-gesture svg{width:43px;height:43px}
+ .nj-capture-btn{top:37%;right:2%;width:38px;height:38px}.nj-capture-btn svg{width:19px;height:19px}
+ .nj-scene-hour{display:none}
+ .nj-canopy .frond.left{width:75px}.nj-canopy .frond.right{width:82px}
+}
+@media(max-height:700px){.nj-world-gesture,.nj-capture-btn{top:29%}.nj-ritual-tip{top:26%}}

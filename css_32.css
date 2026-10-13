@@ -1,0 +1,13 @@
+/* Field Journal v6.1 */
+#nj35 .nj61-field{margin:12px 0 18px;padding:18px;border:1px solid rgba(226,196,118,.32);border-radius:20px;background:linear-gradient(140deg,rgba(15,61,58,.93),rgba(7,28,35,.95));color:#eaf3e8;box-shadow:0 10px 35px rgba(0,0,0,.2)}
+#nj35 .nj61-field-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;color:#e9ce8b;font-size:13px;letter-spacing:.07em}
+#nj35 .nj61-field p{font-size:12px;line-height:1.65;opacity:.85;margin:12px 0}
+#nj35 .nj61-meter{height:6px;background:#163b3e;border-radius:20px;overflow:hidden}
+#nj35 .nj61-meter span{display:block;height:100%;background:linear-gradient(90deg,#66b9a2,#ebcb80)}
+#nj35 .nj61-field-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+#nj35 .nj61-field-actions button,#nj35 .nj61-back{border:1px solid rgba(226,196,118,.4);border-radius:12px;padding:13px 9px;background:#164c48;color:#f7e5b6;font-weight:700;cursor:pointer;min-height:46px}
+#nj35 .nj61-field-actions button:disabled{opacity:.42;cursor:not-allowed}
+#nj35 .nj61-journal-list{display:grid;gap:8px;margin-top:16px}
+#nj35 .nj61-journal-item{display:flex;justify-content:space-between;gap:10px;align-items:center;text-align:left;border:1px solid rgba(226,196,118,.24);border-radius:12px;padding:12px;background:#133739;color:#fff;min-height:50px}
+#nj35 .nj61-journal-item small{color:#d5c18d}
+@media(max-width:480px){#nj35 .nj61-field-actions{grid-template-columns:1fr}#nj35 .nj61-journal-item{align-items:flex-start;flex-direction:column}}

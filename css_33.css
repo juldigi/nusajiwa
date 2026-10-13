@@ -1,0 +1,7 @@
+/* NUSAJIWA 6.2 */
+#nj35 .nj62-label{display:block;margin:14px 0 6px;font-size:12px;color:#ead092;font-weight:700}
+#nj35 .nj62-select{display:block;width:100%;min-height:46px;padding:10px 12px;border-radius:12px;border:1px solid #bca76a;background:#102e32;color:#f7ead0;font:inherit}
+#nj35 .nj62-pool{display:block;line-height:1.5;margin-top:8px;color:#d4dbc9}
+#nj35 .nj62-pages{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:15px;color:#e7d098}
+#nj35 .nj62-pages button{min-height:44px;padding:8px;border:1px solid #bda76d;border-radius:10px;background:#143b3b;color:#f9e5b7}
+#nj35 .nj62-pages button:disabled{opacity:.4}

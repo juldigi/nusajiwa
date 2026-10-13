@@ -1,0 +1,24 @@
+
+/* 300 collectible portraits now appear as the actual active pet, not only catalog thumbnails. */
+.nj34-live{position:relative;display:grid;place-items:center;width:min(70vw,350px);height:min(65vw,310px);max-width:100%;margin:auto;isolation:isolate;transform-origin:50% 85%;animation:nj34breath 3.5s ease-in-out infinite}
+.nj34-live img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 19px 13px #07171c9c);user-select:none;-webkit-user-drag:none;pointer-events:none}
+.nj34-live::after{content:'';position:absolute;left:22%;right:22%;bottom:3%;height:8%;background:#06161b66;border-radius:50%;filter:blur(12px);z-index:-1}
+.nj34-live[data-motion="walk"]{animation:nj34walk .55s ease-in-out infinite alternate}
+.nj34-live[data-motion="run"]{animation:nj34run .26s ease-in-out infinite alternate}
+.nj34-live[data-motion="play"]{animation:nj34play .65s ease-in-out infinite alternate}
+.nj34-live[data-motion="sleep"]{animation:nj34sleep 3.7s ease-in-out infinite}
+.nj34-live[data-motion="eat"]{animation:nj34eat .35s ease-in-out infinite alternate}
+.nj34-live[data-motion="bath"]{animation:nj34bath .48s ease-in-out infinite alternate}
+.nj34-live[data-motion="pet"]{animation:nj34pet .42s ease-in-out 3 alternate}
+.nj34-live .nj34-emotion{position:absolute;top:3%;right:4%;font-size:clamp(20px,4vw,32px);opacity:0;transform:translateY(8px);transition:opacity .3s,transform .3s;filter:drop-shadow(0 2px 4px #0009)}
+.nj34-live[data-motion="play"] .nj34-emotion,.nj34-live[data-motion="pet"] .nj34-emotion{opacity:1;transform:translateY(0)}
+@keyframes nj34breath{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-4px) scale(1.012,.994)}}
+@keyframes nj34walk{0%{transform:translate(-9px,-2px) rotate(-2deg)}100%{transform:translate(9px,1px) rotate(2deg)}}
+@keyframes nj34run{0%{transform:translate(-14px,-11px) rotate(-4deg)}100%{transform:translate(14px,0) rotate(3deg)}}
+@keyframes nj34play{0%{transform:translateY(0) rotate(-3deg)}100%{transform:translateY(-28px) rotate(4deg)}}
+@keyframes nj34sleep{0%,100%{transform:translateY(7px) rotate(-5deg) scale(1,.97)}50%{transform:translateY(7px) rotate(-5deg) scale(1.018,.94)}}
+@keyframes nj34eat{0%{transform:translateY(0) rotate(-1deg)}100%{transform:translateY(5px) rotate(1deg)}}
+@keyframes nj34bath{0%{transform:rotate(-3deg) scale(.99)}100%{transform:rotate(3deg) scale(1.01)}}
+@keyframes nj34pet{0%{transform:scale(1)}100%{transform:scale(1.045) rotate(2deg)}}
+@media(max-width:480px){.nj34-live{width:min(73vw,295px);height:min(67vw,260px)}}
+@media(prefers-reduced-motion:reduce){.nj34-live,.nj34-live[data-motion]{animation:none!important}.nj34-live .nj34-emotion{transition:none}}

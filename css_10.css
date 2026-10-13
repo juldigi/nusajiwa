@@ -1,0 +1,11 @@
+
+.pet-spot{position:relative}.nj28-mood{position:absolute;z-index:9;top:8px;left:50%;transform:translateX(-50%);font-size:12px;font-weight:750;letter-spacing:.025em;white-space:nowrap;padding:7px 13px;border-radius:999px;background:rgba(12,26,31,.83);color:var(--mood,#f6d6a1);border:1px solid color-mix(in srgb,var(--mood) 45%,transparent);box-shadow:0 7px 22px #07161d66;pointer-events:none;backdrop-filter:blur(8px)}
+.nj24-figure{isolation:isolate;transform-origin:50% 82%;will-change:transform;}
+.nj24-figure>img{position:relative;z-index:2;filter:drop-shadow(0 9px 9px rgba(0,0,0,.20))}
+.nj28-ground{position:absolute;z-index:0;left:24%;width:52%;bottom:3%;height:12%;background:radial-gradient(ellipse,#07191977,transparent 70%);border-radius:50%;pointer-events:none}
+.nj28-shine{position:absolute;z-index:1;inset:13% 14%;border-radius:50%;background:radial-gradient(ellipse at 50% 50%,#fff7d91b,transparent 65%);pointer-events:none;animation:nj28glow 5s ease-in-out infinite}
+.nj28-heart{position:absolute;z-index:10;bottom:47%;font-size:29px;color:#ffcfde;text-shadow:0 0 16px #e6739e;animation:nj28float 1.15s ease-out forwards;pointer-events:none}
+.nj24-figure[data-mood="sleepy"]{filter:saturate(.83) brightness(.93)}.nj24-figure[data-mood="happy"] .nj28-shine{background:radial-gradient(ellipse,#ffe5a737,transparent 65%)}
+.nj24-figure[data-motion="walk"]{animation:nj28walk .52s ease-in-out infinite}.nj24-figure[data-motion="run"]{animation:nj28run .30s ease-in-out infinite}.nj24-figure[data-motion="sleep"]{animation:nj28sleep 2.9s ease-in-out infinite}.nj24-figure[data-motion="sit"]{animation:nj28sit 3.1s ease-in-out infinite}.nj24-figure[data-motion="play"]{animation:nj28play .72s ease-in-out infinite}
+@keyframes nj28glow{50%{opacity:.45;transform:scale(1.08)}}@keyframes nj28float{to{transform:translateY(-85px) scale(1.35);opacity:0}}@keyframes nj28walk{50%{transform:translateY(-6px) rotate(-1deg)}}@keyframes nj28run{50%{transform:translateY(-13px) rotate(1.5deg) scale(1.015)}}@keyframes nj28sleep{50%{transform:scale(1.02,.98)}}@keyframes nj28sit{50%{transform:translateY(2px) scale(1.01)}}@keyframes nj28play{45%{transform:translateY(-22px) rotate(-3deg)}}
+@media(prefers-reduced-motion:reduce){.nj28-shine,.nj28-heart,.nj24-figure[data-motion]{animation:none!important}.nj24-figure{will-change:auto}}
