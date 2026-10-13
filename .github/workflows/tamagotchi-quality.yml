@@ -33,4 +33,4 @@ jobs:
           node --check script_33.js
           node --check tamagotchi-3d.js
       - name: Verify game and collection invariants
-        run: node --test tests/nusajiwa-tamagotchi.mjs
+        run: node --test tests/*.mjs
