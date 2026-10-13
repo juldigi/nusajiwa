@@ -877,8 +877,8 @@ function njtApplyLiving(force=false){
   const rod=new THREE.Mesh(new THREE.CapsuleGeometry(.065,.32,3,8),amber);rod.renderOrder=23;rod.position.y=.19;sign.add(rod);
   const dot=new THREE.Mesh(new THREE.SphereGeometry(.075,10,8),amber);dot.renderOrder=23;dot.position.y=-.15;sign.add(dot);
  }
- if(world.sun)world.sun.intensity=njtLiving.sleep?.53:(nightTime?1.07:2.9);
- if(world.accent)world.accent.intensity=njtLiving.sleep?5:(nightTime?13:(viewZone==='kalimantan'?32:25));
+ if(world.sun)world.sun.intensity=njtLiving.sleep?1.08:(nightTime?1.75:3.3);
+ if(world.accent)world.accent.intensity=njtLiving.sleep?11:(nightTime?19:(viewZone==='kalimantan'?31:27));
  return true;
 }
 function njtSetLiving(st){
@@ -986,13 +986,13 @@ function addBaseGeometry(){
  for(let i=0;i<52;i++){let x=Math.sin(i*16.29)*3.9,z=Math.cos(i*11.6)*3.9;const seed=new T.Mesh(new T.TetrahedronGeometry(.022+(.013*(i%3))),i%3?W.mats.gold:W.mats.emissive);seed.position.set(x,.2+((i*13)%5)*.24,z);W.scene.add(seed);W.fireflies.push({node:seed,phase:i*2.45,seed:i})}
 }
 function rect(w,h,d,m){let x=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);x.castShadow=true;x.receiveShadow=true;return x}
-function makeWorld(){let T=THREE;let W={};W.scene=new T.Scene();W.scene.fog=new T.FogExp2(0x152e34,.042);W.scene.background=null;W.camera=new T.PerspectiveCamera(37,1,.1,100);
- let r=new T.WebGLRenderer({canvas,alpha:true,antialias:quality!=='hemat',powerPreference:'high-performance',premultipliedAlpha:true});r.setClearColor(0x000000,0);r.outputColorSpace=T.SRGBColorSpace;r.toneMapping=T.ACESFilmicToneMapping;r.toneMappingExposure=1.19;r.shadowMap.enabled=quality!=='hemat';r.shadowMap.type=T.PCFSoftShadowMap;r.setPixelRatio(rateQuality());three=r;
+function makeWorld(){let T=THREE;let W={};W.scene=new T.Scene();W.scene.fog=new T.FogExp2(0x26463e,.022);W.scene.background=null;W.camera=new T.PerspectiveCamera(37,1,.1,100);
+ let r=new T.WebGLRenderer({canvas,alpha:true,antialias:quality!=='hemat',powerPreference:'high-performance',premultipliedAlpha:true});r.setClearColor(0x000000,0);r.outputColorSpace=T.SRGBColorSpace;r.toneMapping=T.ACESFilmicToneMapping;r.toneMappingExposure=1.33;r.shadowMap.enabled=quality!=='hemat';r.shadowMap.type=T.PCFSoftShadowMap;r.setPixelRatio(rateQuality());three=r;
  const mat=(color,metalness=0,roughness=.72,emissive=0)=>new T.MeshStandardMaterial({color,metalness,roughness,emissive,emissiveIntensity:emissive?.15:0,flatShading:false,side:T.DoubleSide});
  W.mats={grass:mat(0x47775e),stone:mat(0x7b7a70),gold:mat(0xcbb77d,.58,.35),dark:mat(0x24413e),earth:mat(0x6e6554),water:new T.MeshPhysicalMaterial({color:0x4aa6a7,metalness:.15,roughness:.17,transparent:true,opacity:.73,clearcoat:1,clearcoatRoughness:.16}),trunk:mat(0x665640),leaves:mat(0x1e6655),emissive:mat(0xdff5b2,.15,.4,0x42662e)};
- let amb=new T.HemisphereLight(0xe8f4e8,0x19383b,2);W.scene.add(amb);
- let sun=new T.DirectionalLight(0xffd69c,2.9);sun.position.set(-6,12,7);sun.castShadow=true;sun.shadow.mapSize.set(innerWidth<700?512:1024,innerWidth<700?512:1024);sun.shadow.camera.left=-9;sun.shadow.camera.right=9;sun.shadow.camera.top=9;sun.shadow.camera.bottom=-9;sun.shadow.bias=-.0009;W.scene.add(sun);W.sun=sun;
- let accent=new T.PointLight(0x84f6df,25,15);accent.position.set(2.7,3,-1);W.scene.add(accent);W.accent=accent;
+ let amb=new T.HemisphereLight(0xf1fff2,0x647c70,2.25);W.scene.add(amb);
+ let sun=new T.DirectionalLight(0xffe3b2,3.3);sun.position.set(-6,12,7);sun.castShadow=true;sun.shadow.mapSize.set(innerWidth<700?512:1024,innerWidth<700?512:1024);sun.shadow.camera.left=-9;sun.shadow.camera.right=9;sun.shadow.camera.top=9;sun.shadow.camera.bottom=-9;sun.shadow.bias=-.0009;W.scene.add(sun);W.sun=sun;let portraitFill=new T.DirectionalLight(0xd6eeff,1.25);portraitFill.position.set(3,5,9);W.scene.add(portraitFill);W.portraitFill=portraitFill;
+ let accent=new T.PointLight(0xb1f8e5,27,15);accent.position.set(2.7,3,-1);W.scene.add(accent);W.accent=accent;
  W.avatarRoot=new T.Group();W.scene.add(W.avatarRoot);W.scenery=[];W.fireflies=[];world=W;addBaseGeometry();rebuildAvatar();changeRegion();resize();
 }
 NJ36_PROFILES["gelatik_jawa"]=["Padang rumput dan mosaik pertanian Jawa", "Burung kecil berkepala hitam, pipi putih dan paruh merah tebal."];
@@ -4382,8 +4382,8 @@ function harvestStone(){
 function changeRegion(){
  if(!world)return;
  const palette={sumatra:[0x47775e,0xffd69c,0x152e34],java:[0x6e7562,0xffb27a,0x2d3d44],kalimantan:[0x397c68,0xf9daa6,0x143a35],sulawesi:[0x7a8962,0xece6a4,0x303c3a],nusa:[0xaaa068,0xffcc8d,0x5d5541],papua:[0x358265,0xf4e1bc,0x143c35],laut:[0x3d7b83,0xc9eafa,0x0c344b]}[viewZone];
- world.mats.grass.color.setHex(palette[0]);world.sun.color.setHex(palette[1]);world.scene.fog.color.setHex(palette[2]);world.accent.intensity=nightTime?13:(viewZone==='kalimantan'?32:25);world.sun.intensity=nightTime?1.07:2.9;world.scene.fog.density=nightTime?.055:.042;
- rebuildBiome();notify('⌖ '+regions.find(r=>r[0]===viewZone)[1]);
+ world.mats.grass.color.setHex(palette[0]);world.sun.color.setHex(palette[1]);world.scene.fog.color.setHex(palette[2]);world.accent.intensity=nightTime?19:(viewZone==='kalimantan'?31:27);world.sun.intensity=nightTime?1.75:3.3;world.scene.fog.density=nightTime?.032:.022;
+ rebuildBiome();njtApplyLiving(true);notify('⌖ '+regions.find(r=>r[0]===viewZone)[1]);
 }
 function animate(t){if(sceneDisposed)return;requestAnimationFrame(animate);if(document.hidden||sceneEl.hidden)return;if(!three)return;
  const rawDelta=(t-lastFrame)/1000||.016;const dt=Math.min(.035,rawDelta);lastFrame=t;tick+=dt;if(quality==='auto'){fpsSamples++;if(rawDelta>.038)slowTicks++;if(fpsSamples>=140){if(slowTicks>75&&frameScale>0.69){frameScale=.68;three.setPixelRatio(rateQuality());resize()}else if(slowTicks<18&&frameScale<1){frameScale=1;three.setPixelRatio(rateQuality());resize()}fpsSamples=0;slowTicks=0}}let slow=respectMotion?.18:1;
@@ -4691,7 +4691,7 @@ function animate(t){if(sceneDisposed)return;requestAnimationFrame(animate);if(do
  }
  for(let q=fx.length-1;q>=0;q--){const f=fx[q];f.age+=dt;f.node.position.y+=dt*f.speed;f.node.position.x+=Math.cos(f.a)*dt*.17;f.node.position.z+=Math.sin(f.a)*dt*.17;f.node.material.opacity=Math.max(0,.95-f.age/1.15);if(f.age>1.15){world.scene.remove(f.node);f.node.geometry.dispose();f.node.material.dispose();fx.splice(q,1)}}
  for(let f of world.fireflies){f.node.position.y=.22+f.seed%6*.14+Math.sin(tick*(.6+f.seed%3*.33)+f.phase)*.20*slow;f.node.material.opacity=.8;}
- const W=world;if(W.crystal)W.crystal.rotation.y+=dt*.45;let theta=rotation+.2,rad=10*zoom;W.camera.position.set(Math.sin(theta)*rad,4.4+pitch*rad,Math.cos(theta)*rad);W.camera.lookAt(0,.86,0);three.render(W.scene,W.camera);
+ const W=world;if(W.crystal)W.crystal.rotation.y+=dt*.45;const tamaPortrait=sceneEl.classList.contains('njt-on')&&innerWidth<=650;let theta=rotation+.2,rad=(tamaPortrait?9.2:10)*zoom;W.camera.position.set(Math.sin(theta)*rad,(tamaPortrait?4.05:4.4)+pitch*rad,Math.cos(theta)*rad);W.camera.lookAt(0,tamaPortrait?.56:.86,0);three.render(W.scene,W.camera);
 }
 // Engine import: one low-cost CDN dependency; the classic game remains fully usable when offline.
 async function boot3D(){let needsGPU=!!(document.createElement('canvas').getContext('webgl2')||document.createElement('canvas').getContext('webgl'));if(!needsGPU)throw new Error('WebGL tidak tersedia di perangkat ini');
