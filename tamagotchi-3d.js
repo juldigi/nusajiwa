@@ -173,7 +173,8 @@ function hatch(){
 }
 function exportWholeGame(){
  const content={format:'NUSAJIWA_TAMAGOTCHI_3D_BACKUP',version:7,savedAt:new Date().toISOString(),
-  classic:localStorage.getItem('nusajiwa-save-v1'),tamagotchi:store,signature:progress()};
+  classic:localStorage.getItem('nusajiwa-save-v1'),tamagotchi:store,signature:progress(),
+  adventure:localStorage.getItem('nusajiwa-adventure-v1')};
  try{const blob=new Blob([JSON.stringify(content,null,2)],{type:'application/json'});
   const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;
   a.download='NUSAJIWA_TAMAGOTCHI_3D_FULL_BACKUP.json';document.body.append(a);a.click();a.remove();
@@ -197,6 +198,7 @@ function importWholeGame(){
    localStorage.setItem(API.saveKey,JSON.stringify(raw.signature));
    localStorage.setItem(KEY,JSON.stringify(raw.tamagotchi));
    if(raw.classic&&typeof raw.classic==='string')localStorage.setItem('nusajiwa-save-v1',raw.classic);
+   if(typeof raw.adventure==='string'&&raw.adventure.length<1000000){const ar=JSON.parse(raw.adventure);if(ar?.version===1&&ar.pets&&typeof ar.pets==='object')localStorage.setItem('nusajiwa-adventure-v1',raw.adventure);}
    location.reload();
   }catch(err){toast('Impor gagal: '+err.message);}
  },{once:true});
@@ -272,7 +274,15 @@ function show(key){
  if(!active()&&!['starter','collection','codex','help','settings','status'].includes(key))key='collection';
  if(key==='feed')screen='food';
  else if(key==='light')screen='light';
- else if(key==='game'){beginMini();return}
+ else if(key==='game')screen='playChoices';
+ else if(key==='adventure'){
+  const p=active();
+  if(!p||p.stage===0){hatch();return}
+  if(p.retired||p.sleep||p.sick){toast('Sahabat harus sehat dan bangun untuk berpetualang.');render();return}
+  screen='home';render();
+  if(!window.NUSAJIWA_ADVENTURE?.open?.())toast('Arena petualangan belum siap.');
+  return;
+ }
  else if(key==='medicine'||key==='toilet'){care(key);screen='home';return}
  else if(key==='status')screen='status';
  else if(key==='discipline')screen='discipline';
@@ -298,7 +308,7 @@ function statusContent(p){
  ].map(([k,v])=>'<div><span>'+k+'</span><b>'+v+'</b></div>').join('')+'</div>'+
  (p.stage===0?'<button class="njt-primary" data-tama="hatch">🥚 Tetaskan telur</button>':'')+
  (p.retired?'<button class="njt-primary" data-tama="collection">Mulai generasi baru</button>':'')+
- choices([['expedition','🧭 Jelajah & Batu Elemen'],['evolution','✦ Evolusi & Ritual Legenda']]);
+ choices([['adventure','🎮 Jelajah Evolusi · Platformer'],['expedition','🧭 Eksplorasi 3D & Batu Elemen'],['evolution','✦ Evolusi & Ritual Legenda']]);
 }
 function drawPanel(){
  const box=$('#njtPanel'),p=active();
@@ -307,6 +317,7 @@ function drawPanel(){
  let title='',content='';
  if(screen==='food'){title='🍙 Beri Makan';content='<p>Isi perutnya secukupnya. Camilan menambah kebahagiaan tetapi juga berat badan.</p>'+
  choices([['meal','🍚 Makanan utama','Kenyang +2, berat +1'],['snack','🍡 Camilan','Kenyang +1, bahagia +1, berat +2']]);}
+ else if(screen==='playChoices'){title='✦ Ayo Bermain';content='<p>Pilih permainan: latihan cepat ala Tamagotchi atau berpetualang di Rimba Sumatra untuk memperoleh pengalaman evolusi.</p>'+choices([['quickGame','◈ Tebak Arah · 5 ronde','Menambah kebahagiaan'],['adventure','🎮 Jelajah Evolusi · 5 level','Platformer 2.5D, hadiah Jiwa & XP']]);}
  else if(screen==='light'){title='☾ Lampu & Tidur';content='<p>Padamkan lampu saat istirahat seperti Tamagotchi klasik. Nyalakan saat ingin bermain lagi.</p>'+
  choices([['lightOff','☾ Matikan lampu','Sahabat beristirahat'],['lightOn','☀ Nyalakan lampu','Sahabat bangun']]);}
  else if(screen==='status'){title='♥ Buku Kesehatan';content=statusContent(p);}
@@ -386,7 +397,7 @@ function drawPanel(){
  '<ol><li>Tombol <b>A</b>: berpindah ikon, <b>B</b>: OK, <b>C</b>: kembali.</li><li>Perhatikan kenyang, senang, kedisiplinan, sakit, dan toilet.</li>'+
  '<li>Jika ia memanggil, berikan perhatian. Jangan memarahi tanpa alasan.</li><li>Matikan lampu saat istirahat. Bermain tebak arah untuk menaikkan kebahagiaan.</li>'+
  '<li>Pertumbuhan membutuhkan waktu nyata, pengalaman, perawatan, dan batu elemen untuk Legenda.</li>'+
- '<li>Ensiklopedia memuat fakta/kisah dan sumber, berbeda dari evolusi fantasi.</li></ol>'+
+ '<li>Ikon Main kini menyediakan Tebak Arah serta Jelajah Evolusi 2.5D: lima level, checkpoint, Jiwa, dan batu elemen.</li><li>Ensiklopedia memuat fakta/kisah dan sumber, berbeda dari evolusi fantasi.</li></ol>'+
  '<p>Saat game ditutup, kebutuhan bergerak perlahan sampai maksimum 12 jam per pembaruan. Simpanan permainan berada di browser perangkat ini.</p>'+
  choices([['settings','⚙ Pengaturan & backup'],['back','Mulai bermain']]);}
  else if(screen==='settings'){title='⚙ Pengaturan';content='<p>Progres 3D dan Kodex yang sudah ada tetap dipertahankan.</p>'+
@@ -443,6 +454,8 @@ element.addEventListener('click',ev=>{
  if(a==='lightOff'||a==='lightOn'){care('light',a==='lightOff'?'off':'on');screen='home';render();return}
  if(a==='praise'||a==='scold'){care('discipline',a);screen='home';render();return}
  if(a==='left'||a==='right'){guess(a==='left'?0:1);return}
+ if(a==='quickGame'){beginMini();return}
+ if(a==='adventure'){show('adventure');return}
  if(a==='hatch'){hatch();screen='home';render();return}
  if(a==='expedition'||a==='evolution'){show(a);return}
  if(a==='choose'){select(b.dataset.id);return}
@@ -496,5 +509,27 @@ setInterval(()=>{if(!document.hidden)check3d()},1800);
 needs();if(active()){nativePick(store.active);if(active().sleep)API.setTamaMood?.('sleep',0);}pressNative('#nj35ZoomIn');pressNative('#nj35ZoomIn');render();
 if(!active())show('starter');
 else if(!store.introduced){store.introduced=true;save();show('help');}
-window.NUSAJIWA_TAMAGOTCHI={version:'7.4',creatureCount:LIST.length,getSave:()=>JSON.parse(JSON.stringify(store)),refresh:()=>{synchronize();render()},open:show};
+function awardAdventure(result){
+ const p=active(),lvl=Number(result?.level);
+ if(!p||p.id!==result?.id||p.retired||p.stage===0||p.sleep||p.sick||
+    !Number.isInteger(lvl)||lvl<0||lvl>=5)return {earned:false,reason:'Sahabat tidak siap'};
+ p.adventureMarks=Array.isArray(p.adventureMarks)?p.adventureMarks:[];
+ const firstKey='first:'+lvl,stoneKey='stone:'+lvl;
+ const dailyKey='daily:'+new Date().toLocaleDateString('en-CA')+':'+lvl;
+ const first=!p.adventureMarks.includes(firstKey);
+ if(!first&&p.adventureMarks.includes(dailyKey))return {earned:false,reason:'Sudah mendapat hadiah hari ini'};
+ const stars=clamp(result.stars,1,3);
+ const xp=first?18+3*stars:4,spirit=first?8+2*stars:2;
+ const element=['api','air','angin','tanah','cahaya','bayangan'].includes(result.element)?result.element:null;
+ const stone=!!result.gem&&!!element&&!p.adventureMarks.includes(stoneKey);
+ if(!API.rewardTamaAdventure?.(p.id,xp,spirit,stone?element:null))return {earned:false,reason:'Progres 3D belum siap'};
+ if(first)p.adventureMarks.push(firstKey);
+ if(stone)p.adventureMarks.push(stoneKey);
+ if(!p.adventureMarks.includes(dailyKey))p.adventureMarks.push(dailyKey);
+ p.adventureMarks=p.adventureMarks.slice(-350);
+ p.happy=clamp(p.happy+1);p.games++;p.weight=Math.max(3,p.weight-.25);
+ save();growth(p);render();
+ return {earned:true,xp,spirit,stone,first};
+}
+window.NUSAJIWA_TAMAGOTCHI={version:'8.0',creatureCount:LIST.length,awardAdventure,getSave:()=>JSON.parse(JSON.stringify(store)),refresh:()=>{synchronize();render()},open:show};
 })();
