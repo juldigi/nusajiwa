@@ -106,16 +106,16 @@ test('iPhone layout regression: action buttons never consume the 3D pet screen',
 test('iPhone 7.6: 3D lighting is brighter and the shell no longer darkens the scene',()=>{
  const fix=css.slice(css.indexOf('/* 7.6 — brighter glass'));
  assert.ok(fix.length>3000,'Bright glass and compact controls must be at the end of CSS');
- assert.match(html,/script_32\\.js\\?v=7\\.6\\.0/,'Updated WebGL engine must bypass stale mobile cache');
- assert.match(fix,/#njt \\.njt-shell\\{\\s*background:linear-gradient/,'Overlay shell must become near-transparent');
- assert.match(fix,/rgba\\(8,40,45,\\.015\\)/,'Viewport must not be shaded by solid teal');
- assert.match(fix,/#njt \\.njt-window\\{[\\s\\S]*?background:radial-gradient/,'Viewport tint is light, not dark');
- assert.match(fix,/grid-template-rows:repeat\\(2,45px\\)/,'Nine icons must be kept within two 45px rows');
- assert.match(fix,/width:48px;\\s*height:44px/,'A/B/C must remain reachable but compact');
- assert.match(fix,/#njt \\.njt-top\\{[\\s\\S]*?height:42px/,'Header must be compact');
- assert.match(fix,/#njt \\.njt-foot\\{display:none\\}/,'Decorative footer must not steal 3D space');
- assert.match(engine,/toneMappingExposure=1\\.33/,'More exposure is needed');
- assert.match(engine,/portraitFill=new T\\.DirectionalLight/,'Soft light must illuminate pet from the front');
- assert.match(engine,/FogExp2\\(0x26463e,\\.022\\)/,'Daytime fog must not swallow the creature');
- assert.match(engine,/tamaPortrait\\?9\\.2:10/,'Mobile camera must frame the creature more prominently');
+ assert.match(html,/script_32\.js\?v=7\.6\.0/,'Updated WebGL engine must bypass stale mobile cache');
+ assert.match(fix,/#njt \.njt-shell\{\s*background:linear-gradient/,'Overlay shell must become near-transparent');
+ assert.match(fix,/rgba\(8,40,45,\.015\)/,'Viewport must not be shaded by solid teal');
+ assert.match(fix,/#njt \.njt-window\{[\s\S]*?background:radial-gradient/,'Viewport tint is light, not dark');
+ assert.match(fix,/grid-template-rows:repeat\(2,45px\)/,'Nine icons must be kept within two 45px rows');
+ assert.match(fix,/width:48px;\s*height:44px/,'A/B/C must remain reachable but compact');
+ assert.match(fix,/#njt \.njt-top\{[\s\S]*?height:42px/,'Header must be compact');
+ assert.match(fix,/#njt \.njt-foot\{display:none\}/,'Decorative footer must not steal 3D space');
+ assert.match(engine,/toneMappingExposure=1\.33/,'More exposure is needed');
+ assert.match(engine,/portraitFill=new T\.DirectionalLight/,'Soft light must illuminate pet from the front');
+ assert.match(engine,/FogExp2\(0x26463e,\.022\)/,'Daytime fog must not swallow the creature');
+ assert.match(engine,/tamaPortrait\?9\.2:10/,'Mobile camera must frame the creature more prominently');
 });
