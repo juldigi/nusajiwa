@@ -100,3 +100,20 @@ test('Main menu includes optional platformer without losing classic tebak arah',
  a.click('quickGame');
  assert.match(a.scene.child.querySelector('#njtPanel').innerHTML,/RONDE/);
 });
+
+test('Hidden elemental stone can still be found on a same-day replay with no duplicate XP',()=>{
+ const a=boot();a.click('choose',{id:'komodo'});a.click('hatch');
+ const reward={id:'komodo',level:1,stars:2,gem:false,element:'air'};
+ const first=a.game.awardAdventure(reward);
+ assert.equal(first.earned,true);
+ assert.equal(first.stone,false);
+ const currentXP=a.engine.pets.komodo.xp;
+ const repeat=a.game.awardAdventure({...reward,gem:true});
+ assert.equal(repeat.earned,true);
+ assert.equal(repeat.xp,0);
+ assert.equal(repeat.spirit,0);
+ assert.equal(repeat.stone,true);
+ assert.equal(a.engine.stones.air,1);
+ assert.equal(a.engine.pets.komodo.xp,currentXP);
+ assert.equal(a.game.awardAdventure({...reward,gem:true}).earned,false);
+});
