@@ -1,0 +1,36 @@
+name: NUSAJIWA Tamagotchi Quality
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'script_32.js'
+      - 'script_33.js'
+      - 'tamagotchi-3d.js'
+      - 'tamagotchi-3d.css'
+      - 'tests/**'
+      - '.github/workflows/tamagotchi-quality.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: 300 Identities · JS Syntax · Care & Encyclopedia
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Parse core JavaScript
+        run: |
+          node --check script_32.js
+          node --check script_33.js
+          node --check tamagotchi-3d.js
+      - name: Verify game and collection invariants
+        run: node --test tests/nusajiwa-tamagotchi.mjs
