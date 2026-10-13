@@ -137,13 +137,45 @@ function hatch(){
  else toast('Pilih telur dari Suaka terlebih dahulu.');
  render();
 }
+function exportWholeGame(){
+ const content={format:'NUSAJIWA_TAMAGOTCHI_3D_BACKUP',version:7,savedAt:new Date().toISOString(),
+  classic:localStorage.getItem('nusajiwa-save-v1'),tamagotchi:store,signature:progress()};
+ try{const blob=new Blob([JSON.stringify(content,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;
+  a.download='NUSAJIWA_TAMAGOTCHI_3D_FULL_BACKUP.json';document.body.append(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),8000);toast('Progres lengkap telah diekspor.');}
+ catch(_){toast('Tidak dapat mengekspor file di browser ini.');}
+}
+function importWholeGame(){
+ const input=document.createElement('input');input.type='file';input.accept='.json,application/json';input.hidden=true;
+ document.body.append(input);
+ input.addEventListener('change',async()=>{
+  const file=input.files?.[0];input.remove();if(!file)return;
+  if(file.size>3000000){toast('File cadangan maksimal 3 MB.');return;}
+  try{
+   const raw=JSON.parse(await file.text());
+   if(raw?.format!=='NUSAJIWA_TAMAGOTCHI_3D_BACKUP'||raw.version!==7||
+      raw.signature?.version!==1||typeof raw.signature.pets!=='object'||
+      raw.tamagotchi?.version!==1||typeof raw.tamagotchi.pets!=='object')throw Error('Format cadangan tidak sesuai.');
+   if(!Object.keys(raw.signature.pets).every(id=>!!find(id))||
+      !Object.keys(raw.tamagotchi.pets).every(id=>!!find(id)))throw Error('Ada makhluk yang tidak dikenal.');
+   if(!confirm('Pulihkan cadangan NUSAJIWA lengkap? Progres di perangkat ini akan ditimpa.'))return;
+   localStorage.setItem(API.saveKey,JSON.stringify(raw.signature));
+   localStorage.setItem(KEY,JSON.stringify(raw.tamagotchi));
+   if(raw.classic&&typeof raw.classic==='string')localStorage.setItem('nusajiwa-save-v1',raw.classic);
+   location.reload();
+  }catch(err){toast('Impor gagal: '+err.message);}
+ },{once:true});
+ input.click();
+}
 function select(id){
  if(!find(id))return;
  nativePick(id);
  if(!progress().pets?.[id])pressNative('#nj35Adopt');
  if(!progress().pets?.[id]){toast('Jiwa belum cukup. Jelajah Nusantara untuk mendapatkannya.');return;}
+ if(store.pets[id]?.retired){toast('Siklus makhluk ini telah selesai. Pilih sahabat generasi berikutnya.');return;}
  if(!store.pets[id])store.pets[id]=newLife(id,progress().pets[id].phase);
- store.active=id;store.pets[id].retired=false;screen='home';save();render();toast(find(id).name+' kini sahabatmu!');
+ store.active=id;screen='home';save();render();toast(find(id).name+' kini sahabatmu!');
 }
 function nativeCare(kind){pressNative('[data-njcare="'+kind+'"]')}
 function care(kind,mode){
@@ -281,8 +313,8 @@ function drawPanel(){
  '<p>Saat game ditutup, kebutuhan bergerak perlahan sampai maksimum 12 jam per pembaruan. Simpanan permainan berada di browser perangkat ini.</p>'+
  choices([['settings','⚙ Pengaturan & backup'],['back','Mulai bermain']]);}
  else if(screen==='settings'){title='⚙ Pengaturan';content='<p>Progres 3D dan Kodex yang sudah ada tetap dipertahankan.</p>'+
- choices([['sound','♪ Suara '+(store.sound?'aktif':'mati')],['export','↓ Ekspor save 3D'],
- ['import','↑ Impor save 3D'],['quality','◈ Kualitas render'],['legacy','↗ Mode permainan klasik']]);}
+ choices([['sound','♪ Suara '+(store.sound?'aktif':'mati')],['export','↓ Ekspor progres lengkap'],
+ ['import','↑ Impor progres lengkap'],['quality','◈ Kualitas render'],['legacy','↗ Mode permainan klasik']]);}
  box.innerHTML=option(title,content);
 }
 function render(){
@@ -331,8 +363,8 @@ element.addEventListener('click',ev=>{
  if(a==='read'){const id=focused;if(!id)return;if(!store.reads.includes(id))store.reads.push(id);if(store.pets[id])store.pets[id].studied++;
    save();nativePick(id);pressNative('[data-njtab="archive"]');screen='home';render();return;}
  if(a==='album'){screen='album';render();return}
- if(a==='export'){pressNative('#nj37Export');return}
- if(a==='import'){pressNative('#nj37ImportBtn');return}
+ if(a==='export'){exportWholeGame();return}
+ if(a==='import'){importWholeGame();return}
  if(a==='quality'){pressNative('#nj35Quality');toast('Kualitas render diperbarui.');return}
  if(a==='legacy'){pressNative('#nj35Legacy');return}
 });
