@@ -165,3 +165,28 @@ body.nj35-playing>a[href*="atlas-evolusi"]{display:none!important}
  background-color:#376a67;
 }
 #njt .njt-pick-grid button.njt-focused{background:#476b63;border-color:#ffe7a3;}
+
+/* 7.2 — starter journey, correct focus feedback, calm retro polish */
+#njt .njt-starter-eggs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}
+#njt .njt-starter-eggs button{position:relative;min-width:0;display:grid;align-items:center;justify-items:center;gap:6px;
+ color:#ffeac1;border:1px solid rgba(242,213,149,.70);background:linear-gradient(155deg,#23555a,#123442);
+ border-radius:17px;box-shadow:inset 0 1px 0 #ffffff22,0 6px 16px #0004;padding:16px 6px;min-height:151px;cursor:pointer}
+#njt .njt-starter-eggs button:active{transform:scale(.975)}
+#njt .njt-starter-eggs b{font-size:12px;text-align:center;line-height:1.4}
+#njt .njt-starter-eggs small{text-align:center;font-size:10px;color:#c7ddc9;line-height:1.35}
+#njt .njt-egg{font-size:39px;line-height:1.6;filter:drop-shadow(0 7px 9px #080e1633);animation:njtEggFloat 3.9s ease-in-out infinite}
+#njt .njt-starter-eggs button:nth-child(2) .njt-egg{animation-delay:.6s}
+#njt .njt-starter-eggs button:nth-child(3) .njt-egg{animation-delay:1.2s}
+@keyframes njtEggFloat{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-7px) rotate(5deg)}}
+#njt .njt-starter-note{font-size:11px;color:#c7dacb}
+#njt .njt-panel button.njt-focused{outline:3px solid #ffe5a4;outline-offset:2px;box-shadow:0 0 0 5px #3e6b59,0 4px 22px #f0cb8055}
+#njt .njt-menu-item.selected .njt-menu-art{filter:drop-shadow(0 2px 2px #243f3a55)}
+#njt .njt-console button{-webkit-tap-highlight-color:transparent;user-select:none}
+#njt .njt-top-tools button:focus-visible{outline:3px solid #ffe5a4;outline-offset:3px}
+#njt .njt-alert:not(:empty){animation:njtAlertPulse 1.1s ease-in-out infinite}
+@keyframes njtAlertPulse{0%,100%{opacity:.75;transform:scale(.96)}50%{opacity:1;transform:scale(1.08)}}
+#njt.njt-sleep .njt-window:after{content:'☾';position:absolute;right:17px;top:114px;font-size:31px;color:#f9ecb6;
+ text-shadow:0 0 18px #a9bcff9c;pointer-events:none}
+#njt.njt-sick .njt-alert{background:#bb6c78}
+@media(max-width:380px){#njt .njt-starter-eggs{gap:5px}#njt .njt-starter-eggs button{padding:11px 3px}#njt .njt-starter-eggs b{font-size:11px}}
+@media(prefers-reduced-motion:reduce){#njt .njt-alert,#njt .njt-egg{animation:none}}
