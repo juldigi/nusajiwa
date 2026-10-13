@@ -67,7 +67,7 @@ function buildCoins(l){const coins=[];for(let x=5;x<l.length-2;x+=5){const seg=l
 function begin(n){
  if(!pet||n<0||n>=LEVELS.length||n>0&&!record(pet.id).completed[n-1])return;
  levelIndex=n;const level=LEVELS[n];const coins=buildCoins(level);
- run={level,coins,gem:{x:level.gem,y:2.1,got:false},x:2,y:0,vx:0,vy:0,grounded:true,double:false,heroFacing:1,health:3,score:0,checkpoint:2,usedCp:[],hurtUntil:0,skillUntil:0,skillCool:0,seconds:0,accum:0,cameraX:6.5,ended:false};
+ run={level,coins,gem:{x:level.gem,y:2.1,got:false},x:2,y:0,vx:0,vy:0,grounded:true,double:false,heroFacing:1,health:3,score:0,checkpoint:2,usedCp:[],hurtUntil:0,skillUntil:0,skillCool:0,seconds:0,accum:0,cameraX:2.5,ended:false};
  mode='play';playing=true;overlay.hidden=true;clearInput();
  try{setupVisual()}catch(e){console.warn('Adventure 3D fallback:',e);set2D()}
  announce('✦ '+level.name+' · Sampai ke gerbang!');
@@ -126,7 +126,9 @@ function physics(dt){
  for(const coin of s.coins){if(!coin.got&&Math.hypot(s.x-coin.x,s.y+.5-coin.y)<.85){coin.got=true;s.score+=5}}
  if(!s.gem.got&&Math.hypot(s.x-s.gem.x,s.y+.5-s.gem.y)<1.05){s.gem.got=true;s.score+=25;announce('◆ Batu '+s.level.element+' ditemukan!')}
  for(const cp of s.level.checkpoints){if(!s.usedCp.includes(cp)&&s.x>=cp){s.checkpoint=cp;s.usedCp.push(cp);announce('⚑ Checkpoint disimpan')}}
- s.cameraX+=(clamp(s.x+3.2,6.6,s.level.length-5.5)-s.cameraX)*Math.min(1,dt*5.5);
+ const narrow=(canvas.clientWidth||window.innerWidth)/Math.max(1,canvas.clientHeight||window.innerHeight)<.8;
+ const lead=narrow?1.25:3.2,minimum=narrow?3:6.6;
+ s.cameraX+=(clamp(s.x+lead,minimum,s.level.length-(narrow?3:5.5))-s.cameraX)*Math.min(1,dt*5.5);
  if(s.x>=s.level.length-1){finish()}
 }
 function swapCanvas(){const next=canvas.cloneNode(false);canvas.replaceWith(next);canvas=next;}
@@ -214,7 +216,7 @@ function setupVisual(){
  }
  function draw(){
   if(!run)return;
-  const viewportW=Math.max(200,canvas.clientWidth||window.innerWidth),viewportH=Math.max(140,canvas.clientHeight||window.innerHeight),aspect=viewportW/viewportH,hh=aspect<.88?5.8:4.8;
+  const viewportW=Math.max(200,canvas.clientWidth||window.innerWidth),viewportH=Math.max(140,canvas.clientHeight||window.innerHeight),aspect=viewportW/viewportH,hh=aspect<.88?7:4.8;
   camera.left=-hh*aspect;camera.right=hh*aspect;camera.top=hh;camera.bottom=-hh;
   camera.position.set(run.cameraX,3.4,19);camera.lookAt(run.cameraX,1.6,0);camera.updateProjectionMatrix();
   hero.position.set(run.x,run.y+(pet.type==='spirit'?.08:0),1.2);hero.scale.x=run.heroFacing;
@@ -232,7 +234,7 @@ function draw2d(){
  if(!ctx||!run)return;
  const w=canvas.width,h=canvas.height;
  ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle='#92d9be';ctx.fillRect(0,0,w,h);
- const unit=Math.min(w/14.8,h/9),sx=x=>w*.46+(x-run.cameraX)*unit,sy=y=>h*.66-y*unit;
+ const narrow=w/h<.8;const unit=Math.min(w/(narrow?9:14.8),h/9),sx=x=>w*.46+(x-run.cameraX)*unit,sy=y=>h*.66-y*unit;
  ctx.fillStyle='#b3e5cb';for(let x=0;x<run.level.length+12;x+=6){ctx.beginPath();ctx.arc(sx(x),sy(-1),unit*3,Math.PI,2*Math.PI);ctx.fill();}
  ctx.fillStyle='#3d8366';for(const g of run.level.ground){ctx.fillRect(sx(g[0]),sy(0),Math.max(0,(g[1]-g[0])*unit),h-sy(0));ctx.fillStyle='#7cbd72';ctx.fillRect(sx(g[0]),sy(.08),Math.max(0,(g[1]-g[0])*unit),unit*.25);ctx.fillStyle='#3d8366'}
  ctx.fillStyle='#896b4d';for(const p of run.level.ledges){ctx.fillRect(sx(p[0]-p[2]/2),sy(p[1]),p[2]*unit,.3*unit)}
