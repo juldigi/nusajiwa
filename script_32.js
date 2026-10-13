@@ -161,7 +161,7 @@ const CREATURES=[
 ["kakatua_jambul_kuning", "Kakatua Kecil Jambul Kuning", "Fauna", "Nusa Tenggara & Sulawesi", "yellow_cockatoo", "#e7e5db"],
 ["walabi_papua", "Walabi Lincah Papua", "Fauna", "Papua", "agile_wallaby", "#a2896b"],
 ["kanguru_pohon_kelabu", "Kanguru Pohon Kelabu", "Fauna", "Papua", "tree_kangaroo", "#8f7964"],
-["kura_rote", "Kura-Kura Leher Ular Rote", "Fauna", "Pulau Rote, Nusa Tenggara Timur", "rote_turtle", "#687965"],
+["kura_ambon", "Kura-kura Kotak Ambon", "Fauna", "Maluku dan Sulawesi", "amboina_box_turtle", "#465b3e"],
 ["buaya_muara", "Buaya Muara", "Fauna", "Berbagai pesisir Indonesia", "saltwater_crocodile", "#637364"],
 ["elang_flores", "Elang Flores", "Fauna", "Nusa Tenggara", "flores_eagle", "#8a745c"],
 ["ikan_belida", "Ikan Belida", "Fauna", "Sumatra & Kalimantan", "knifefish", "#a9a277"],
@@ -371,6 +371,8 @@ NJ36_PROFILES["rangkong_gading"]=["Hutan primer Sumatra dan Kalimantan","Rangkon
 NJ36_PROFILES["kakatua_jambul_kuning"]=["Hutan dan tepi hutan Indonesia bagian tengah","Kakatua putih dengan jambul kuning yang dapat ditegakkan dan paruh bengkok kelabu."];
 NJ36_PROFILES["walabi_papua"]=["Savana dan semak terbuka Papua","Marsupial darat dengan kaki belakang kuat, kepala kecil, telinga tegak serta ekor panjang untuk keseimbangan."];
 NJ36_PROFILES["kanguru_pohon_kelabu"]=["Hutan hujan Papua","Kanguru pohon bertubuh relatif kekar dengan anggota tubuh mencengkeram cabang dan ekor panjang sebagai penyeimbang."];
+NJ36_PROFILES["kura_ambon"]=["Perairan tenang dan lahan basah di Maluku dan Sulawesi","Cuora amboinensis: kura-kura kotak bertempurung cokelat gelap, plastron berengsel dan tiga garis kuning khas di sisi kepala. Berbeda dari kura-kura leher ular Rote. Status IUCN: Terancam (EN, asesmen 2020)."];
+NJ39_SOURCES["kura_ambon"]="https://doi.org/10.2305/IUCN.UK.2020-2.RLTS.T5958A3078812.en";
 NJ36_PROFILES["kura_rote"]=["Lahan basah Pulau Rote, NTT","Kura-kura air tawar endemik Rote, memiliki leher sangat panjang yang ditekuk ke samping, tempurung pipih oval."];
 NJ36_PROFILES["buaya_muara"]=["Mangrove, estuari, dan aliran sungai pesisir","Reptil predator dengan moncong lebar, tubuh bersisik berpelat dan ekor panjang sangat kuat."];
 NJ36_PROFILES["elang_flores"]=["Hutan Flores dan Kepulauan Nusa Tenggara","Burung pemangsa besar dengan dada lebih terang, paruh melengkung dan sayap lebar."];
@@ -528,6 +530,13 @@ const NJ36_REGION_ELEMENT={sumatra:'tanah',java:'api',kalimantan:'air',sulawesi:
 const newEmpty=()=>({version:1,pets:{},stones:Object.fromEntries(NJ36_ELEMENTS.map(x=>[x,0])),chosen:'cahaya',selectedElement:'cahaya',spirit:120,expeditions:0,daily:{},lastCareTick:Date.now(),updatedAt:Date.now()});
 function cleanNovel(raw){
  const out=newEmpty();if(!raw||raw.version!==1||typeof raw.pets!=='object')return out;
+ // 7.1: Preserve old saves from the duplicate Kura Rote entry by canonicalizing to the
+ // existing Rote snake-neck ID, prioritizing the pet with the most progress.
+ if(raw.pets?.kura_rote){
+  const legacy=raw.pets.kura_rote,canon=raw.pets.kura_leher_ular_rote;
+  if(!canon||(Number(legacy.xp)||0)>(Number(canon.xp)||0))
+    raw.pets.kura_leher_ular_rote={...legacy,species:'kura_leher_ular_rote'};
+ }
  for(const c of CREATURES){const old=raw.pets?.[c[0]];if(!old)continue;
   const p={species:c[0],phase:Math.max(0,Math.min(7,Number(old.phase)||0)),xp:Math.max(0,Math.min(100000,Number(old.xp)||0)),legend:NJ36_ELEMENTS.includes(old.legend)?old.legend:null,stats:{}};
   for(const k of ['happy','energy','bond','hunger','clean'])p.stats[k]=Math.max(0,Math.min(100,Number(old.stats?.[k])||0));out.pets[c[0]]=p;
@@ -4071,8 +4080,52 @@ function nj633Metamorph(body,M,id,phase){
  }
  body.userData.nj633Morph={identity:id,stage,geometryBranch:stage<=3?'replacement':stage===7?'legend-extension':'original-rig'};
 }
+
+/* Model khas Cuora amboinensis (IUCN T5958A3078812; TFTSG account 053):
+   kotak plastron berengsel, tiga pita kuning sisi kepala, kaki berselaput,
+   tempurung bervariasi menurut umur. Bukan duplikat kura-kura Rote. */
+function nj70Cuora(g,M,stage){
+ const hatch=stage<=2,older=stage>=6;
+ const skin=new THREE.MeshStandardMaterial({color:0x40533e,roughness:.83});
+ const shell=new THREE.MeshStandardMaterial({color:0x302f24,roughness:.72});
+ const scute=new THREE.MeshStandardMaterial({color:0x586944,roughness:.77});
+ const yellow=new THREE.MeshStandardMaterial({color:0xe1c66b,roughness:.6});
+ const plastron=new THREE.MeshStandardMaterial({color:0xb2a475,roughness:.81});
+ const high=hatch?.32:stage<5?.41:.51;
+ ell(g,0,.59,0,.80,.21,.93,plastron);
+ ell(g,0,.94,-.09,.85,high,hatch?.82:.98,shell);
+ for(let j=0;j<16;j++){
+  const a=j*Math.PI*2/16,x=Math.sin(a)*.64,z=Math.cos(a)*.69-.09;
+  const plate=ell(g,x,1.04+high*.66-Math.abs(x)*.22,z,.15,.046,.17,j%4?scute:plastron);
+  plate.rotation.y=a;
+ }
+ for(let j=-2;j<=2;j++)ell(g,0,1.13+high*.60-Math.abs(j)*.02,-.1+j*.25,.25,.047,.13,j%2?scute:plastron);
+ // Cross-shell hinge and articulated anterior lower lobe.
+ tube(g,[[-.72,.51,.25],[0,.47,.25],[.72,.51,.25]],.037,shell);
+ if(stage>=3){const plate=ell(g,0,.47,.53,.67,.10,.38,plastron);plate.rotation.x=-.09;}
+ for(const sx of [-1,1])for(const z of [-.55,.58]){
+  cylinder(g,sx*.55,.62,z,sx*.75,.18,z+(z>0?.13:-.08),.15,.13,skin);
+  ell(g,sx*.76,.16,z+(z>0?.25:-.14),.22,.10,.24,skin);
+  for(let toe=-1;toe<=1;toe++)tube(g,[[sx*(.72+toe*.055),.17,z+.27],[sx*(.72+toe*.055),.12,z+.43]],.018,yellow);
+ }
+ ell(g,0,.82,.84,.32,.24,.40,skin);
+ ell(g,0,.94,1.20,hatch?.32:.38,hatch?.28:.32,.40,skin);
+ ell(g,0,.79,1.47,.21,.11,.17,plastron);
+ eyes(g,M,0,1.05,1.5,.27,.066);
+ // Identification marker: three lateral yellow or orange-yellow stripes on both cheeks.
+ for(const sx of [-1,1])for(let k=0;k<3;k++)
+  tube(g,[[sx*.18,1.15-k*.115,1.49],[sx*.32,1.07-k*.10,1.29],[sx*.35,1.00-k*.08,1.00]],hatch?.021:.029,yellow);
+ if(hatch)for(const x of [-.4,0,.4])tube(g,[[x,1.16,-.77],[x,1.31,-.1],[x,1.16,.68]],.042,scute);
+ if(older)for(let j=0;j<11;j++){
+  const a=j*2.399;ell(g,Math.sin(a)*.62,1.13+Math.cos(a)*.13,-.31+(j%4)*.16,.077,.025,.07,plastron);
+ }
+ if(stage===7)for(let k=0;k<8;k++){
+  const a=k*Math.PI/4,crystal=new THREE.Mesh(new THREE.OctahedronGeometry(.11),M.glow);
+  crystal.position.set(Math.sin(a)*.7,1.48,Math.cos(a)*.77);g.add(crystal);
+ }
+}
 function makeAvatar(r, portraitMode=false){const type=r[4],M=mats(r),group=new THREE.Group();group.name='NJ35_MODEL_'+r[0];let body=new THREE.Group();body.name='anatomy';group.add(body);
- if(r[0]==='sembrani')nj630Sembrani(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='ebu_gogo')nj630Ebu(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='kuda_lumping')nj630Lumping(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='warak_ngendog')nj629Warak(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='boraspati_tano')nj629Boraspati(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='bujang_ganong')nj629Ganong(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='hanoman')nj628Hanoman(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='jatayu')nj628Jatayu(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='makara_candi')nj628Makara(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='dewi_sri')nj627Sri(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='batara_kala')nj627Kala(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='putri_mandalika')nj627Mandalika(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='nyi_roro_kidul')nj626SeaQueen(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='jaka_tarub')nj626JakaTarub(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='kebo_iwa')nj626KeboIwa(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='singa_barong_reog')nj625Reog(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='rangda')nj625Rangda(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='wewe')nj625Wewe(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='garuda')nj624Garuda(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='barong')nj624Barong(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='kuyang')nj624Kuyang(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='lembuswana')nj619Lembuswana(body,M);else if(r[0]==='naga_basuki')nj619Basuki(body,M);else if(r[0]==='bunian')nj614Bunian(body,M);else if(r[0]==='siluman_harimau')nj614SilumanHarimau(body,M);else if(r[0]==='macan_putih')nj614MacanPutih(body,M);else if(r[0]==='babi_ngepet')nj613BabiNgepet(body,M);else if(r[0]==='ahool')nj613Ahool(body,M);else if(r[0]==='pocong')nj612Pocong(body,M);else if(r[0]==='kuntilanak')nj612Kuntilanak(body,M);else if(r[0]==='tuyul')nj612Tuyul(body,M);else if(r[0]==='buto_ijo')nj611ButoIjo(body,M);else if(r[0]==='sundel_bolong')nj611SundelBolong(body,M);else if(r[0]==='naga_antaboga')nj611Antaboga(body,M);else if(r[0]==='leak')nj610Leak(body,M);else if(r[0]==='genderuwo')nj610Genderuwo(body,M);else if(r[0]==='jenglot')nj610Jenglot(body,M);else if(r[0]==='begu_ganjang')nj610Begu(body,M);else if(r[0]==='barong')nj69Barong(body,M);else if(r[0]==='banaspati')nj69Banaspati(body,M);else if(r[0]==='palasik')nj69Palasik(body,M);else if(r[0]==='kuyang')nj68Kuyang(body,M);else if(r[0]==='wewe')nj68Wewe(body,M);else if(r[0]==='rangda')nj68Rangda(body,M);else if(NJ67_BIRD_DESIGNS[r[0]])nj67Bird(body,M,r);else if(r[0]==='hiu_martil_bergerigi')nj67Hammerhead(body,M);else if(r[0]==='kancil_jawa')nj67Kancil(body,M);else if(NJ56_SCULPTORS[r[0]])NJ56_SCULPTORS[r[0]](body,M);else if(nj54Sculptors[r[0]])nj54Sculptors[r[0]](body,M);else if(nj53Sculptors[r[0]])nj53Sculptors[r[0]](body,M);else if(nj52Sculptors[r[0]])nj52Sculptors[r[0]](body,M);else if(nj51Sculptors[r[0]])nj51Sculptors[r[0]](body,M);else if(nj50Sculptors[r[0]])nj50Sculptors[r[0]](body,M);else if(nj47Sculptors[r[0]])nj47Sculptors[r[0]](body,M);else if(nj46Sculptors[r[0]])nj46Sculptors[r[0]](body,M);else if(nj42Sculptors[r[0]])nj42Sculptors[r[0]](body,M);else if(nj41Sculptors[r[0]])nj41Sculptors[r[0]](body,M);else if(nj40Sculptors[r[0]])nj40Sculptors[r[0]](body,M);else if(nj39Sculptors[r[0]])nj39Sculptors[r[0]](body,M);else if(nj38Sculptors[r[0]])nj38Sculptors[r[0]](body,M);else if(type==='elephant')nj37Elephant(body,M);else if(type==='rhino')nj37Rhino(body,M);else if(type==='deer')nj37Deer(body,M);else if(type==='tarsier')nj37Tarsier(body,M);else if(['turtle','pignose','snakeneck','loggerhead','ridley','flatback'].includes(type))nj37Turtle(body,M);else if(type==='dugong')nj37Dugong(body,M);else if(type==='arowana')nj37Fish(body,M);else if(['starling','eagle','hornbill','cassowary','cockatoo','peafowl'].includes(type))nj37Bird(body,M,type);else if(type==='orangutan'||type==='gibbon')nj37Gibbon(body,M,type==='orangutan');else if(type==='babirusa')nj37Babirusa(body,M);else if(type==='tiger')cat(body,M,r);else if(['reptile','monitor'].includes(type))lizard(body,M);else if(type==='bird'||type==='kingfisher')bird(body,M,type);else if(type==='paradise'||type==='maleo'||type==='garuda')bird(body,M,type);else if(type==='anoa'||type==='lembuswana')bovine(body,M,type);else if(type==='bekantan')monkey(body,M);
+ if(r[0]==='kura_ambon')nj70Cuora(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='sembrani')nj630Sembrani(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='ebu_gogo')nj630Ebu(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='kuda_lumping')nj630Lumping(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='warak_ngendog')nj629Warak(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='boraspati_tano')nj629Boraspati(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='bujang_ganong')nj629Ganong(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='hanoman')nj628Hanoman(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='jatayu')nj628Jatayu(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='makara_candi')nj628Makara(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='dewi_sri')nj627Sri(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='batara_kala')nj627Kala(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='putri_mandalika')nj627Mandalika(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='nyi_roro_kidul')nj626SeaQueen(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='jaka_tarub')nj626JakaTarub(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='kebo_iwa')nj626KeboIwa(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='singa_barong_reog')nj625Reog(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='rangda')nj625Rangda(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='wewe')nj625Wewe(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='garuda')nj624Garuda(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='barong')nj624Barong(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='kuyang')nj624Kuyang(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='lembuswana')nj619Lembuswana(body,M);else if(r[0]==='naga_basuki')nj619Basuki(body,M);else if(r[0]==='bunian')nj614Bunian(body,M);else if(r[0]==='siluman_harimau')nj614SilumanHarimau(body,M);else if(r[0]==='macan_putih')nj614MacanPutih(body,M);else if(r[0]==='babi_ngepet')nj613BabiNgepet(body,M);else if(r[0]==='ahool')nj613Ahool(body,M);else if(r[0]==='pocong')nj612Pocong(body,M);else if(r[0]==='kuntilanak')nj612Kuntilanak(body,M);else if(r[0]==='tuyul')nj612Tuyul(body,M);else if(r[0]==='buto_ijo')nj611ButoIjo(body,M);else if(r[0]==='sundel_bolong')nj611SundelBolong(body,M);else if(r[0]==='naga_antaboga')nj611Antaboga(body,M);else if(r[0]==='leak')nj610Leak(body,M);else if(r[0]==='genderuwo')nj610Genderuwo(body,M);else if(r[0]==='jenglot')nj610Jenglot(body,M);else if(r[0]==='begu_ganjang')nj610Begu(body,M);else if(r[0]==='barong')nj69Barong(body,M);else if(r[0]==='banaspati')nj69Banaspati(body,M);else if(r[0]==='palasik')nj69Palasik(body,M);else if(r[0]==='kuyang')nj68Kuyang(body,M);else if(r[0]==='wewe')nj68Wewe(body,M);else if(r[0]==='rangda')nj68Rangda(body,M);else if(NJ67_BIRD_DESIGNS[r[0]])nj67Bird(body,M,r);else if(r[0]==='hiu_martil_bergerigi')nj67Hammerhead(body,M);else if(r[0]==='kancil_jawa')nj67Kancil(body,M);else if(NJ56_SCULPTORS[r[0]])NJ56_SCULPTORS[r[0]](body,M);else if(nj54Sculptors[r[0]])nj54Sculptors[r[0]](body,M);else if(nj53Sculptors[r[0]])nj53Sculptors[r[0]](body,M);else if(nj52Sculptors[r[0]])nj52Sculptors[r[0]](body,M);else if(nj51Sculptors[r[0]])nj51Sculptors[r[0]](body,M);else if(nj50Sculptors[r[0]])nj50Sculptors[r[0]](body,M);else if(nj47Sculptors[r[0]])nj47Sculptors[r[0]](body,M);else if(nj46Sculptors[r[0]])nj46Sculptors[r[0]](body,M);else if(nj42Sculptors[r[0]])nj42Sculptors[r[0]](body,M);else if(nj41Sculptors[r[0]])nj41Sculptors[r[0]](body,M);else if(nj40Sculptors[r[0]])nj40Sculptors[r[0]](body,M);else if(nj39Sculptors[r[0]])nj39Sculptors[r[0]](body,M);else if(nj38Sculptors[r[0]])nj38Sculptors[r[0]](body,M);else if(type==='elephant')nj37Elephant(body,M);else if(type==='rhino')nj37Rhino(body,M);else if(type==='deer')nj37Deer(body,M);else if(type==='tarsier')nj37Tarsier(body,M);else if(['turtle','pignose','snakeneck','loggerhead','ridley','flatback'].includes(type))nj37Turtle(body,M);else if(type==='dugong')nj37Dugong(body,M);else if(type==='arowana')nj37Fish(body,M);else if(['starling','eagle','hornbill','cassowary','cockatoo','peafowl'].includes(type))nj37Bird(body,M,type);else if(type==='orangutan'||type==='gibbon')nj37Gibbon(body,M,type==='orangutan');else if(type==='babirusa')nj37Babirusa(body,M);else if(type==='tiger')cat(body,M,r);else if(['reptile','monitor'].includes(type))lizard(body,M);else if(type==='bird'||type==='kingfisher')bird(body,M,type);else if(type==='paradise'||type==='maleo'||type==='garuda')bird(body,M,type);else if(type==='anoa'||type==='lembuswana')bovine(body,M,type);else if(type==='bekantan')monkey(body,M);
  else if(type==='kuyang'||type==='palasik'||type==='banaspati')floating(body,M,type);
  else if(r[0]==='nyai_blora')serpentWoman(body,M);
  else if(r[0]==='hantu_banyu')waterWraith(body,M);
