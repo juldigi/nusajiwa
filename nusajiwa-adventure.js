@@ -37,7 +37,8 @@ root.innerHTML='<div class="nja-stage">'+
  '<div id="njaMenu" class="nja-menu"></div></div>'+
  '</div>';
 document.body.append(root);
-const $=q=>root.querySelector(q),canvas=$('#njaCanvas'),overlay=$('#njaOverlay'),menu=$('#njaMenu');
+const $=q=>root.querySelector(q),overlay=$('#njaOverlay'),menu=$('#njaMenu');
+let canvas=$('#njaCanvas');
 let opened=false,playing=false,mode='menu',pet=null,levelIndex=0,run=null,THREE=null,render3d=null,ctx=null,raf=0,last=0,accumulator=0,lastUi=0,returnHidden=false,importToken=0;
 let input={left:false,right:false,jump:false,special:false,jumpRequest:false,specialRequest:false};
 const ACTIVE_KEYS=new Set(['ArrowLeft','ArrowRight','ArrowUp','Space',' ','KeyA','KeyD','KeyW','KeyX','KeyJ','KeyK','Escape']);
@@ -116,7 +117,7 @@ function physics(dt){
  const prevY=s.y;s.x=clamp(s.x+s.vx*dt,.2,s.level.length+.5);
  s.vy+=(-22)*(getAbility()==='spirit'&&s.skillUntil>0&&s.vy<0?.19:1)*dt;
  s.y+=s.vy*dt;s.grounded=false;
- if(s.vy<=0){const surfaces=s.level.ground.map(g=>[g[0],0,g[1]-g[0]]).concat(s.level.ledges);
+ if(s.vy<=0){const surfaces=s.level.ground.map(g=>[(g[0]+g[1])/2,0,g[1]-g[0]]).concat(s.level.ledges);
    for(const g of surfaces){if(s.x+.23<g[0]-g[2]/2||s.x-.23>g[0]+g[2]/2)continue;
     if(prevY>=g[1]-.07&&s.y<=g[1]&&s.y>=g[1]-1.4){s.y=g[1];s.vy=0;s.grounded=true;s.double=false;break;}}
  }
@@ -128,7 +129,8 @@ function physics(dt){
  s.cameraX+=(clamp(s.x+3.2,6.6,s.level.length-5.5)-s.cameraX)*Math.min(1,dt*5.5);
  if(s.x>=s.level.length-1){finish()}
 }
-function set2D(){if(render3d){render3d.dispose();render3d=null}ctx=canvas.getContext('2d',{alpha:false});}
+function swapCanvas(){const next=canvas.cloneNode(false);canvas.replaceWith(next);canvas=next;}
+function set2D(){if(render3d){render3d.dispose();render3d=null;swapCanvas()}ctx=canvas.getContext('2d',{alpha:false});if(!ctx){swapCanvas();ctx=canvas.getContext('2d',{alpha:false})}resize();}
 function resize(){
  if(!opened)return;
  const box=canvas.getBoundingClientRect(),w=Math.max(240,Math.floor(box.width)),h=Math.max(180,Math.floor(box.height));
@@ -140,13 +142,13 @@ function resize(){
 async function tryThree(token){
  if(THREE||!opened)return;
  for(const url of ['https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js','https://unpkg.com/three@0.160.1/build/three.module.js']){
-  try{const lib=await import(url);if(!opened||token!==importToken)return;THREE=lib;if(playing){setupVisual()}return}catch(e){console.warn('3D adventure asset unavailable:',e)}
+  try{const lib=await import(url);if(!opened||token!==importToken)return;THREE=lib;if(playing){try{setupVisual()}catch(err){console.warn('3D scene fallback',err);set2D()}}return}catch(e){console.warn('3D adventure asset unavailable:',e)}
  }
 }
 function setupVisual(){
- if(render3d){render3d.dispose();render3d=null}
- ctx=null;
+ if(render3d){render3d.dispose();render3d=null;swapCanvas()}
  if(!THREE){set2D();return}
+ if(ctx){swapCanvas();ctx=null;}
  const T=THREE,l=run.level,scene=new T.Scene();
  scene.background=new T.Color(l.sky);scene.fog=new T.Fog(l.sky,18,56);
  const camera=new T.OrthographicCamera(-8,8,4.9,-4.9,.1,100);
@@ -182,7 +184,7 @@ function setupVisual(){
  if(pet.type==='tiger'){
   sphere(orange,0,.75,0,.61,.37,.35);sphere(orange,.46,.98,.05,.29,.29,.28);
   for(const x of [-.35,.33])for(const z of [-.23,.24])sphere(orange,x,.33,z,.11,.33,.12);
-  for(let i=0;i<4;i++)box(dark,-.29+i*.2,1.06,.05,.07,.27,.71);
+  for(let i=0;i<4;i++)part(new T.BoxGeometry(.07,.27,.71),dark,-.29+i*.2,1.06,.05);
   sphere(white,.67,.84,.16,.16,.10,.2);
  }else if(pet.type==='bird'){
   sphere(orange,0,.83,0,.38,.49,.25);sphere(white,.11,1.34,0,.30,.27,.28);
