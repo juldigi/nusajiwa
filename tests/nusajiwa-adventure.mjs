@@ -93,3 +93,12 @@ test('Adventure opens and closes as an integrated mode while preserving Tamagotc
  assert.equal(scene.hidden,false,'Return to the saved Tamagotchi screen');
  assert.equal(win.NUSAJIWA_ADVENTURE.isOpen(),false);
 });
+test('GitHub Pages release ships both runtime shells and Adventure assets',()=>{
+ const yaml=read('.github/workflows/pages.yml');
+ for(const file of ['tamagotchi-3d.js','tamagotchi-3d.css','nusajiwa-adventure.js','nusajiwa-adventure.css']){
+  assert.ok(yaml.includes(file),'GitHub Pages artifact must include '+file);
+ }
+ assert.match(yaml,/cancel-in-progress: true/,'Stale Pages builds must not block current release');
+ assert.match(engine,/getAdventureAvatar:njtAdventureAvatar/,'The same actual 3D pet model is available inside Adventure');
+ assert.match(source,/window\.NJ35\?\.getAdventureAvatar\?\./,'Adventure should reuse the real 3D creature when WebGL is present');
+});
