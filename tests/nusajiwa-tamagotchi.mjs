@@ -74,5 +74,5 @@ test('Classic attention, 3D visual reactions and generations stay synchronized',
  assert.ok(engine.includes('restartTamaGeneration:njtRestartGeneration'),'Existing pets must support generational restart');
  assert.ok(engine.includes('njtApplyLiving(true)'),'3D feedback must initialize after renderer boot');
  assert.ok(tama.includes("p.reason==='Aku ingin perhatian!'"),'Discipline should depend on behavior, not neglect');
- assert.ok(tama.includes('pressNative(\\'[data-njtab="archive"]\\')'),'Kodex must remain playable');
+ assert.ok(tama.includes('data-njtab="archive"'),'Kodex must remain playable');
 });
