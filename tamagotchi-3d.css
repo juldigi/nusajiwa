@@ -373,3 +373,140 @@ body.nj35-playing>a[href*="atlas-evolusi"]{display:none!important}
   #njt .njt-three-buttons button{width:57px;height:46px}
   #njt .njt-foot{display:none}
 }
+
+
+/* 7.6 — brighter glass, shorter hardware controls; the 3D pet owns the screen.
+   The former opaque teal shell sat directly OVER the WebGL canvas and darkened
+   every pixel; making lights brighter alone cannot repair that compositing bug. */
+#njt .njt-shell{
+  background:linear-gradient(100deg,
+    rgba(41,94,84,.13),rgba(12,47,49,.025) 18%,
+    rgba(8,40,45,.015) 70%,rgba(46,97,88,.12));
+}
+#njt .njt-window{
+  background:radial-gradient(ellipse at center,transparent 55%,rgba(8,33,30,.025) 90%,rgba(7,28,26,.06));
+  box-shadow:inset 0 0 0 3px rgba(9,44,51,.22),0 5px 16px rgba(0,0,0,.12);
+}
+#njt .njt-glass{
+  background:linear-gradient(150deg,rgba(255,252,219,.04),transparent 37%,transparent 80%,rgba(34,55,49,.018));
+}
+#njt .njt-menu-art.book{background-image:none!important;font-size:20px!important}
+#njt .njt-menu-item.selected{transform:none}
+
+@media(max-width:650px){
+  #njt .njt-shell{
+    grid-template-rows:auto minmax(120px,1fr) auto;
+    gap:4px;
+    padding:calc(env(safe-area-inset-top) + 3px) 7px calc(env(safe-area-inset-bottom) + 4px);
+  }
+  #njt .njt-top{
+    min-height:42px;
+    height:42px;
+    max-height:42px;
+    padding:1px 5px;
+    gap:7px;
+  }
+  #njt .njt-brand{gap:0;min-width:0;line-height:1.0}
+  #njt .njt-brand small{display:none}
+  #njt .njt-brand strong{
+    font-size:20px;
+    letter-spacing:.075em;
+    line-height:1.02;
+  }
+  #njt .njt-brand i{
+    display:block;
+    font-size:7px;
+    letter-spacing:.15em;
+    padding-top:2px;
+  }
+  #njt .njt-top-tools{gap:4px;flex-shrink:0}
+  #njt .njt-top-tools button{
+    width:40px;
+    height:40px;
+    min-width:40px;
+    min-height:40px;
+    font-size:16px;
+  }
+  #njt .njt-window{
+    min-height:120px;
+    height:100%;
+    margin:0;
+    border-radius:18px;
+    border-color:rgba(255,235,185,.73);
+    background:radial-gradient(ellipse at center,transparent 60%,rgba(6,30,29,.035) 100%);
+    box-shadow:inset 0 0 0 2px rgba(9,44,51,.23),0 3px 9px rgba(0,0,0,.11);
+  }
+  #njt .njt-glass{
+    background:linear-gradient(135deg,rgba(255,253,225,.035),transparent 33%,transparent 88%);
+  }
+  #njt .njt-status-strip{top:9px;left:11px;right:11px;font-size:11px}
+  #njt .njt-status-strip span:last-child{font-size:9px}
+  #njt .njt-thought{
+    top:43px;
+    max-width:82%;
+    font-size:10px;
+    padding:6px 10px;
+    border-radius:13px;
+  }
+  #njt .njt-age-track{bottom:8px;left:11px;right:11px;font-size:9px;gap:6px}
+  #njt .njt-console{
+    padding:6px 7px 5px;
+    border-radius:16px;
+  }
+  #njt .njt-console-label{
+    margin:0 2px 5px;
+    font-size:8px;
+    line-height:1.2;
+  }
+  #njt .njt-console-label span:last-child{display:none}
+  #njt .njt-menu{
+    grid-template-columns:repeat(10,minmax(0,1fr));
+    grid-template-rows:repeat(2,45px);
+    grid-auto-rows:45px;
+    gap:4px 3px;
+    height:94px;
+    min-height:94px;
+    max-height:94px;
+    align-content:start;
+  }
+  #njt .njt-menu-item,
+  #njt .njt-menu-item:nth-child(n+6){
+    grid-column:span 2;
+    height:45px;
+    min-height:45px;
+    max-height:45px;
+    border-radius:9px;
+    padding:2px 0;
+    gap:2px;
+  }
+  #njt .njt-menu-item:nth-child(6){grid-column:2/span 2}
+  #njt .njt-menu-art{width:19px;height:19px;flex:0 0 19px;font-size:17px}
+  #njt .njt-menu-art.book{font-size:18px!important}
+  #njt .njt-menu-item small{font-size:8px;line-height:1.05}
+  #njt .njt-three-buttons{
+    gap:17px;
+    padding:5px 0 2px;
+    min-height:45px;
+  }
+  #njt .njt-three-buttons button{
+    width:48px;
+    height:44px;
+    min-height:44px;
+    border-radius:46%;
+    gap:0;
+  }
+  #njt .njt-three-buttons i{font-size:15px}
+  #njt .njt-three-buttons small{font-size:7px;line-height:1.15}
+  #njt .njt-three-buttons button:nth-child(2){transform:translateY(3px)}
+  #njt .njt-three-buttons button:active{transform:translateY(2px)}
+  #njt .njt-three-buttons button:nth-child(2):active{transform:translateY(5px)}
+  #njt .njt-foot{display:none}
+}
+@media(max-width:650px) and (max-height:620px){
+  #njt .njt-shell{grid-template-rows:auto minmax(90px,1fr) auto;gap:3px}
+  #njt .njt-top{min-height:40px;height:40px;max-height:40px}
+  #njt .njt-window{min-height:90px}
+  #njt .njt-menu{grid-template-rows:repeat(2,44px);grid-auto-rows:44px;height:91px;min-height:91px;max-height:91px;gap:3px}
+  #njt .njt-menu-item,#njt .njt-menu-item:nth-child(n+6){height:44px;min-height:44px;max-height:44px}
+  #njt .njt-three-buttons{padding:3px 0 0}
+}
