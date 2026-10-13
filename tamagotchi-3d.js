@@ -536,5 +536,5 @@ function awardAdventure(result){
  save();growth(p);render();
  return {earned:true,xp,spirit,stone,first};
 }
-window.NUSAJIWA_TAMAGOTCHI={version:'8.0',creatureCount:LIST.length,awardAdventure,getSave:()=>JSON.parse(JSON.stringify(store)),refresh:()=>{synchronize();render()},open:show};
+window.NUSAJIWA_TAMAGOTCHI={version:'8.1',creatureCount:LIST.length,awardAdventure,getSave:()=>JSON.parse(JSON.stringify(store)),refresh:()=>{synchronize();render()},open:show};
 })();
