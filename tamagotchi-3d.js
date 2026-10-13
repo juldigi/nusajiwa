@@ -86,7 +86,15 @@ function needs(now=Date.now()){
  if(mins<.016)return;
  store.lastTick=now;
  for(const p of Object.values(store.pets)){
-  if(p.retired||p.stage===0)continue;
+  if(p.retired)continue;
+  if(p.stage===0){
+   if(p.id===store.active&&now-(Number(p.born)||now)>=300000){
+    nativePick(p.id);pressNative('#nj37Evolve');
+    const phase=progress().pets?.[p.id]?.phase||0;
+    if(phase>0){p.stage=phase;p.age=0;p.born=now;p.character='Penjelajah';toast('✦ Telur menetas dengan sendirinya!');}
+   }
+   continue;
+  }
   p.age+=mins;
   p.count=p.count||{hunger:0,happy:0,toilet:0};
   p.count.hunger+=mins;p.count.happy+=mins;p.count.toilet+=mins;p.count.mischief=(p.count.mischief||0)+mins;
@@ -252,7 +260,7 @@ function guess(v){
 function thought(p){
  if(!p)return 'Pilih makhluk pertamamu untuk memulai.';
  if(p.retired)return 'Satu kisah selesai. Lihat Album Kenangan.';
- if(p.stage===0)return 'Aku masih telur. Tekan B untuk menetas! 🥚';
+ if(p.stage===0)return 'Aku masih telur. Aku akan menetas otomatis, atau tekan B! 🥚';
  if(p.sick)return 'Aku kurang sehat… ✚';
  if(p.sleep)return 'Zzz… selamat tidur. ☾';
  if(p.attention)return p.reason||'Aku membutuhkanmu!';
