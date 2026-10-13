@@ -283,7 +283,7 @@ function statusContent(p){
  '<div class="njt-info-list">'+[
  ['Fase',STAGES[p.stage]],['Umur',aged(p)],['Berat',Math.round(p.weight)+' g (fantasi)'],
  ['Toilet',p.dirty+' kotoran'],['Sakit',p.sick?'Ya':'Tidak'],['Kesalahan rawat',p.mistakes],
- ['Kepribadian',character(p)]
+ ['Kepribadian',character(p)],['Pengetahuan',p.studied+' entri · '+store.reads.length+'/'+LIST.length+' Kodex']
  ].map(([k,v])=>'<div><span>'+k+'</span><b>'+v+'</b></div>').join('')+'</div>'+
  (p.stage===0?'<button class="njt-primary" data-tama="hatch">🥚 Tetaskan telur</button>':'')+
  (p.retired?'<button class="njt-primary" data-tama="collection">Mulai generasi baru</button>':'')+
@@ -310,7 +310,7 @@ function drawPanel(){
   let intro=f?'<small>LEMBAR PENGETAHUAN</small><h3>'+esc(f.name)+'</h3><p>⌖ '+esc(f.origin)+'</p>':'';
   if(fact)intro+='<p><b>Ciri khas:</b> '+esc(fact.morphology)+'</p><p><b>Konteks:</b> '+esc(fact.habitat)+'</p><span class="njt-verified">✓ Profil bersumber</span>';
   else intro+='<p>Profil awal. Detail dan sumber lanjutan tersedia melalui arsip 3D; sebagian informasi masih perlu kurasi.</p>';
-  content='<p>Fakta fauna, mitologi dan folklor dipisahkan dari fantasi evolusi. Membaca mengisi jurnal pengetahuan.</p>'+
+  content='<p>Fakta fauna, mitologi, dan folklor dipisahkan dari evolusi fantasi. Setiap halaman baru yang pertama kali dibaca bersama sahabat memberi +6 XP dan +5 Jiwa. '+store.reads.length+'/'+LIST.length+' halaman telah dibuka.</p>'+
     '<div class="njt-codex-focus">'+intro+'<button class="njt-primary" data-tama="read">Buka Fakta & Sumber ↗</button></div>'+
     '<input id="njtSearch" type="search" placeholder="Cari '+LIST.length+' makhluk dan wilayah..." value="'+esc(query)+'" autocomplete="off">'+
     '<div class="njt-pick-grid">'+LIST.filter(r=>(r.name+' '+r.origin).toLocaleLowerCase('id').includes(query.toLocaleLowerCase('id'))).slice(0,65).map(r=>
@@ -420,8 +420,20 @@ element.addEventListener('click',ev=>{
  }
  if(a==='filter'){filter=b.dataset.filter;panelCursor=0;drawPanel();return}
  if(a==='focus'){focused=b.dataset.id;panelCursor=0;drawPanel();return}
- if(a==='read'){const id=focused;if(!id)return;if(!store.reads.includes(id))store.reads.push(id);if(store.pets[id])store.pets[id].studied++;
-   save();screen='home';render();nativePick(id);pressNative('[data-njtab="archive"]');return;}
+ if(a==='read'){
+   const id=focused;if(!id)return;
+   const firstRead=!store.reads.includes(id);
+   if(firstRead){
+    store.reads.push(id);
+    const p=active();
+    if(p&&p.stage>0&&!p.retired){
+     p.studied++;
+     API.rewardTamaCodexReading?.(p.id,6,5);
+     toast('✧ Pengetahuan baru! +6 XP dan +5 Jiwa');
+    }else toast('✧ Halaman pengetahuan ditemukan!');
+   }
+   save();screen='home';render();nativePick(id);pressNative('[data-njtab="archive"]');return;
+ }
  if(a==='album'){screen='album';render();return}
  if(a==='export'){exportWholeGame();return}
  if(a==='import'){importWholeGame();return}
