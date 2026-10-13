@@ -15,7 +15,7 @@ const LEVELS=[
  {name:'Teras Sawah',tag:'Platform sawah dan jalan setapak',world:'jawa',theme:'terrace',length:90,ground:[[0,20],[23,42],[45,61],[64,78],[81,92]],ledges:[[10,1.7,5],[31,1.9,5],[52,2.0,4],[71,1.8,5]],hazards:[16,36,57,74,86],patrols:[[28,38,.55,1.6],[66,76,.55,1.9]],checkpoints:[26,66],gem:54,element:'tanah',sky:0xbad9ac},
  {name:'Aliran Batu',tag:'Menyeberang arus dan jembatan batu',world:'jawa',theme:'river',length:94,ground:[[0,19],[22,38],[41,59],[62,77],[80,96]],ledges:[[12,2,5],[30,1.9,4],[50,2.1,5],[69,2,4],[87,1.9,4]],hazards:[15,34,54,71,88],patrols:[[25,35,.55,1.8],[65,74,.55,2]],checkpoints:[24,65],gem:71,element:'air',sky:0xa5c5cb},
  {name:'Lorong Candi',tag:'Memecahkan segel batu pada lorong kuno',world:'jawa',theme:'temple',length:96,ground:[[0,20],[23,41],[44,61],[64,79],[82,98]],ledges:[[12,1.8,4],[30,2,5],[50,2.2,4],[72,1.8,5]],hazards:[16,35,56,75,91],patrols:[[26,37,.55,2.0],[67,76,.55,1.7]],checkpoints:[26,66],gem:51,element:'cahaya',sky:0xd7c5a7},
- {name:'Penjaga Gerbang Batu',tag:'Aktifkan tiga segel untuk membuka gerbang',world:'jawa',theme:'temple',length:102,ground:[[0,20],[23,40],[43,60],[63,81],[84,104]],ledges:[[13,2,5],[31,2,4],[51,1.9,5],[73,2,4],[93,1.9,4]],hazards:[17,35,55,76,91],patrols:[[27,37,.55,1.8],[47,57,.55,2.2],[69,79,.55,2.1],[87,95,.55,1.8]],checkpoints:[26,66],gem:74,element:'cahaya',sky:0xe5c5a2,sigils:[[13,1.15],[50,1.15],[91,1.15]]}
+ {name:'Penjaga Gerbang Batu',tag:'Aktifkan tiga segel untuk membuka gerbang',world:'jawa',theme:'temple',length:102,ground:[[0,20],[23,40],[43,60],[63,81],[84,104]],ledges:[[13,2,5],[31,2,4],[51,1.9,5],[73,2,4],[93,1.9,4]],hazards:[17,35,55,76,91],patrols:[[27,37,.55,1.8],[47,57,.55,2.2],[69,79,.55,2.1],[87,95,.55,1.8]],checkpoints:[26,66],gem:74,element:'cahaya',sky:0xe5c5a2,sigils:[[13,1.15],[50,1.15],[93,1.15]]}
 ];
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const day=()=>new Date().toLocaleDateString('en-CA');
@@ -367,5 +367,5 @@ document.addEventListener('keyup',e=>{if(!opened||!keyNames[e.code])return;e.pre
 window.addEventListener('blur',()=>{if(opened&&playing)pause()});
 document.addEventListener('visibilitychange',()=>{if(opened&&playing&&document.hidden)pause()});
 window.addEventListener('resize',resize,{passive:true});
-window.NUSAJIWA_ADVENTURE={version:'8.0',open,close:exit,levels:LEVELS.map(l=>l.name),getSave:()=>JSON.parse(JSON.stringify(progress)),isOpen:()=>opened};
+window.NUSAJIWA_ADVENTURE={version:'8.1',open,close:exit,levels:LEVELS.map(l=>l.name),getSave:()=>JSON.parse(JSON.stringify(progress)),isOpen:()=>opened};
 })();
