@@ -11,12 +11,15 @@ function levels(){
  assert.ok(first>=0&&end>first);
  return runInNewContext(source.slice(first+'const LEVELS='.length,end+1));
 }
-test('Five original Rimba Sumatra stages with reachable gaps and checkpoints',()=>{
+test('Ten stages across Sumatra and Java with reachable gaps and checkpoints',()=>{
  const maps=levels();
- assert.equal(maps.length,5);
- assert.equal(new Set(maps.map(x=>x.name)).size,5);
+ assert.equal(maps.length,10);
+ assert.equal(new Set(maps.map(x=>x.name)).size,10);
  assert.equal(maps[0].name,'Gerbang Rimba');
  assert.equal(maps[4].name,'Ujian Penjaga Rimba');
+ assert.equal(maps[5].name,'Lereng Gunung Api');
+ assert.equal(maps[9].name,'Penjaga Gerbang Batu');
+ assert.equal(maps.filter(x=>x.world==='jawa').length,5);
  for(const m of maps){
   assert.ok(m.ground.length>=4);
   assert.ok(m.checkpoints.length>=2);
@@ -49,9 +52,9 @@ test('Game is integrated into Tamagotchi, authentic elemental stones and save ba
  assert.match(engine,/rewardTamaAdventure:njtRewardAdventure/);
  assert.match(tama,/p\.adventureMarks/);
  assert.match(tama,/dailyKey/);
- assert.match(html,/nusajiwa-adventure\.css\?v=8\.0\.0/);
- assert.match(html,/nusajiwa-adventure\.js\?v=8\.0\.0/);
- assert.ok(html.indexOf('tamagotchi-3d.js?v=8.0.0')<html.indexOf('nusajiwa-adventure.js?v=8.0.0'));
+ assert.match(html,/nusajiwa-adventure\.css\?v=8\.1\.0/);
+ assert.match(html,/nusajiwa-adventure\.js\?v=8\.1\.0/);
+ assert.ok(html.indexOf('tamagotchi-3d.js?v=8.1.0')<html.indexOf('nusajiwa-adventure.js?v=8.1.0'));
  assert.match(tama,/adventure:localStorage\.getItem/);
  assert.match(tama,/localStorage\.setItem\('nusajiwa-adventure-v1'/);
 });
@@ -101,4 +104,26 @@ test('GitHub Pages release ships both runtime shells and Adventure assets',()=>{
  assert.match(yaml,/cancel-in-progress: true/,'Stale Pages builds must not block current release');
  assert.match(engine,/getAdventureAvatar:njtAdventureAvatar/,'The same actual 3D pet model is available inside Adventure');
  assert.match(source,/window\.NJ35\?\.getAdventureAvatar\?\./,'Adventure should reuse the real 3D creature when WebGL is present');
+});
+
+test('World 2 Java and three-seal guardian trial are playable and collision-safe',()=>{
+ const maps=levels(),boss=maps[9];
+ assert.equal(boss.world,'jawa');
+ assert.equal(boss.sigils.length,3);
+ assert.ok(maps.slice(5).every(x=>Array.isArray(x.patrols)&&x.patrols.length>=1));
+ for(const stage of maps.slice(5)){
+  for(const [a,b,y,v] of stage.patrols){
+   assert.ok(v>0&&y>0,'Guardian moves above ground');
+   assert.ok(stage.ground.some(g=>a>=g[0]&&b<=g[1]),'Patrol must remain on solid land: '+stage.name);
+  }
+ }
+ for(const [x,y] of boss.sigils){
+  assert.ok(y>0,'Sigil must remain visible');
+  assert.ok(boss.ground.some(g=>x>=g[0]&&x<=g[1]),'Sigil must be on a reachable ground segment');
+  assert.ok(boss.hazards.every(h=>Math.abs(x-h)>1),'Do not bury a seal in spikes');
+ }
+ assert.match(source,/s\.sigils\.some\(v=>!v\.got\)/,'Boss gate must stay closed until all seals are activated');
+ assert.match(source,/function patrolX\(enemy,time\)/,'Moving enemies must animate');
+ assert.match(source,/#njaRegion/,'Adventure HUD must identify current world');
+ assert.match(source,/LEVELS_PER_WORLD=5/,'Two worlds need independent numbered stages');
 });
