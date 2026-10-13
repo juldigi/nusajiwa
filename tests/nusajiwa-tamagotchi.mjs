@@ -76,3 +76,14 @@ test('Classic attention, 3D visual reactions and generations stay synchronized',
  assert.ok(tama.includes("p.reason==='Aku ingin perhatian!'"),'Discipline should depend on behavior, not neglect');
  assert.ok(tama.includes('data-njtab="archive"'),'Kodex must remain playable');
 });
+
+test('In-game Codex shows sources, searchable categories, and all 300 identities',()=>{
+ assert.ok(engine.includes('getTamaCodexProfile:njtCodexRecord'));
+ assert.ok(tama.includes('njt-book-page'),'The encyclopedia must be a game book');
+ assert.ok(tama.includes('njt-book-sources'),'Source citations must be visible inside the game');
+ assert.ok(tama.includes("codexKind==='fauna'"),'Fauna and folklore must be browsable separately');
+ assert.ok(tama.includes("visibleCount+=60"),'All identities need discoverable pagination');
+ assert.ok(tama.includes("API.rewardTamaCodexReading?.("),'Knowledge must support pet progression');
+ assert.ok(tama.includes("store.reads.includes(id)"),'Repeated pages must not grant infinite one-time rewards');
+ assert.ok(tama.includes("if(a==='nativeCodex')"),'Optional detailed 3D reference navigation must survive');
+});
