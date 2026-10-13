@@ -87,7 +87,7 @@ test('Adventure opens and closes as an integrated mode while preserving Tamagotc
  new Script(source).runInNewContext({window:win,document:doc,localStorage,console,Date,
   setTimeout(){return 1},clearTimeout(){},requestAnimationFrame(){return 1},cancelAnimationFrame(){},
   navigator:{},Math});
- assert.equal(win.NUSAJIWA_ADVENTURE.levels.length,5);
+ assert.equal(win.NUSAJIWA_ADVENTURE.levels.length,10);
  assert.equal(win.NUSAJIWA_ADVENTURE.isOpen(),false);
  assert.equal(win.NUSAJIWA_ADVENTURE.open(),true);
  assert.equal(scene.hidden,true,'Tamagotchi and WebGL render must pause while Adventure runs');
