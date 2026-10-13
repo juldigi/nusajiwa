@@ -85,3 +85,19 @@
  #nja .nja-menu h1{font-size:23px}
 }
 @media(prefers-reduced-motion:reduce){#nja .nja-message{transition:none}}
+
+/* 8.1: scrollable two-world level book without blocking portrait controls. */
+#nja .nja-world-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;
+ border-bottom:1px solid rgba(244,217,157,.43);padding:13px 4px 8px;margin-top:13px;text-align:left;color:#f9e6af}
+#nja .nja-world-heading b{font-size:12px;letter-spacing:.07em}
+#nja .nja-world-heading small{font-size:10px;color:#cfe2d4}
+#nja .nja-world-heading:first-child{margin-top:0}
+#nja .nja-levels{scrollbar-width:thin;scrollbar-color:#c6a86a66 transparent}
+#nja .nja-menu:has(.nja-levels){display:flex;flex-direction:column;min-height:0}
+#nja .nja-menu:has(.nja-levels) .nja-menu-body{min-height:0;overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+#nja .nja-menu:has(.nja-levels) .nja-menu-buttons{flex-shrink:0}
+@media(max-width:650px){
+ #nja .nja-world-heading{align-items:flex-start;flex-direction:column;gap:2px;padding:9px 3px 5px}
+ #nja .nja-world-heading b{font-size:10px}
+ #nja .nja-world-heading small{font-size:9px}
+}
