@@ -36,7 +36,7 @@ function load(){try{
  o.selected=clamp(o.selected,0,8);o.reads=Array.isArray(o.reads)?o.reads:[];o.album=Array.isArray(o.album)?o.album.slice(-40):[];
  return o;
 }catch(_){return blank();}}
-let store=load(),screen='home',query='',filter='all',focused='',mini=null,lastInteract=0,toastTimeout=0,panelCursor=0,pendingGeneration=null;
+let store=load(),screen='home',query='',filter='all',focused='',mini=null,lastInteract=0,toastTimeout=0,panelCursor=0,pendingGeneration=null,codexKind='all',visibleCount=60;
 function newLife(id,stage){return {id,stage:clamp(stage,0,7),born:Date.now(),age:0,weight:5,hunger:3,happy:3,discipline:1,health:4,
  dirty:0,sick:false,sleep:false,lightsOff:false,attention:false,callAt:0,missed:0,mistakes:0,
  count:{hunger:0,happy:0,toilet:0,mischief:0},meals:0,games:0,studied:0,character:'Penjelajah',retired:false};}
@@ -267,8 +267,8 @@ function show(key){
  else if(key==='medicine'||key==='toilet'){care(key);screen='home';return}
  else if(key==='status')screen='status';
  else if(key==='discipline')screen='discipline';
- else if(key==='codex'){screen='codex';focused=store.active||LIST[0]?.id||'';query='';}
- else if(key==='collection'||key==='starter'){screen=key;query='';}
+ else if(key==='codex'){screen='codex';focused=store.active||LIST[0]?.id||'';query='';codexKind='all';visibleCount=60;}
+ else if(key==='collection'||key==='starter'){screen=key;query='';visibleCount=60;}
  else if(key==='help'||key==='settings')screen=key;
  else if(key==='expedition'||key==='evolution'){
   pressNative('[data-njtab="'+(key==='expedition'?'explore':'ritual')+'"]');screen='home';
@@ -305,16 +305,37 @@ function drawPanel(){
  '<div class="njt-mini-score">RONDE '+(mini.round+1)+'/5 · BENAR '+mini.score+'</div>'+
  '<div class="njt-guess-mark">✧ ? ✧</div><div class="njt-guess"><button data-tama="left">◀ KIRI</button><button data-tama="right">KANAN ▶</button></div>';}
  else if(screen==='codex'){
-  title='▤ Ensiklopedia Hidup';
-  const f=find(focused)||LIST[0],fact=window.NJ45_CODEX?.[f?.id];
-  let intro=f?'<small>LEMBAR PENGETAHUAN</small><h3>'+esc(f.name)+'</h3><p>⌖ '+esc(f.origin)+'</p>':'';
-  if(fact)intro+='<p><b>Ciri khas:</b> '+esc(fact.morphology)+'</p><p><b>Konteks:</b> '+esc(fact.habitat)+'</p><span class="njt-verified">✓ Profil bersumber</span>';
-  else intro+='<p>Profil awal. Detail dan sumber lanjutan tersedia melalui arsip 3D; sebagian informasi masih perlu kurasi.</p>';
-  content='<p>Fakta fauna, mitologi, dan folklor dipisahkan dari evolusi fantasi. Setiap halaman baru yang pertama kali dibaca bersama sahabat memberi +6 XP dan +5 Jiwa. '+store.reads.length+'/'+LIST.length+' halaman telah dibuka.</p>'+
-    '<div class="njt-codex-focus">'+intro+'<button class="njt-primary" data-tama="read">Buka Fakta & Sumber ↗</button></div>'+
-    '<input id="njtSearch" type="search" placeholder="Cari '+LIST.length+' makhluk dan wilayah..." value="'+esc(query)+'" autocomplete="off">'+
-    '<div class="njt-pick-grid">'+LIST.filter(r=>(r.name+' '+r.origin).toLocaleLowerCase('id').includes(query.toLocaleLowerCase('id'))).slice(0,65).map(r=>
-      '<button data-tama="focus" data-id="'+esc(r.id)+'" class="'+(focused===r.id?'selected':'')+'">'+esc(r.name)+'</button>').join('')+'</div>';
+  title='▤ Kitab Makhluk Nusantara';
+  const f=find(focused)||LIST[0],profile=API.getTamaCodexProfile?.(f?.id),fact=window.NJ45_CODEX?.[f?.id];
+  const verified=!!fact,read=store.reads.includes(f?.id);
+  const kind=r=>codexKind==='all'||(codexKind==='fauna'?r.category==='Fauna':r.category!=='Fauna');
+  const filtered=LIST.filter(r=>kind(r)&&(r.name+' '+r.origin+' '+(r.category||'')).toLocaleLowerCase('id').includes(query.toLocaleLowerCase('id')));
+  const info=(label,value)=>'<div class="njt-book-fact"><dt>'+esc(label)+'</dt><dd>'+esc(value||'—')+'</dd></div>';
+  const sources=Array.isArray(fact?.sources)?fact.sources:[];
+  let book=f?'<div class="njt-book-page"><div class="njt-book-kicker">✦ NUSAJIWA · LEMBAR PENGETAHUAN</div><h3>'+esc(f.name)+'</h3>'+
+    '<p><b>'+esc(f.category||'Makhluk Nusantara')+'</b> · '+esc(f.origin)+'</p>'+
+    '<span class="njt-book-badge '+(verified?'reviewed':'draft')+'">'+(verified?'✓ Profil dengan sumber':'◇ Profil awal · masih dikurasi')+'</span>':'';
+  if(fact){
+   book+='<dl class="njt-book-facts">'+info('Nama ilmiah / identitas',fact.scientific)+info('Status / konteks',fact.status)+info('Habitat / latar',fact.habitat)+info('Ciri khas',fact.morphology)+'</dl>'+
+    '<details class="njt-book-more"><summary>Perilaku, peran dan tantangan</summary><dl>'+info('Perilaku / cerita',fact.behavior)+info('Peran ekologis',fact.ecology)+info('Ancaman / tantangan',fact.threats)+'</dl></details>'+
+    '<div class="njt-book-note"><b>Fakta ≠ evolusi fantasi</b><p>'+esc(fact.context||'Evolusi karakter merupakan elemen permainan.')+'</p></div>'+
+    '<div class="njt-book-sources"><b>Bacaan lebih lanjut</b>'+sources.map(([name,url])=>String(url).startsWith('https://')?'<a target="_blank" rel="noopener noreferrer" href="'+esc(url)+'">↗ '+esc(name)+'</a>':'').join('')+'</div>';
+  }else{
+   book+='<p>'+esc(profile?.summary||'Profil ini menunggu kurasi editorial lebih lanjut.')+'</p>'+
+    '<dl class="njt-book-facts">'+info('Habitat / latar cerita',profile?.habitat||f.origin)+info('Kelompok',profile?.category||f.category||'Nusantara')+'</dl>'+
+    '<div class="njt-book-note"><b>Catatan editorial</b><p>Identitas fauna dan tokoh folklor dibedakan. Uraian ini bukan fakta lengkap yang telah diverifikasi; bentuk 3D adalah interpretasi artistik.</p></div>'+
+    (String(profile?.sourceUrl||'').startsWith('https://')?'<div class="njt-book-sources"><b>Referensi awal · perlu kurasi</b><a target="_blank" rel="noopener noreferrer" href="'+esc(profile.sourceUrl)+'">↗ Telusuri referensi identitas</a></div>':'');
+  }
+  book+='<div class="njt-book-actions"><button class="njt-primary" data-tama="read">'+(read?'✓ Sudah tercatat dalam jurnal':'♡ Tandai dibaca · +6 XP / +5 Jiwa')+'</button>'+
+    '<button class="njt-secondary" data-tama="nativeCodex">◈ Periksa wujud 3D & riwayat</button></div></div>';
+  content='<p class="njt-codex-summary">'+store.reads.length+' dari '+LIST.length+' lembar pernah dibuka. Belajar bersama sahabat menambah pengetahuan dan pengalaman. Sumber budaya / ilmiah berbeda dari fantasi evolusi.</p>'+
+    book+'<div class="njt-codex-controls"><b>Jelajahi kitab makhluk</b><div class="njt-filter">'+
+    [['all','Semua'],['fauna','Fauna'],['folklor','Mitologi & Folklor']].map(([id,label])=>'<button data-tama="kind" data-filter="'+id+'" class="'+(codexKind===id?'chosen':'')+'">'+label+'</button>').join('')+'</div>'+
+    '<input id="njtSearch" type="search" placeholder="Cari '+LIST.length+' makhluk / wilayah..." value="'+esc(query)+'" autocomplete="off"></div>'+
+    '<div class="njt-codex-count">'+filtered.length+' ditemukan · '+Math.min(filtered.length,visibleCount)+' tampil</div>'+
+    '<div class="njt-pick-grid">'+filtered.slice(0,visibleCount).map(r=>'<button data-tama="focus" data-id="'+esc(r.id)+'" class="'+(f?.id===r.id?'selected':'')+'">'+esc(r.name)+
+    '<small>'+(store.reads.includes(r.id)?'✓ Dibaca · ':'')+esc(r.category||'Identitas')+'</small></button>').join('')+'</div>'+
+    (visibleCount<filtered.length?'<button class="njt-secondary" data-tama="nextBatch">Lihat '+Math.min(60,filtered.length-visibleCount)+' entri berikutnya ↓</button>':'');
  }
  else if(screen==='starter'){
   title='✦ Telur Pertamamu';
@@ -333,14 +354,17 @@ function drawPanel(){
  }
  else if(screen==='collection'){
   title='◈ Suaka · '+Object.keys(store.pets).length+' Sahabat';
-  const list=LIST.filter(r=>(r.name+' '+r.origin).toLocaleLowerCase('id').includes(query.toLocaleLowerCase('id'))&&
-       (filter!=='owned'||!!store.pets[r.id])).slice(0,70);
-  content='<p>Pilih dari '+LIST.length+' identitas makhluk berbeda. Delapan fase dan batu elemen bukan makhluk tambahan.</p>'+
-   '<div class="njt-filter"><button data-tama="filter" data-filter="all" class="'+(filter==='all'?'chosen':'')+'">Semua</button>'+
-   '<button data-tama="filter" data-filter="owned" class="'+(filter==='owned'?'chosen':'')+'">Milikku</button></div>'+
-   '<input id="njtSearch" type="search" placeholder="Cari nama / asal..." value="'+esc(query)+'" autocomplete="off">'+
+  const filtered=LIST.filter(r=>(r.name+' '+r.origin).toLocaleLowerCase('id').includes(query.toLocaleLowerCase('id'))&&
+    (filter==='all'||filter==='owned'&&!!store.pets[r.id]||filter==='fauna'&&r.category==='Fauna'||filter==='folklor'&&r.category!=='Fauna'));
+  const list=filtered.slice(0,visibleCount);
+  content='<p>Pilih dari '+LIST.length+' makhluk berbeda; wujud evolusi bukan identitas tambahan. Telur dan progres disimpan di perangkatmu.</p>'+
+   '<div class="njt-filter">'+[['all','Semua'],['owned','Milikku'],['fauna','Fauna'],['folklor','Legenda']].map(([id,label])=>
+   '<button data-tama="filter" data-filter="'+id+'" class="'+(filter===id?'chosen':'')+'">'+label+'</button>').join('')+'</div>'+
+   '<input id="njtSearch" type="search" placeholder="Cari nama / daerah..." value="'+esc(query)+'" autocomplete="off">'+
+   '<div class="njt-codex-count">'+filtered.length+' ditemukan · '+list.length+' tampil</div>'+
    '<div class="njt-pick-grid">'+list.map(r=>'<button data-tama="choose" data-id="'+esc(r.id)+'" class="'+(store.active===r.id?'selected':'')+'">'+esc(r.name)+
    '<small>'+(store.pets[r.id]?'♥ '+STAGES[store.pets[r.id].stage]:'✦ Adopsi telur')+'</small></button>').join('')+'</div>'+
+   (visibleCount<filtered.length?'<button class="njt-secondary" data-tama="nextBatch">Lihat '+Math.min(60,filtered.length-visibleCount)+' makhluk berikutnya ↓</button>':'')+
    '<button class="njt-secondary" data-tama="album">▤ Album Kenangan ('+store.album.length+')</button>';
  }
  else if(screen==='album'){title='▤ Album Kenangan';content='<p>Semua sahabat yang telah menyelesaikan siklus kehidupan tersimpan dalam album.</p>'+
@@ -419,6 +443,8 @@ element.addEventListener('click',ev=>{
   store.pets[id]=newLife(id,0);store.active=id;pendingGeneration=null;screen='home';save();render();toast('Telur generasi baru telah tiba!');return;
  }
  if(a==='filter'){filter=b.dataset.filter;panelCursor=0;drawPanel();return}
+ if(a==='kind'){codexKind=b.dataset.filter;visibleCount=60;panelCursor=0;drawPanel();return}
+ if(a==='nextBatch'){visibleCount+=60;panelCursor=0;drawPanel();return}
  if(a==='focus'){focused=b.dataset.id;panelCursor=0;drawPanel();return}
  if(a==='read'){
    const id=focused;if(!id)return;
@@ -432,8 +458,9 @@ element.addEventListener('click',ev=>{
      toast('✧ Pengetahuan baru! +6 XP dan +5 Jiwa');
     }else toast('✧ Halaman pengetahuan ditemukan!');
    }
-   save();screen='home';render();nativePick(id);pressNative('[data-njtab="archive"]');return;
+   save();drawPanel();return;
  }
+ if(a==='nativeCodex'){const id=focused;if(!id)return;screen='home';render();nativePick(id);pressNative('[data-njtab="archive"]');return}
  if(a==='album'){screen='album';render();return}
  if(a==='export'){exportWholeGame();return}
  if(a==='import'){importWholeGame();return}
@@ -458,5 +485,5 @@ setInterval(()=>{if(!document.hidden)check3d()},1800);
 needs();if(active()){nativePick(store.active);if(active().sleep)API.setTamaMood?.('sleep',0);}pressNative('#nj35ZoomIn');pressNative('#nj35ZoomIn');render();
 if(!active())show('starter');
 else if(!store.introduced){store.introduced=true;save();show('help');}
-window.NUSAJIWA_TAMAGOTCHI={version:'7.2',creatureCount:LIST.length,getSave:()=>JSON.parse(JSON.stringify(store)),refresh:()=>{synchronize();render()},open:show};
+window.NUSAJIWA_TAMAGOTCHI={version:'7.4',creatureCount:LIST.length,getSave:()=>JSON.parse(JSON.stringify(store)),refresh:()=>{synchronize();render()},open:show};
 })();
