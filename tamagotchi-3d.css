@@ -252,3 +252,124 @@ body.nj35-playing>a[href*="atlas-evolusi"]{display:none!important}
 #njt .njt-codex-count{font-size:10px;color:#c4dcce;font-weight:800;letter-spacing:.03em;padding-bottom:6px}
 #njt .njt-pick-grid{max-height:37dvh}
 @media(max-width:380px){#njt .njt-book-page{padding:15px 11px}#njt .njt-book-page h3{font-size:22px}}
+
+
+/* 7.5 — iPhone layout hotfix. Keep the 3D habitat as the primary view.
+   The grid MUST have two bounded rows: an auto-sized implicit second row
+   previously expanded the action tiles to hundreds of pixels on mobile. */
+#njt .njt-menu{
+  grid-template-columns:repeat(10,minmax(0,1fr));
+  grid-template-rows:repeat(2,56px);
+  grid-auto-rows:56px;
+  height:118px;
+  min-height:118px;
+  max-height:118px;
+  align-content:start;
+  align-items:stretch;
+  overflow:visible;
+}
+#njt .njt-menu-item,
+#njt .njt-menu-item:nth-child(n+6){
+  grid-column:span 2;
+  box-sizing:border-box;
+  width:100%;
+  height:56px;
+  min-height:56px;
+  max-height:56px;
+  min-width:0;
+  align-self:stretch;
+  overflow:hidden;
+}
+#njt .njt-menu-item:nth-child(6){grid-column:2/span 2}
+#njt .njt-menu-art{flex:0 0 24px}
+#njt .njt-menu-item small{white-space:nowrap}
+#njt .njt-console{flex-shrink:0;min-height:0}
+#njt .njt-window{min-height:0}
+
+@media(max-width:650px){
+  #njt .njt-shell{
+    display:grid;
+    grid-template-rows:auto minmax(110px,1fr) auto;
+    gap:7px;
+    width:100%;
+    height:100dvh;
+    max-height:100dvh;
+    min-height:0;
+    overflow:hidden;
+    padding:calc(env(safe-area-inset-top) + 5px) 8px calc(env(safe-area-inset-bottom) + 6px);
+  }
+  #njt .njt-top{min-height:0;padding:4px 9px 3px}
+  #njt .njt-window{
+    width:100%;
+    height:100%;
+    min-width:0;
+    min-height:110px;
+    margin:0;
+    flex:none;
+    border-radius:19px;
+  }
+  #njt .njt-console{
+    display:block;
+    min-height:0;
+    height:auto;
+    max-height:none;
+    padding:8px 8px 6px;
+    border-radius:19px;
+    overflow:visible;
+  }
+  #njt .njt-console-label{
+    margin:0 2px 7px;
+    font-size:9px;
+    line-height:1.25;
+  }
+  #njt .njt-console-label span:last-child{font-size:8px}
+  #njt .njt-menu{
+    grid-template-columns:repeat(10,minmax(0,1fr));
+    grid-template-rows:repeat(2,50px);
+    grid-auto-rows:50px;
+    height:105px;
+    min-height:105px;
+    max-height:105px;
+    gap:5px 3px;
+  }
+  #njt .njt-menu-item,
+  #njt .njt-menu-item:nth-child(n+6){
+    grid-column:span 2;
+    height:50px;
+    min-height:50px;
+    max-height:50px;
+    padding:3px 0;
+    border-radius:10px;
+    gap:3px;
+  }
+  #njt .njt-menu-item:nth-child(6){grid-column:2/span 2}
+  #njt .njt-menu-art{
+    flex:0 0 21px;
+    width:21px;
+    height:21px;
+    font-size:19px;
+  }
+  #njt .njt-menu-item small{font-size:9px;line-height:1.1}
+  #njt .njt-three-buttons{
+    min-height:0;
+    padding:8px 0 3px;
+    gap:20px;
+  }
+  #njt .njt-three-buttons button{width:61px;height:51px;flex-shrink:0}
+  #njt .njt-foot{padding:7px 3px 0}
+  #njt .njt-thought{top:50px;max-width:86%;font-size:11px}
+  #njt .njt-status-strip{top:12px;left:12px;right:12px}
+  #njt .njt-age-track{bottom:12px;left:12px;right:12px}
+}
+@media(max-width:650px) and (max-height:620px){
+  #njt .njt-shell{grid-template-rows:auto minmax(94px,1fr) auto;gap:4px}
+  #njt .njt-brand small,#njt .njt-brand i{display:none}
+  #njt .njt-top{padding:2px 7px}
+  #njt .njt-window{min-height:94px}
+  #njt .njt-menu{grid-template-rows:repeat(2,45px);grid-auto-rows:45px;height:95px;min-height:95px;max-height:95px}
+  #njt .njt-menu-item,#njt .njt-menu-item:nth-child(n+6){height:45px;min-height:45px;max-height:45px;gap:2px}
+  #njt .njt-menu-art{flex-basis:18px;width:18px;height:18px}
+  #njt .njt-three-buttons{padding:5px 0 1px}
+  #njt .njt-three-buttons button{width:57px;height:46px}
+  #njt .njt-foot{display:none}
+}
