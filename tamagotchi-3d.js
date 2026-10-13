@@ -23,6 +23,16 @@ function load(){try{
  const v=JSON.parse(localStorage.getItem(KEY)||'null');
  if(!v||v.version!==1||typeof v.pets!=='object'||!v.pets)return blank();
  const o=Object.assign(blank(),v);
+ // Former versions listed the same Rote snake-neck species twice under separate IDs.
+ // Move care history to the canonical Rote record; never label it as Cuora.
+ if(o.pets.kura_rote){
+  const legacy=o.pets.kura_rote,canon=o.pets.kura_leher_ular_rote;
+  if(!canon||(Number(legacy.age)||0)>(Number(canon.age)||0)){
+   o.pets.kura_leher_ular_rote={...legacy,id:'kura_leher_ular_rote'};
+  }
+  if(o.active==='kura_rote')o.active='kura_leher_ular_rote';
+  delete o.pets.kura_rote;
+ }
  o.selected=clamp(o.selected,0,8);o.reads=Array.isArray(o.reads)?o.reads:[];o.album=Array.isArray(o.album)?o.album.slice(-40):[];
  return o;
 }catch(_){return blank();}}
