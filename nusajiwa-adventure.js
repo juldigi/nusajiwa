@@ -117,6 +117,7 @@ function finish(){
  const sub='<p>Gerbang terbuka! Kamu membawa <b>'+run.score+' Jiwa</b> dan <b>'+stars+' ★</b>. '+(gems?'Batu elemen berhasil ditemukan.':'Batu rahasia belum ditemukan.')+'</p><div class="nja-reward">'+earned+'</div><p class="nja-tip">Evolusi tetap membutuhkan usia, perawatan dan XP. Hasil petualangan telah dikirim ke sahabat Tamagotchi yang sama.</p>';
  present('Level selesai! ✨',sub,[[levelIndex<LEVELS.length-1?'next':'levels',levelIndex<LEVELS.length-1?'▶ Level berikutnya':'✓ Lihat semua level'],['retry','↻ Main lagi'],['exit','♡ Kembali ke Habitat']]);
 }
+function patrolX(enemy,time){return (enemy.start+enemy.end)/2+Math.sin(time*enemy.speed)*(enemy.end-enemy.start)/2}
 function physics(dt){
  const s=run;if(!s||s.ended)return;
  s.seconds+=dt;s.skillCool=Math.max(0,s.skillCool-dt);s.hurtUntil=Math.max(0,s.hurtUntil-dt);s.skillUntil=Math.max(0,s.skillUntil-dt);
@@ -131,15 +132,29 @@ function physics(dt){
    for(const g of surfaces){if(s.x+.23<g[0]-g[2]/2||s.x-.23>g[0]+g[2]/2)continue;
     if(prevY>=g[1]-.07&&s.y<=g[1]&&s.y>=g[1]-1.4){s.y=g[1];s.vy=0;s.grounded=true;s.double=false;break;}}
  }
- if(s.y< -3.5)hurt();
- for(const h of s.level.hazards){if(Math.abs(s.x-h)<.54&&s.y<.68&&s.y>-.45)hurt()}
+ if(s.y< -3.5){hurt();return}
+ for(const h of s.level.hazards){if(Math.abs(s.x-h)<.54&&s.y<.68&&s.y>-.45){hurt();return}}
+ for(const enemy of s.patrols){
+  const x=patrolX(enemy,s.seconds);
+  if(Math.abs(s.x-x)<.58&&Math.abs(s.y+.45-enemy.y)<.69){hurt();return}
+ }
+ for(const seal of s.sigils){
+  if(!seal.got&&Math.hypot(s.x-seal.x,s.y+.55-seal.y)<.95){
+   seal.got=true;s.score+=15;announce('◇ Segel '+s.sigils.filter(v=>v.got).length+'/'+s.sigils.length+' aktif!');
+  }
+ }
  for(const coin of s.coins){if(!coin.got&&Math.hypot(s.x-coin.x,s.y+.5-coin.y)<.85){coin.got=true;s.score+=5}}
  if(!s.gem.got&&Math.hypot(s.x-s.gem.x,s.y+.5-s.gem.y)<1.05){s.gem.got=true;s.score+=25;announce('◆ Batu '+s.level.element+' ditemukan!')}
  for(const cp of s.level.checkpoints){if(!s.usedCp.includes(cp)&&s.x>=cp){s.checkpoint=cp;s.usedCp.push(cp);announce('⚑ Checkpoint disimpan')}}
  const narrow=(canvas.clientWidth||window.innerWidth)/Math.max(1,canvas.clientHeight||window.innerHeight)<.8;
  const lead=narrow?1.25:3.2,minimum=narrow?3:6.6;
  s.cameraX+=(clamp(s.x+lead,minimum,s.level.length-(narrow?3:5.5))-s.cameraX)*Math.min(1,dt*5.5);
- if(s.x>=s.level.length-1){finish()}
+ if(s.x>=s.level.length-1){
+  if(s.sigils.some(v=>!v.got)){
+   s.x=s.level.length-2.2;
+   if(s.seconds-s.gateHintAt>3){announce('Gerbang terkunci! Temukan seluruh segel batu.');s.gateHintAt=s.seconds}
+  }else finish();
+ }
 }
 function swapCanvas(){const next=canvas.cloneNode(false);canvas.replaceWith(next);canvas=next;}
 function set2D(){if(render3d){render3d.dispose();render3d=null;swapCanvas()}ctx=canvas.getContext('2d',{alpha:false});if(!ctx){swapCanvas();ctx=canvas.getContext('2d',{alpha:false})}resize();}
