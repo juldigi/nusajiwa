@@ -65,16 +65,20 @@ function levelMenu(){
  if(p.stage===0||p.sleep||p.sick){let message=p.stage===0?'Telur harus menetas terlebih dahulu.':p.sleep?'Sahabat sedang tidur. Nyalakan lampunya dahulu.':'Sahabat sedang sakit. Obati dahulu.';
  present('Sahabat perlu istirahat','<p>'+message+'</p>',[['exit','Kembali merawat']]);return;}
  const r=record(p.id);
- let entries=LEVELS.map((l,i)=>{const unlocked=i===0||!!r.completed[i-1];return '<button type="button" class="nja-level '+(unlocked?'':'locked')+'" data-nja="level" data-value="'+i+'" '+(unlocked?'':'disabled')+'><b>'+(i+1)+'. '+safe(l.name)+'</b><small>'+safe(l.tag)+'</small><em>'+(r.completed[i]?'✓ '+r.completed[i]+' ★':unlocked?'MAINKAN':'🔒 Selesaikan level sebelumnya')+'</em></button>'}).join('');
+ const entries=LEVELS.map((l,i)=>{const unlocked=i===0||!!r.completed[i-1];const title=i===0||i===LEVELS_PER_WORLD?
+  '<div class="nja-world-heading"><b>'+(i===0?'🌳 WORLD 1 · RIMBA SUMATRA':'🏯 WORLD 2 · TANAH JAWA')+'</b><small>'+(i===0?'Hutan, sungai dan batu elemen':'Lereng, persawahan dan ujian segel')+'</small></div>':'';
+  return title+'<button type="button" class="nja-level '+(unlocked?'':'locked')+'" data-nja="level" data-value="'+i+'" '+(unlocked?'':'disabled')+'><b>'+(Math.floor(i/LEVELS_PER_WORLD)+1)+'—'+((i%LEVELS_PER_WORLD)+1)+' · '+safe(l.name)+'</b><small>'+safe(l.tag)+'</small><em>'+(r.completed[i]?'✓ '+r.completed[i]+' ★':unlocked?'MAINKAN':'🔒 Terkunci')+'</em></button>';}).join('');
  const ability=pet.type==='spirit'?'Melayang':pet.type==='bird'?'Terbang sekali':pet.type==='tiger'?'Lari kilat':'Lompat dorong';
- present('Jelajah Evolusi','<p>Petualangan 2.5D bersama <b>'+safe(p.id.replaceAll('_',' '))+'</b>. '+(p.stage===1?'Tahap Bayi: latihan dapat dimainkan sejak dini. ':'')+'Kemampuan khusus: <b>'+ability+'</b>. Kumpulkan Jiwa, sentuh checkpoint dan capai gerbang.</p><div class="nja-levels">'+entries+'</div><p class="nja-tip">iPhone: ◀ ▶, LOMPAT, SKILL · Komputer: ← →, ↑/Spasi, X. Kualitas perawatan tetap memengaruhi evolusi.</p>',[['exit','Kembali ke Habitat']]);
+ present('Jelajah Evolusi','<p>Sepuluh level di dua dunia 2.5D bersama <b>'+safe(p.id.replaceAll('_',' '))+'</b>. '+(p.stage===1?'Tahap Bayi: latihan dapat dimainkan sejak dini. ':'')+'Kemampuan khusus: <b>'+ability+'</b>. Kumpulkan Jiwa, sentuh checkpoint dan capai gerbang.</p><div class="nja-levels">'+entries+'</div><p class="nja-tip">iPhone: ◀ ▶, LOMPAT, SKILL · Komputer: ← →, ↑/Spasi, X. Kualitas perawatan tetap memengaruhi evolusi.</p>',[['exit','Kembali ke Habitat']]);
 }
 function buildCoins(l){const coins=[];for(let x=5;x<l.length-2;x+=5){const seg=l.ground.find(g=>x>=g[0]+.5&&x<=g[1]-.5);if(seg)coins.push({x,y:1+(x%3===0?.7:0),got:false});}l.ledges.forEach(p=>coins.push({x:p[0],y:p[1]+.85,got:false}));return coins;}
 function begin(n){
- if(!pet||n<0||n>=LEVELS.length||n>0&&!record(pet.id).completed[n-1])return;
+ if(!pet||!Number.isInteger(n)||n<0||n>=LEVELS.length||n>0&&!record(pet.id).completed[n-1])return;
  levelIndex=n;const level=LEVELS[n];const coins=buildCoins(level);
- run={level,coins,gem:{x:level.gem,y:2.1,got:false},x:2,y:0,vx:0,vy:0,grounded:true,double:false,heroFacing:1,health:3,score:0,checkpoint:2,usedCp:[],hurtUntil:0,skillUntil:0,skillCool:0,seconds:0,accum:0,cameraX:2.5,ended:false};
+ run={level,coins,gem:{x:level.gem,y:2.1,got:false},patrols:(level.patrols||[]).map(([start,end,y,speed])=>({start,end,y,speed})),
+  sigils:(level.sigils||[]).map(([x,y])=>({x,y,got:false})),gateHintAt:-20,x:2,y:0,vx:0,vy:0,grounded:true,double:false,heroFacing:1,health:3,score:0,checkpoint:2,usedCp:[],hurtUntil:0,skillUntil:0,skillCool:0,seconds:0,accum:0,cameraX:2.5,ended:false};
  mode='play';playing=true;overlay.hidden=true;clearInput();
+ $('#njaRegion').textContent='JELAJAH EVOLUSI · '+(level.world==='jawa'?'TANAH JAWA':'RIMBA SUMATRA');
  try{setupVisual()}catch(e){console.warn('Adventure 3D fallback:',e);set2D()}
  announce('✦ '+level.name+' · Sampai ke gerbang!');
  last=0;accumulator=0;
@@ -111,7 +115,7 @@ function finish(){
  save();
  const earned=reward?.earned?'+'+reward.xp+' XP · +'+reward.spirit+' Jiwa'+(reward.stone?' · Batu '+run.level.element:''):'Hadiah sudah tercatat hari ini.';
  const sub='<p>Gerbang terbuka! Kamu membawa <b>'+run.score+' Jiwa</b> dan <b>'+stars+' ★</b>. '+(gems?'Batu elemen berhasil ditemukan.':'Batu rahasia belum ditemukan.')+'</p><div class="nja-reward">'+earned+'</div><p class="nja-tip">Evolusi tetap membutuhkan usia, perawatan dan XP. Hasil petualangan telah dikirim ke sahabat Tamagotchi yang sama.</p>';
- present('Level selesai! ✨',sub,[[levelIndex<4?'next':'levels',levelIndex<4?'▶ Level berikutnya':'✓ Lihat semua level'],['retry','↻ Main lagi'],['exit','♡ Kembali ke Habitat']]);
+ present('Level selesai! ✨',sub,[[levelIndex<LEVELS.length-1?'next':'levels',levelIndex<LEVELS.length-1?'▶ Level berikutnya':'✓ Lihat semua level'],['retry','↻ Main lagi'],['exit','♡ Kembali ke Habitat']]);
 }
 function physics(dt){
  const s=run;if(!s||s.ended)return;
@@ -256,8 +260,8 @@ function draw2d(){
  }
 }
 function hud(){
- $('#njaStage').textContent='1—'+(levelIndex+1)+' · '+Math.round(run.x/run.level.length*100)+'%';
- $('#njaCoins').textContent='✦ '+run.score;
+ $('#njaStage').textContent=(Math.floor(levelIndex/LEVELS_PER_WORLD)+1)+'—'+(levelIndex%LEVELS_PER_WORLD+1)+' · '+Math.round(run.x/run.level.length*100)+'%';
+ $('#njaCoins').textContent='✦ '+run.score+(run.sigils.length?' · ◇ '+run.sigils.filter(v=>v.got).length+'/'+run.sigils.length:'');
  $('#njaLives').textContent='♥ '.repeat(run.health).trim();
  $('#njaFill').style.width=clamp(run.x/run.level.length*100,0,100)+'%';
 }
