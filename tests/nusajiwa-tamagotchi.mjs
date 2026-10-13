@@ -65,3 +65,14 @@ test('Legacy save migration and WebGL control bridge retained',()=>{
  assert.ok(engine.includes('selectTamaSpecies'));
  assert.ok(engine.includes('setTamaMood'));
 });
+
+test('Classic attention, 3D visual reactions and generations stay synchronized',()=>{
+ assert.ok(tama.includes("screen==='starter'"),'First-egg choice screen missing');
+ assert.ok(tama.includes("screen==='generation'"),'Repeat life cycle missing');
+ assert.ok(tama.includes('API.setTamaEnvironment?.('),'The pet needs must reach the WebGL scene');
+ assert.ok(engine.includes('setTamaEnvironment:njtSetLiving'),'3D scene must expose living conditions');
+ assert.ok(engine.includes('restartTamaGeneration:njtRestartGeneration'),'Existing pets must support generational restart');
+ assert.ok(engine.includes('njtApplyLiving(true)'),'3D feedback must initialize after renderer boot');
+ assert.ok(tama.includes("p.reason==='Aku ingin perhatian!'"),'Discipline should depend on behavior, not neglect');
+ assert.ok(tama.includes('pressNative(\\'[data-njtab="archive"]\\')'),'Kodex must remain playable');
+});
