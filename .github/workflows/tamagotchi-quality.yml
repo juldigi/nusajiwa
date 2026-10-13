@@ -9,6 +9,8 @@ on:
       - 'script_33.js'
       - 'tamagotchi-3d.js'
       - 'tamagotchi-3d.css'
+      - 'nusajiwa-adventure.js'
+      - 'nusajiwa-adventure.css'
       - 'tests/**'
       - '.github/workflows/tamagotchi-quality.yml'
   workflow_dispatch:
@@ -18,7 +20,7 @@ permissions:
 
 jobs:
   check:
-    name: 300 Identities · JS Syntax · Care & Encyclopedia
+    name: 300 Identities · Gameplay · Platformer · Encyclopedia
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -32,5 +34,6 @@ jobs:
           node --check script_32.js
           node --check script_33.js
           node --check tamagotchi-3d.js
+          node --check nusajiwa-adventure.js
       - name: Verify game and collection invariants
         run: node --test tests/*.mjs
