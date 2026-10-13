@@ -828,7 +828,74 @@ function openSide(mode){sideOpen=true;$('#nj35Side').classList.add('open');let h
 }
 function closeSide(){sideOpen=false;$('#nj35Side').classList.remove('open')}
 function return3D(){back.hidden=true;sceneEl.hidden=false;document.body.classList.add('nj35-playing');drawInfo();resize();}
-window.NJ35={version:'7.0',saveKey:NJ36_PETS_KEY,getCurrentId:()=>record()[0],selectTamaSpecies:(id)=>{const pos=CREATURES.findIndex(c=>c[0]===id);if(pos<0)return false;if(pos!==index)setRecord(pos);return true;},setTamaMood:(mode,ms=1600)=>{if(!['idle','feed','play','clean','bond','sleep','sick'].includes(mode))return false;actionName=mode;actionUntil=ms===0?Infinity:performance.now()+Math.max(0,Math.min(9000,ms));return true;},getTamaRenderStatus:()=>({creature:record()[0],quality,webgl:!!three,phase:gamePet()?.phase??null}),getSignaturePets:()=>Object.keys(novelState.pets),returnTo3D:return3D,creatures:CREATURES.map(r=>({id:r[0],name:r[1],origin:r[3]})),getGameProgress:()=>JSON.parse(JSON.stringify(nj37)),getMode:()=>quality,is3D:()=>!!three,edition58:()=>({total:CREATURES.length,releases:{"5.1": 6, "5.2": 8, "5.3": 6, "5.4": 8, "5.6": 8}}),edition47:()=>({newIds:[...NJ47_IDS],total:CREATURES.length,modelsReady:[...NJ47_IDS].every(id=>typeof nj47Sculptors[id]==='function')}),edition46:()=>({newIds:[...NJ46_IDS],total:CREATURES.length,modelsReady:[...NJ46_IDS].every(id=>typeof nj46Sculptors[id]==='function')}),edition42:()=>({newIds:[...NJ42_IDS],total:CREATURES.length,modelsReady:[...NJ42_IDS].every(x=>typeof nj42Sculptors[x]==='function')})};
+
+/* 7.2 — visual feedback for the classic pet's needs in the actual 3D habitat.
+   No allocation per animation frame; only reconstructs when care state changes. */
+let njtLiving={dirty:0,sick:false,sleep:false,attention:false};
+let njtLivingSignature='',njtLivingDecor=null;
+function njtClearDecor(){
+ if(!njtLivingDecor)return;
+ njtLivingDecor.parent?.remove(njtLivingDecor);
+ njtLivingDecor.traverse(o=>{
+  if(o.geometry)o.geometry.dispose();
+  if(o.material){(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>m.dispose?.())}
+ });
+ njtLivingDecor=null;
+}
+function njtApplyLiving(force=false){
+ if(!THREE||!world?.avatarRoot)return false;
+ const signature=[njtLiving.dirty,njtLiving.sick,njtLiving.sleep,njtLiving.attention].join(':');
+ if(!force&&signature===njtLivingSignature)return true;
+ njtLivingSignature=signature;
+ njtClearDecor();
+ const group=new THREE.Group();group.name='Tamagotchi_3D_Needs';world.avatarRoot.add(group);njtLivingDecor=group;
+ function orb(x,y,z,sx,sy,sz,color){
+  const node=new THREE.Mesh(new THREE.SphereGeometry(1,12,9),new THREE.MeshStandardMaterial({color,roughness:.82}));
+  node.scale.set(sx,sy,sz);node.position.set(x,y,z);group.add(node);return node;
+ }
+ function bar(x,y,z,w,h,d,color){
+  const node=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new THREE.MeshBasicMaterial({color,depthTest:false}));
+  node.position.set(x,y,z);node.renderOrder=21;group.add(node);return node;
+ }
+ for(let i=0;i<Math.min(4,njtLiving.dirty);i++){
+  const x=.87+i*.41,z=.72+(i%2)*.35;
+  orb(x,.025,z,.19,.10,.16,0x765438);
+  orb(x,.13,z,.15,.105,.14,0x856143);
+  orb(x,.23,z,.09,.075,.09,0xa07851);
+  orb(x+.045,.33,z,.025,.025,.024,0xe7c99a);
+ }
+ if(njtLiving.sick){
+  for(let i=0;i<3;i++){
+   const x=-.84+i*.62;
+   bar(x,2.66,-.1,.085,.39,.07,0x9de5c7);
+   bar(x,2.66,-.08,.33,.085,.07,0x9de5c7);
+  }
+ }
+ if(njtLiving.attention&&!njtLiving.sleep){
+  const sign=new THREE.Group();sign.position.set(-.85,2.53,.45);group.add(sign);
+  const amber=new THREE.MeshBasicMaterial({color:0xffce73,depthTest:false});
+  const rod=new THREE.Mesh(new THREE.CapsuleGeometry(.065,.32,3,8),amber);rod.renderOrder=23;rod.position.y=.19;sign.add(rod);
+  const dot=new THREE.Mesh(new THREE.SphereGeometry(.075,10,8),amber);dot.renderOrder=23;dot.position.y=-.15;sign.add(dot);
+ }
+ if(world.sun)world.sun.intensity=njtLiving.sleep?.53:(nightTime?1.07:2.9);
+ if(world.accent)world.accent.intensity=njtLiving.sleep?5:(nightTime?13:(viewZone==='kalimantan'?32:25));
+ return true;
+}
+function njtSetLiving(st){
+ const dirty=Math.min(4,Math.max(0,Math.floor(Number(st?.dirty)||0)));
+ njtLiving={dirty,sick:!!st?.sick,sleep:!!st?.sleep,attention:!!st?.attention};
+ return njtApplyLiving();
+}
+function njtRestartGeneration(id){
+ if(!CREATURES.some(c=>c[0]===id)||!nj37.pets[id])return false;
+ const p=nj37.pets[id];p.phase=0;p.xp=0;p.legend=null;
+ p.stats={happy:74,energy:80,bond:8,hunger:75,clean:85};
+ save3d();
+ if(record()[0]===id){rebuildAvatar();drawInfo();}
+ return true;
+}
+
+window.NJ35={version:'7.0',saveKey:NJ36_PETS_KEY,getCurrentId:()=>record()[0],selectTamaSpecies:(id)=>{const pos=CREATURES.findIndex(c=>c[0]===id);if(pos<0)return false;if(pos!==index)setRecord(pos);return true;},setTamaEnvironment:njtSetLiving,restartTamaGeneration:njtRestartGeneration,setTamaMood:(mode,ms=1600)=>{if(!['idle','feed','play','clean','bond','sleep','sick'].includes(mode))return false;actionName=mode;actionUntil=ms===0?Infinity:performance.now()+Math.max(0,Math.min(9000,ms));return true;},getTamaRenderStatus:()=>({creature:record()[0],quality,webgl:!!three,phase:gamePet()?.phase??null}),getSignaturePets:()=>Object.keys(novelState.pets),returnTo3D:return3D,creatures:CREATURES.map(r=>({id:r[0],name:r[1],origin:r[3]})),getGameProgress:()=>JSON.parse(JSON.stringify(nj37)),getMode:()=>quality,is3D:()=>!!three,edition58:()=>({total:CREATURES.length,releases:{"5.1": 6, "5.2": 8, "5.3": 6, "5.4": 8, "5.6": 8}}),edition47:()=>({newIds:[...NJ47_IDS],total:CREATURES.length,modelsReady:[...NJ47_IDS].every(id=>typeof nj47Sculptors[id]==='function')}),edition46:()=>({newIds:[...NJ46_IDS],total:CREATURES.length,modelsReady:[...NJ46_IDS].every(id=>typeof nj46Sculptors[id]==='function')}),edition42:()=>({newIds:[...NJ42_IDS],total:CREATURES.length,modelsReady:[...NJ42_IDS].every(x=>typeof nj42Sculptors[x]==='function')})};
 const back=document.createElement('button');back.textContent='◈ Kembali ke Dunia 3D';back.id='nj35Return';back.style.cssText='position:fixed;right:16px;top:max(86px,env(safe-area-inset-top));z-index:45;background:#103641;color:#f2d28b;border:1px solid #dcbd7a;padding:13px 18px;border-radius:27px;box-shadow:0 8px 30px #0017;font-weight:700;cursor:pointer';back.addEventListener('click',return3D);back.hidden=true;document.body.append(back);
 const input3d=document.createElement('input');input3d.type='file';input3d.accept='application/json,.json';input3d.id='nj37ImportFile';input3d.hidden=true;document.body.append(input3d);input3d.addEventListener('change',e=>import3d(e.target.files?.[0]));
 // Controls stay functional on touch and mouse, including the fallback when WebGL isn't available.
@@ -4616,7 +4683,7 @@ function animate(t){if(sceneDisposed)return;requestAnimationFrame(animate);if(do
 // Engine import: one low-cost CDN dependency; the classic game remains fully usable when offline.
 async function boot3D(){let needsGPU=!!(document.createElement('canvas').getContext('webgl2')||document.createElement('canvas').getContext('webgl'));if(!needsGPU)throw new Error('WebGL tidak tersedia di perangkat ini');
  let errors=[];for(const url of ['https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js','https://unpkg.com/three@0.160.1/build/three.module.js']){try{THREE=await import(url);break}catch(e){errors.push(e)}}
- if(!THREE)throw new Error('Paket 3D belum tersedia tanpa internet');makeWorld();requestAnimationFrame(animate);
+ if(!THREE)throw new Error('Paket 3D belum tersedia tanpa internet');makeWorld();njtApplyLiving(true);requestAnimationFrame(animate);
 }
 try{if(!Number.isInteger(savedUI.index)&&typeof current==='function'&&current()&&CREATURES.findIndex(r=>r[0]===current().species)>=0)index=CREATURES.findIndex(r=>r[0]===current().species)}catch(e){}
 drawInfo();window.addEventListener('resize',resize,{passive:true});window.addEventListener('orientationchange',resize,{passive:true});document.addEventListener('visibilitychange',()=>{lastFrame=0});
