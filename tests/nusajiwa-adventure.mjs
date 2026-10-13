@@ -79,7 +79,7 @@ test('Adventure opens and closes as an integrated mode while preserving Tamagotc
  const doc={createElement:()=>root,getElementById:id=>id==='nj35'?scene:null,
   body:{append(){},classList:{add(){},remove(){}}},addEventListener(){}};
  const pet={id:'kuyang',stage:1,happy:3,sick:false,sleep:false,retired:false};
- const win={NUSAJIWA_TAMAGOTCHI:{getSave:()=>({active:'kuyang',pets:{kuyang:pet}}),refresh(){},open(){}}},devicePixelRatio:2,addEventListener(){}};
+ const win={NUSAJIWA_TAMAGOTCHI:{getSave:()=>({active:'kuyang',pets:{kuyang:pet}}),refresh(){},open(){}},devicePixelRatio:2,addEventListener(){}};
  const localStorage={getItem(){return null},setItem(){}};
  new Script(source).runInNewContext({window:win,document:doc,localStorage,console,Date,
   setTimeout(){return 1},clearTimeout(){},requestAnimationFrame(){return 1},cancelAnimationFrame(){},
