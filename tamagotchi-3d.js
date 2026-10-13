@@ -26,7 +26,7 @@ function load(){try{
  o.selected=clamp(o.selected,0,8);o.reads=Array.isArray(o.reads)?o.reads:[];o.album=Array.isArray(o.album)?o.album.slice(-40):[];
  return o;
 }catch(_){return blank();}}
-let store=load(),screen='home',query='',filter='all',focused='',mini=null,lastInteract=0,toastTimeout=0;
+let store=load(),screen='home',query='',filter='all',focused='',mini=null,lastInteract=0,toastTimeout=0,panelCursor=0;
 function newLife(id,stage){return {id,stage:clamp(stage,0,7),born:Date.now(),age:0,weight:5,hunger:3,happy:3,discipline:1,health:4,
  dirty:0,sick:false,sleep:false,lightsOff:false,attention:false,callAt:0,missed:0,mistakes:0,
  count:{hunger:0,happy:0,toilet:0},meals:0,games:0,studied:0,character:'Penjelajah',retired:false};}
@@ -233,6 +233,7 @@ function thought(p){
  return ['Hai, Penjaga! ♡','Ayo bermain!','Nusantara indah sekali ✦','Kita tumbuh bersama!'][Math.floor(Date.now()/18000)%4];
 }
 function show(key){
+ panelCursor=0;
  if(!active()&&!['collection','codex','help','settings','status'].includes(key))key='collection';
  if(key==='feed')screen='food';
  else if(key==='light')screen='light';
@@ -316,6 +317,14 @@ function drawPanel(){
  choices([['sound','♪ Suara '+(store.sound?'aktif':'mati')],['export','↓ Ekspor progres lengkap'],
  ['import','↑ Impor progres lengkap'],['quality','◈ Kualitas render'],['legacy','↗ Mode permainan klasik']]);}
  box.innerHTML=option(title,content);
+ markPanelCursor();
+}
+function panelButtons(){return [...$('#njtPanel').querySelectorAll('button[data-tama]')].filter(b=>b.dataset.tama!=='back'&&!b.disabled)}
+function markPanelCursor(){
+ if(screen==='home')return;
+ const a=panelButtons();if(!a.length)return;
+ panelCursor=((panelCursor%a.length)+a.length)%a.length;
+ a.forEach((b,i)=>{b.classList.toggle('njt-focused',i===panelCursor);b.setAttribute('aria-current',i===panelCursor?'true':'false')});
 }
 function render(){
  const p=active();
@@ -335,10 +344,10 @@ function back(){
  if(screen!=='home'){screen='home';query='';render();return}
  show(active()?'status':'collection');
 }
-function buttonA(){store.selected=(store.selected+1)%ACTIONS.length;beep(390);save();render()}
+function buttonA(){if(screen!=='home'){const b=panelButtons();if(b.length){panelCursor=(panelCursor+1)%b.length;markPanelCursor();b[panelCursor].scrollIntoView({block:'nearest',behavior:'smooth'});beep(390)}return;}store.selected=(store.selected+1)%ACTIONS.length;beep(390);save();render()}
 function buttonB(){
  beep(610);
- if(screen!=='home'){back();return}
+ if(screen!=='home'){const b=panelButtons();if(b.length)b[panelCursor]?.click();else back();return}
  if(active()?.stage===0){hatch();return}
  show(ACTIONS[store.selected][0]);
 }
@@ -358,8 +367,8 @@ element.addEventListener('click',ev=>{
  if(a==='hatch'){hatch();screen='home';render();return}
  if(a==='expedition'||a==='evolution'){show(a);return}
  if(a==='choose'){select(b.dataset.id);return}
- if(a==='filter'){filter=b.dataset.filter;drawPanel();return}
- if(a==='focus'){focused=b.dataset.id;drawPanel();return}
+ if(a==='filter'){filter=b.dataset.filter;panelCursor=0;drawPanel();return}
+ if(a==='focus'){focused=b.dataset.id;panelCursor=0;drawPanel();return}
  if(a==='read'){const id=focused;if(!id)return;if(!store.reads.includes(id))store.reads.push(id);if(store.pets[id])store.pets[id].studied++;
    save();nativePick(id);pressNative('[data-njtab="archive"]');screen='home';render();return;}
  if(a==='album'){screen='album';render();return}
@@ -382,7 +391,7 @@ document.addEventListener('keydown',e=>{
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){needs();synchronize();if(active())growth(active());render()}});
 window.addEventListener('pageshow',()=>{needs();synchronize();render()});
 setInterval(()=>{if(!document.hidden){needs();synchronize();if(active())growth(active());render()}},60000);
-needs();if(active())nativePick(store.active);render();
+needs();if(active())nativePick(store.active);pressNative('#nj35ZoomIn');pressNative('#nj35ZoomIn');render();
 if(!active())show('collection');
 else if(!store.introduced){store.introduced=true;save();show('help');}
 window.NUSAJIWA_TAMAGOTCHI={version:'7.0',creatureCount:LIST.length,getSave:()=>JSON.parse(JSON.stringify(store)),refresh:()=>{synchronize();render()},open:show};
