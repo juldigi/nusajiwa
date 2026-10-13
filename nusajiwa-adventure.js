@@ -4,12 +4,18 @@
 'use strict';
 if(window.NUSAJIWA_ADVENTURE)return;
 const KEY='nusajiwa-adventure-v1';
+const LEVELS_PER_WORLD=5;
 const LEVELS=[
- {name:'Gerbang Rimba',tag:'Lompati akar & temukan Jiwa',length:84,ground:[[0,20],[23,43],[46,66],[69,86]],ledges:[[9,1.6,4],[29,1.6,4],[52,1.8,4]],hazards:[13,32,58,75],checkpoints:[26,51],gem:39,element:'tanah',sky:0x92d9be},
+ {name:'Gerbang Rimba',world:'sumatra',theme:'jungle',tag:'Lompati akar & temukan Jiwa',length:84,ground:[[0,20],[23,43],[46,66],[69,86]],ledges:[[9,1.6,4],[29,1.6,4],[52,1.8,4]],hazards:[13,32,58,75],checkpoints:[26,51],gem:39,element:'tanah',sky:0x92d9be},
  {name:'Sungai Berliku',tag:'Lewati aliran sungai dan tepian',length:88,ground:[[0,16],[19,34],[37,54],[57,71],[74,90]],ledges:[[8,1.8,4],[24,1.8,4],[43,2.0,5],[62,1.6,4]],hazards:[12,27,48,65,80],checkpoints:[23,50],gem:45,element:'air',sky:0x8bcacb},
  {name:'Hutan Berkabut',tag:'Ikuti cahaya di balik kabut',length:92,ground:[[0,18],[21,39],[42,59],[62,77],[80,94]],ledges:[[10,1.7,4],[29,2.0,5],[48,1.8,5],[68,2,4]],hazards:[13,31,52,71,85],checkpoints:[26,64],gem:69,element:'angin',sky:0xc3d6c1},
  {name:'Gua Tersembunyi',tag:'Terangi jalan menuju kristal',length:95,ground:[[0,19],[22,39],[42,61],[64,78],[81,97]],ledges:[[12,1.8,5],[29,2.0,4],[49,2,4],[70,1.8,4]],hazards:[16,35,56,74,88],checkpoints:[25,65],gem:51,element:'bayangan',sky:0x97b5bd},
- {name:'Ujian Penjaga Rimba',tag:'Lewati gerbang terakhir evolusi',length:100,ground:[[0,19],[22,39],[42,57],[60,77],[80,102]],ledges:[[10,2,5],[28,2.1,4],[47,1.9,4],[68,2.1,4],[88,1.8,4]],hazards:[15,33,51,70,90],checkpoints:[25,63],gem:88,element:'cahaya',sky:0xf4d4a0}
+ {name:'Ujian Penjaga Rimba',tag:'Lewati gerbang terakhir evolusi',length:100,ground:[[0,19],[22,39],[42,57],[60,77],[80,102]],ledges:[[10,2,5],[28,2.1,4],[47,1.9,4],[68,2.1,4],[88,1.8,4]],hazards:[15,33,51,70,90],checkpoints:[25,63],gem:88,element:'cahaya',sky:0xf4d4a0},
+ {name:'Lereng Gunung Api',tag:'Melintasi lereng dan batu hangat',world:'jawa',theme:'volcano',length:86,ground:[[0,18],[21,37],[40,58],[61,74],[77,88]],ledges:[[12,1.8,4],[30,1.8,4],[48,2,4],[68,1.9,5]],hazards:[14,30,52,69,82],patrols:[[27,34,.55,1.5]],checkpoints:[24,63],gem:48,element:'api',sky:0xe4c1aa},
+ {name:'Teras Sawah',tag:'Platform sawah dan jalan setapak',world:'jawa',theme:'terrace',length:90,ground:[[0,20],[23,42],[45,61],[64,78],[81,92]],ledges:[[10,1.7,5],[31,1.9,5],[52,2.0,4],[71,1.8,5]],hazards:[16,36,57,74,86],patrols:[[28,38,.55,1.6],[66,76,.55,1.9]],checkpoints:[26,66],gem:54,element:'tanah',sky:0xbad9ac},
+ {name:'Aliran Batu',tag:'Menyeberang arus dan jembatan batu',world:'jawa',theme:'river',length:94,ground:[[0,19],[22,38],[41,59],[62,77],[80,96]],ledges:[[12,2,5],[30,1.9,4],[50,2.1,5],[69,2,4],[87,1.9,4]],hazards:[15,34,54,71,88],patrols:[[25,35,.55,1.8],[65,74,.55,2]],checkpoints:[24,65],gem:71,element:'air',sky:0xa5c5cb},
+ {name:'Lorong Candi',tag:'Memecahkan segel batu pada lorong kuno',world:'jawa',theme:'temple',length:96,ground:[[0,20],[23,41],[44,61],[64,79],[82,98]],ledges:[[12,1.8,4],[30,2,5],[50,2.2,4],[72,1.8,5]],hazards:[16,35,56,75,91],patrols:[[26,37,.55,2.0],[67,76,.55,1.7]],checkpoints:[26,66],gem:51,element:'cahaya',sky:0xd7c5a7},
+ {name:'Penjaga Gerbang Batu',tag:'Aktifkan tiga segel untuk membuka gerbang',world:'jawa',theme:'temple',length:102,ground:[[0,20],[23,40],[43,60],[63,81],[84,104]],ledges:[[13,2,5],[31,2,4],[51,1.9,5],[73,2,4],[93,1.9,4]],hazards:[17,35,55,76,91],patrols:[[27,37,.55,1.8],[47,57,.55,2.2],[69,79,.55,2.1],[87,95,.55,1.8]],checkpoints:[26,66],gem:74,element:'cahaya',sky:0xe5c5a2,sigils:[[13,1.15],[50,1.15],[91,1.15]]}
 ];
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const day=()=>new Date().toLocaleDateString('en-CA');
@@ -24,7 +30,7 @@ const root=document.createElement('section');
 root.id='nja';root.hidden=true;root.setAttribute('aria-label','Jelajah Evolusi NUSAJIWA');
 root.innerHTML='<div class="nja-stage">'+
  '<canvas id="njaCanvas" aria-label="Arena platformer: bergerak, melompat, dan kumpulkan Jiwa"></canvas>'+
- '<header class="nja-hud"><div class="nja-title"><b>NUSAJIWA</b><small>JELAJAH EVOLUSI · RIMBA SUMATRA</small></div>'+
+ '<header class="nja-hud"><div class="nja-title"><b>NUSAJIWA</b><small id="njaRegion">JELAJAH EVOLUSI · RIMBA SUMATRA</small></div>'+
  '<div class="nja-stats"><span id="njaStage">1—1</span><span id="njaCoins">✦ 0</span><span id="njaLives">♥ ♥ ♥</span></div>'+
  '<button type="button" data-nja="pause" class="nja-hud-btn" aria-label="Jeda petualangan">Ⅱ</button></header>'+
  '<div class="nja-message" id="njaMessage" aria-live="polite"></div>'+
