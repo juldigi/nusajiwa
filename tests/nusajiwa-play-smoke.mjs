@@ -41,7 +41,7 @@ function boot(old={}){
 }
 test('boots 3D Tamagotchi with beginner eggs and physical A/B/C',()=>{
  const a=boot();
- assert.equal(a.game.version,'8.0');
+ assert.equal(a.game.version,'8.1');
  assert.match(a.scene.child.innerHTML,/njt-three-buttons/);
  assert.match(a.scene.child.querySelector('#njtPanel').innerHTML,/Telur Pertamamu/);
  assert.match(a.scene.child.querySelector('#njtPanel').innerHTML,/Harimau Sumatra/);
