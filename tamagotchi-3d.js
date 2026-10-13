@@ -235,6 +235,7 @@ function care(kind,mode){
 }
 function beginMini(){
  if(!active()||active().stage===0){hatch();return}
+ if(active().retired){toast('Siklus kehidupan telah selesai. Pilih telur generasi baru.');return}
  if(active().sleep){toast('Tunggu sampai sahabat bangun.');return}
  mini={round:0,score:0,answer:Math.floor(Math.random()*2)};screen='minigame';render();
 }
@@ -271,6 +272,8 @@ function show(key){
  else if(key==='collection'||key==='starter'){screen=key;query='';visibleCount=60;}
  else if(key==='help'||key==='settings')screen=key;
  else if(key==='expedition'||key==='evolution'){
+  if(active()?.sleep){toast('Sahabatmu sedang tidur. Bangunkan dulu untuk beraktivitas.');render();return;}
+  if(active()?.retired){toast('Lanjutkan dengan telur generasi baru.');render();return;}
   pressNative('[data-njtab="'+(key==='expedition'?'explore':'ritual')+'"]');screen='home';
  }
  render();
