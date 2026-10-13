@@ -3,3 +3,22 @@ window.NJ45_CODEX={"tiger":{"scientific":"Panthera tigris sondaica","status":"Kr
 
 /* NUSAJIWA 4.7: only the following two entries receive a primary-source-reviewed badge. */
 Object.assign(window.NJ45_CODEX,{"tokhtor_sumatra": {"scientific": "Carpococcyx viridis", "status": "Terancam (EN), IUCN 2025 — penilaian November 2024", "habitat": "Hutan kaki gunung dan hutan pegunungan bawah Sumatra, terutama hutan berlapis bawah rapat, kira-kira 400–1.400 meter.", "morphology": "Burung darat berekor panjang; tubuh bawah cokelat kemerahan dan hijau zaitun, sayap kehijauan, dengan kulit biru, ungu dan hijau mengelilingi mata.", "behavior": "Mencari mangsa di lantai hutan; rujukan Red List menyebut mangsa tak bertulang belakang, reptil dan mamalia kecil dalam pengamatan terbatas.", "ecology": "Penghuni lantai hutan yang langka dan hanya dijumpai di kawasan tertentu pada Pegunungan Bukit Barisan.", "threats": "Berkurangnya tutupan hutan, fragmentasi habitat, kemungkinan tekanan perburuan dan jerat.", "context": "Representasi 3D adalah interpretasi visual dan kebiasaan makan dalam game tidak boleh dipakai sebagai rujukan pemeliharaan satwa liar.", "sources": [["IUCN Red List · Carpococcyx viridis (2025)", "https://doi.org/10.2305/IUCN.UK.2025-2.RLTS.T22724459A266075416.en"]]}, "kima_raksasa": {"scientific": "Tridacna gigas", "status": "CITES Apendiks II; status ESA dalam proses menurut NOAA 2024 (bukan kategori IUCN)", "habitat": "Terumbu karang dangkal di kawasan Indo-Pasifik, pada substrat karang atau pasir dekat karang.", "morphology": "Kerang dua cangkang sangat besar dengan lipatan cangkang radial dalam dan mantel beraneka warna, sering bermotif cincin biru-hijau.", "behavior": "Hidup menetap pada bentang laut dangkal; mantel berasosiasi dengan alga simbion yang memanfaatkan cahaya.", "ecology": "Bagian dari komunitas terumbu karang dan sumber mikrohabitat bagi organisme laut lainnya.", "threats": "Pengambilan untuk daging/cangkang, perdagangan, kerusakan terumbu karang dan perubahan kondisi laut.", "context": "Kima di NUSAJIWA adalah sahabat virtual; jangan memindahkan atau mengambil kima liar tanpa izin.", "sources": [["NOAA Fisheries · True Giant Clam", "https://www.fisheries.noaa.gov/species/true-giant-clam"], ["NOAA Fisheries · Giant Clam Management", "https://www.fisheries.noaa.gov/species/giant-clam-tridacna-spp/conservation-management"]]}});
+
+
+/* NUSAJIWA 7.1: Cuora amboinensis replaces a duplicated biological identity.
+   Cited assessment is IUCN 2020 (not the superseded 2000 Vulnerable listing). */
+window.NJ45_CODEX["kura_ambon"]={
+ scientific:"Cuora amboinensis — kura-kura kotak Asia Tenggara",
+ status:"Terancam (EN), IUCN Red List 2020 (asesmen 2018)",
+ habitat:"Lahan basah, perairan tenang, rawa dan ekosistem air tawar Asia Tenggara. Subspesies C. a. amboinensis terdapat di Maluku dan Sulawesi.",
+ morphology:"Tempurung gelap berprofil pipih sampai cembung tergantung subspesies; plastron berengsel yang dapat menutup; tiga pita kekuningan pada sisi kepala. Leher relatif pendek, berbeda nyata dari kura-kura leher ular Rote.",
+ behavior:"Bersifat semiakuatik dan memanfaatkan perairan tergenang, rawa dan habitat yang juga dapat berdekatan dengan aktivitas manusia.",
+ ecology:"Pemakan beragam tumbuhan dan satwa kecil di ekosistem air tawar; siklus peneluran mengikuti lingkungan tropis.",
+ threats:"Eksploitasi dan perdagangan satwa, pengambilan dari alam, serta penurunan kualitas habitat.",
+ context:"Model delapan fase, batu elemen dan interaksi mengasuh dalam NUSAJIWA adalah fantasi. Kura-kura nyata bukan benda koleksi untuk ditangkap dari alam.",
+ sources:[
+  ["IUCN Red List · Cuora amboinensis (2020)","https://doi.org/10.2305/IUCN.UK.2020-2.RLTS.T5958A3078812.en"],
+  ["IUCN Tortoise and Freshwater Turtle Specialist Group · Account 053","https://iucn-tftsg.org/cbftt/species-accounts/cuora-amboinensis-053/"],
+  ["Cuora Conservation Center","https://www.cuora.org/cuora-amboinensis"]
+ ]
+};
