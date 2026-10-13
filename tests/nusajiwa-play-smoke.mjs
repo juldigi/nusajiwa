@@ -40,7 +40,7 @@ function boot(old={}){
 }
 test('boots 3D Tamagotchi with beginner eggs and physical A/B/C',()=>{
  const a=boot();
- assert.equal(a.game.version,'7.2');
+ assert.equal(a.game.version,'7.4');
  assert.match(a.scene.child.innerHTML,/njt-three-buttons/);
  assert.match(a.scene.child.querySelector('#njtPanel').innerHTML,/Telur Pertamamu/);
  assert.match(a.scene.child.querySelector('#njtPanel').innerHTML,/Harimau Sumatra/);
@@ -57,9 +57,10 @@ test('adopt, hatch and feed are connected to actual 3D pet save',()=>{
 test('Codex switches to the selected encyclopedia entry',()=>{
  const a=boot();a.click('choose',{id:'komodo'});
  a.game.open('codex');a.click('focus',{id:'kuyang'});a.click('read');
+ assert.ok(a.game.getSave().reads.includes('kuyang'));
+ a.click('nativeCodex');
  assert.equal(a.api.getCurrentId(),'kuyang');
  assert.ok(a.seen.includes('archive'));
- assert.ok(a.game.getSave().reads.includes('kuyang'));
 });
 test('retired character begins a new generation with album unchanged',()=>{
  const a=boot();a.click('choose',{id:'komodo'});a.click('hatch');
