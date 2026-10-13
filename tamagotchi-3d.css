@@ -198,3 +198,16 @@ body.nj35-playing>a[href*="atlas-evolusi"]{display:none!important}
  padding:14px 16px;font-size:13px;font-weight:800;line-height:1.45;box-shadow:0 9px 34px #0018}
 #njt .njt-render-hint small{display:block;font-size:11px;font-weight:500;color:#d5e5d8;line-height:1.5;margin-top:9px}
 #njt .njt-render-hint[hidden]{display:none!important}
+
+/* 7.3 touch audit: 9 actions cannot fit as usable 44px targets in one iPhone row.
+   Five controls on top, four centered underneath, with real finger-sized targets. */
+#njt .njt-menu{grid-template-columns:repeat(10,minmax(0,1fr));gap:6px 4px}
+#njt .njt-menu-item{grid-column:span 2;min-height:55px}
+#njt .njt-menu-item:nth-child(6){grid-column:2/span 2}
+@media(max-width:650px){
+ #njt .njt-menu{grid-template-columns:repeat(10,minmax(0,1fr));gap:5px 3px}
+ #njt .njt-menu-item{grid-column:span 2;min-height:49px;border-radius:10px}
+ #njt .njt-menu-item:nth-child(6){grid-column:2/span 2}
+ #njt .njt-menu-item small{font-size:9px}
+}
+@media(max-height:670px){#njt .njt-menu-item{min-height:44px}#njt .njt-menu-art{height:20px;width:20px}}
