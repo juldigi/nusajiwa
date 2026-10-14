@@ -23,6 +23,27 @@ jobs:
           for file in script_*.js; do node --check "$file"; done
           node --check tamagotchi-3d.js
           node --check nusajiwa-adventure.js
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run complete gameplay regression suite before publication
+        run: node --test tests/*.mjs
+      - name: Validate deployment asset references
+        run: |
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const html = fs.readFileSync('index.html', 'utf8');
+          const refs = [...html.matchAll(/<(?:script|link)\b[^>]*?\b(?:src|href)="(\.\/[^"]+)"/g)].map(x=>x[1].split('?')[0].slice(2));
+          const missing = refs.filter(x=>!fs.existsSync(x));
+          const duplicate = refs.filter((x,i)=>refs.indexOf(x)!==i);
+          if(missing.length) throw Error('Missing deployment assets: '+missing.join(', '));
+          if(duplicate.length) console.warn('Repeated asset references:', [...new Set(duplicate)].join(', '));
+          for(const file of ['tamagotchi-3d.js','nusajiwa-adventure.js','script_32.js','script_33.js']){
+            if(!refs.includes(file)) throw Error('Missing core runtime reference: '+file);
+          }
+          console.log('Validated',refs.length,'script/style asset references');
+          NODE
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:
