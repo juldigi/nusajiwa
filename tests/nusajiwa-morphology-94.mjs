@@ -64,5 +64,5 @@ test('Unlisted IDs unaffected; module loads before engine and is included in Pag
  assert.ok(html.indexOf('./nj94-fauna.js')<html.indexOf('./script_32.js'));
  const workflow=read('.github/workflows/pages.yml');
  assert.ok(workflow.includes('node --check nj94-fauna.js'));
- assert.ok(workflow.includes('nj94-fauna.js pages-fixes.js'));
+ assert.ok(workflow.includes('nj94-fauna.js nj95-visual-audit.js pages-fixes.js'));
 });
