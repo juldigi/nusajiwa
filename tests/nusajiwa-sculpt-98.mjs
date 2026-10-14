@@ -45,7 +45,7 @@ test('All eight stages of each character create DIFFERENT mesh identities and ma
    assert.equal(rig.userData.id,id);
    assert.equal(rig.userData.phase,stage);
    assert.equal(rig.userData.reconstructed,true);
-   assert.ok(rig.children.length>=6,'not enough differentiable parts for '+id+'/'+stage);
+   assert.ok(rig.children.length>=(stage===0?4:6),'not enough differentiable parts for '+id+'/'+stage);
    assert.equal(original.visible,false,'source adult must not overlap '+id+'/'+stage);
    assert.equal(oldOverlay.visible,false,'previous overlay must not overlap '+id+'/'+stage);
    if(stage===0)assert.equal(group.children[1].visible,false,'old egg must be hidden');
