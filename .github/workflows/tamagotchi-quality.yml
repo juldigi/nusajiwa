@@ -10,6 +10,7 @@ on:
       - 'nj89-ten.js'
       - 'nj90-forty.js'
       - 'nj94-fauna.js'
+      - 'nj96-fauna.js'
       - 'nj95-visual-audit.js'
       - 'tamagotchi-3d.js'
       - 'tamagotchi-3d.css'
@@ -42,6 +43,7 @@ jobs:
           node --check nj89-ten.js
           node --check nj90-forty.js
           node --check nj94-fauna.js
+          node --check nj96-fauna.js
           node --check nj95-visual-audit.js
       - name: Verify game and collection invariants
         run: node --test tests/*.mjs
