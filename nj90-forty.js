@@ -52,8 +52,14 @@ window.NUSAJIWA_MORPH40=function(group,body,M,id,phase,T,ell,tube){
  case 'entrails':for(let j=0;j<Math.min(8,s+2);j++){const a=j*2.4;
   t('viscera-strand-'+j,[[Math.sin(a)*.14,1.5,.04],[Math.sin(a)*.28,.94,-.08],
   [Math.sin(a+.7)*.35,.35-(j%2)*.09,-.20]],.038,M.pink);}break;
- case 'rearhole':e('posterior-gown-rim',0,1.3,-.46,.13+s*.015,.19+s*.015,.025,M.dark);
-  e('posterior-gown-void',0,1.3,-.50,.105+s*.013,.17+s*.013,.019,M.black);break;
+ case 'rearhole':{
+  // Retain NJ611 real fabric aperture. An opaque ellipsoid would conceal it.
+  const edge=new T.Mesh(new T.TorusGeometry(.285,.032,8,40),M.white);
+  edge.name=tag('posterior-gown-open-aperture-rim');edge.position.set(0,1.56,-.488);root.add(edge);
+  pair(d=>t('open-back-dress-seam-'+d,[[d*.35,1.91,-.46],
+    [d*.37,1.49,-.48],[d*.41,.92,-.50]],.030,M.light));
+  break;
+ }
  case 'hair':hair('character-long-hair',Math.min(10,s+3));break;
  case 'arms':pair(d=>t('long-bent-guardian-arm-'+d,
   [[d*.27,1.43,.09],[d*.49,.80,.18],[d*.39,.36,.30]],.078,M.main));break;
@@ -162,16 +168,33 @@ window.NUSAJIWA_MORPH40=function(group,body,M,id,phase,T,ell,tube){
   case 'tiger':e('young-quad-body',0,.80,-.12,.40+.07*s,.38,.68,M.main);
     e('distinct-cat-head',0,1.22,.54,.30,.30,.31,M.light);
     pair(d=>{for(const z of [-.37,.37])e('young-tiger-paw-'+d+'-'+z,d*.32,.25,z,.14,.23,.18,M.main);});break;
-  case 'serpent':coil('juvenile-reptile');
-    e('rising-unwinged-naga-head',0,1.80,.78,.28,.23,.35,M.main);break;
+  case 'serpent':{
+    coil('juvenile-reptile');
+    if(id==='nyai_blora'){
+      e('juvenile-serpent-woman-face',0,1.83,.78,.28,.34,.26,M.light);
+      e('black-hair-over-serpent-neck',0,2.13,.58,.34,.19,.25,M.black);
+      pair(d=>t('female-serpent-lock-'+d,[[d*.16,2.13,.53],[d*.29,1.58,.39],[d*.33,.83,.21]],.05,M.black));
+    }else e('rising-unwinged-naga-head',0,1.80,.78,.28,.23,.35,M.main);
+    break;
+  }
   case 'human':e('juvenile-person-garment',0,1.00,0,.30,.59,.28,M.main);
     e('juvenile-person-head',0,1.76,.14,.29,.30,.24,M.light);
     pair(d=>t('juvenile-person-arm-'+d,[[d*.25,1.42,0],[d*.36,.88,.16],[d*.39,.54,.21]],.06,M.main));break;
   case 'ape':e('short-upright-body',0,1.02,-.03,.29,.46,.27,M.main);
     e('short-hominid-head',0,1.79,.15,.32,.33,.25,M.light);
     pair(d=>t('short-long-ape-arm-'+d,[[d*.28,1.4,.04],[d*.49,.79,.15],[d*.44,.38,.19]],.085,M.dark));break;
-  case 'spirit':e('spectral-shoulderless-core',0,1.05,-.06,.29,.55,.20,M.dark);
-    if(id!=='hantu_jeruk_purut')e('spectral-human-face',0,1.75,.17,.32,.36,.24,M.light);trail('early-spirit');break;
+  case 'spirit':{
+    if(id==='poppo'){
+      // Fixed: youth flying head is NOT a full ghost torso.
+      e('poppo-floating-juvenile-head',0,1.78,.15,.24+s*.04,.29,.26,M.light);
+      e('poppo-separate-hairline',0,2.11,-.09,.27+s*.04,.18,.24,M.black);
+      pair(d=>e('poppo-shadow-temple-'+d,d*.17,1.81,.35,.055,.075,.03,M.dark));
+      break;
+    }
+    e('spectral-shoulderless-core',0,1.05,-.06,.29,.55,.20,M.dark);
+    if(id!=='hantu_jeruk_purut')e('spectral-human-face',0,1.75,.17,.32,.36,.24,M.light);
+    trail('early-spirit');break;
+  }
   }
  };
  if(s===0){

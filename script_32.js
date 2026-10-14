@@ -2622,12 +2622,24 @@ NJ36_PROFILES["penyu_pipih"]=["Perairan sekitar Papua dan Australia","Natator de
 
 /* NUSAJIWA 5.6: eight distinct storytelling identities. These are artistic game interpretations. */
 const NJ56_IDS=new Set(["si_manis_jembatan_ancol", "hantu_jeruk_purut", "orang_pendek", "dewi_lanjar", "jaka_tarub", "nawang_wulan", "timun_mas", "keong_mas"]);
-function nj56Specter(g,M){ell(g,0,1.22,0,.51,.92,.32,M.light);ell(g,0,2.18,.10,.38,.43,.34,M.main);for(let i=0;i<9;i++)tube(g,[[Math.sin(i*2.4)*.18,2.36,.1],[Math.sin(i*2.4)*.32,1.55,.13],[Math.sin(i*2.4)*.44,.54,.16]],.025,M.dark);ell(g,-.13,2.23,.41,.065,.08,.03,M.eye);ell(g,.13,2.23,.41,.065,.08,.03,M.eye)}
+function nj56Specter(g,M,headless=false){
+ ell(g,0,1.22,0,.51,.92,.32,M.light);
+ if(headless){
+  // Jeruk Purut: headless robed figure, not the headed Si Manis sculpt.
+  ell(g,0,1.95,.06,.37,.19,.30,M.white);
+  ell(g,0,2.00,.22,.18,.046,.12,M.black);
+  for(const d of [-1,1])tube(g,[[d*.35,1.78,.05],[d*.49,1.02,.16],[d*.55,.35,.19]],.12,M.white);
+  g.userData.folkloreForm='headless-cleric-Jeruk-Purut-urban-legend';return;
+ }
+ ell(g,0,2.18,.10,.38,.43,.34,M.main);
+ for(let i=0;i<9;i++)tube(g,[[Math.sin(i*2.4)*.18,2.36,.1],[Math.sin(i*2.4)*.32,1.55,.13],[Math.sin(i*2.4)*.44,.54,.16]],.025,M.dark);
+ ell(g,-.13,2.23,.41,.065,.08,.03,M.eye);ell(g,.13,2.23,.41,.065,.08,.03,M.eye);
+}
 function nj56Forest(g,M){ell(g,0,.96,0,.56,.8,.40,M.main);ell(g,0,1.84,.24,.48,.45,.40,M.main);for(let x of [-1,1]){ell(g,x*.54,1.15,.1,.18,.64,.18,M.dark);ell(g,x*.3,.3,0,.22,.37,.25,M.main)}eyes(g,M,0,1.88,.58,.2,.06);ell(g,0,1.65,.60,.24,.15,.18,M.light)}
 function nj56Queen(g,M){ell(g,0,.96,0,.68,1.03,.46,M.main);ell(g,0,2.13,.14,.38,.40,.34,M.light);for(let i=-2;i<=2;i++)ell(g,i*.13,2.62,.08,.075,.29,.08,M.gold);for(let x of [-1,1]){ell(g,x*.7,1.37,0,.18,.66,.18,M.light);ell(g,x*.27,2.18,.45,.065,.06,.04,M.eye)}ell(g,0,1.75,.5,.24,.12,.08,M.gold)}
 function nj56Hero(g,M){ell(g,0,1.12,0,.55,.73,.34,M.main);ell(g,0,2.01,.16,.37,.38,.35,M.light);for(let x of [-1,1]){ell(g,x*.70,1.27,0,.18,.62,.18,M.main);ell(g,x*.25,.36,0,.21,.42,.21,M.dark)}eyes(g,M,0,2.06,.51,.16,.05);ell(g,0,1.1,.36,.53,.10,.08,M.gold)}
 function nj56Shell(g,M){ell(g,0,.62,0,.95,.68,.65,M.gold);for(let i=0;i<7;i++)tube(g,[[0,.97,0],[Math.sin(i*.9)*.44,.85,Math.cos(i*.9)*.33],[Math.sin(i*.9)*.8,.52,Math.cos(i*.9)*.58]],.035,M.dark);ell(g,0,1.1,.54,.22,.20,.20,M.light);eyes(g,M,0,1.18,.74,.11,.035)}
-const NJ56_SCULPTORS={si_manis_jembatan_ancol:nj56Specter,hantu_jeruk_purut:nj56Specter,orang_pendek:nj56Forest,dewi_lanjar:nj56Queen,jaka_tarub:nj56Hero,nawang_wulan:nj56Queen,timun_mas:nj56Hero,keong_mas:nj56Shell};
+const NJ56_SCULPTORS={si_manis_jembatan_ancol:nj56Specter,hantu_jeruk_purut:(g,M)=>nj56Specter(g,M,true),orang_pendek:nj56Forest,dewi_lanjar:nj56Queen,jaka_tarub:nj56Hero,nawang_wulan:nj56Queen,timun_mas:nj56Hero,keong_mas:nj56Shell};
 NJ36_PROFILES["si_manis_jembatan_ancol"]=["Jakarta","Cerita hantu urban Jakarta yang berkembang melalui kisah lisan dan adaptasi populer." + "Visual merupakan interpretasi artistik; profil folklor awal, belum diverifikasi terhadap sumber primer."];
 NJ36_PROFILES["hantu_jeruk_purut"]=["Jakarta","Legenda urban Jakarta yang dikaitkan dengan kawasan Jeruk Purut; bukan klaim kejadian nyata." + "Visual merupakan interpretasi artistik; profil folklor awal, belum diverifikasi terhadap sumber primer."];
 NJ36_PROFILES["orang_pendek"]=["Kerinci, Sumatra","Kisah makhluk pendek penghuni hutan Sumatra; keberadaannya belum dibuktikan secara zoologis." + "Visual merupakan interpretasi artistik; profil folklor awal, belum diverifikasi terhadap sumber primer."];
@@ -4364,8 +4376,11 @@ function nj88Morph(group,body,M,id,phase){
  root.userData={identity:id,stage:s,geometryBranch:s?'replaced-silhouette':'original-egg-with-crest',culturalStatus:'invented-game-evolution'};
 }
 
-function makeAvatar(r, portraitMode=false){const type=r[4],M=mats(r),group=new THREE.Group();group.name='NJ35_MODEL_'+r[0];let body=new THREE.Group();body.name='anatomy';group.add(body);
- if(r[0]==='kura_ambon')nj70Cuora(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='sembrani')nj630Sembrani(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='ebu_gogo')nj630Ebu(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='kuda_lumping')nj630Lumping(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='warak_ngendog')nj629Warak(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='boraspati_tano')nj629Boraspati(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='bujang_ganong')nj629Ganong(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='hanoman')nj628Hanoman(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='jatayu')nj628Jatayu(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='makara_candi')nj628Makara(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='dewi_sri')nj627Sri(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='batara_kala')nj627Kala(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='putri_mandalika')nj627Mandalika(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='nyi_roro_kidul')nj626SeaQueen(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='jaka_tarub')nj626JakaTarub(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='kebo_iwa')nj626KeboIwa(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='singa_barong_reog')nj625Reog(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='rangda')nj625Rangda(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='wewe')nj625Wewe(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='garuda')nj624Garuda(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='barong')nj624Barong(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='kuyang')nj624Kuyang(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='lembuswana')nj619Lembuswana(body,M);else if(r[0]==='naga_basuki')nj619Basuki(body,M);else if(r[0]==='bunian')nj614Bunian(body,M);else if(r[0]==='siluman_harimau')nj614SilumanHarimau(body,M);else if(r[0]==='macan_putih')nj614MacanPutih(body,M);else if(r[0]==='babi_ngepet')nj613BabiNgepet(body,M);else if(r[0]==='ahool')nj613Ahool(body,M);else if(r[0]==='pocong')nj612Pocong(body,M);else if(r[0]==='kuntilanak')nj612Kuntilanak(body,M);else if(r[0]==='tuyul')nj612Tuyul(body,M);else if(r[0]==='buto_ijo')nj611ButoIjo(body,M);else if(r[0]==='sundel_bolong')nj611SundelBolong(body,M);else if(r[0]==='naga_antaboga')nj611Antaboga(body,M);else if(r[0]==='leak')nj610Leak(body,M);else if(r[0]==='genderuwo')nj610Genderuwo(body,M);else if(r[0]==='jenglot')nj610Jenglot(body,M);else if(r[0]==='begu_ganjang')nj610Begu(body,M);else if(r[0]==='barong')nj69Barong(body,M);else if(r[0]==='banaspati')nj69Banaspati(body,M);else if(r[0]==='palasik')nj69Palasik(body,M);else if(r[0]==='kuyang')nj68Kuyang(body,M);else if(r[0]==='wewe')nj68Wewe(body,M);else if(r[0]==='rangda')nj68Rangda(body,M);else if(NJ67_BIRD_DESIGNS[r[0]])nj67Bird(body,M,r);else if(r[0]==='hiu_martil_bergerigi')nj67Hammerhead(body,M);else if(r[0]==='kancil_jawa')nj67Kancil(body,M);else if(NJ56_SCULPTORS[r[0]])NJ56_SCULPTORS[r[0]](body,M);else if(nj54Sculptors[r[0]])nj54Sculptors[r[0]](body,M);else if(nj53Sculptors[r[0]])nj53Sculptors[r[0]](body,M);else if(nj52Sculptors[r[0]])nj52Sculptors[r[0]](body,M);else if(nj51Sculptors[r[0]])nj51Sculptors[r[0]](body,M);else if(nj50Sculptors[r[0]])nj50Sculptors[r[0]](body,M);else if(nj47Sculptors[r[0]])nj47Sculptors[r[0]](body,M);else if(nj46Sculptors[r[0]])nj46Sculptors[r[0]](body,M);else if(nj42Sculptors[r[0]])nj42Sculptors[r[0]](body,M);else if(nj41Sculptors[r[0]])nj41Sculptors[r[0]](body,M);else if(nj40Sculptors[r[0]])nj40Sculptors[r[0]](body,M);else if(nj39Sculptors[r[0]])nj39Sculptors[r[0]](body,M);else if(nj38Sculptors[r[0]])nj38Sculptors[r[0]](body,M);else if(type==='elephant')nj37Elephant(body,M);else if(type==='rhino')nj37Rhino(body,M);else if(type==='deer')nj37Deer(body,M);else if(type==='tarsier')nj37Tarsier(body,M);else if(['turtle','pignose','snakeneck','loggerhead','ridley','flatback'].includes(type))nj37Turtle(body,M);else if(type==='dugong')nj37Dugong(body,M);else if(type==='arowana')nj37Fish(body,M);else if(['starling','eagle','hornbill','cassowary','cockatoo','peafowl'].includes(type))nj37Bird(body,M,type);else if(type==='orangutan'||type==='gibbon')nj37Gibbon(body,M,type==='orangutan');else if(type==='babirusa')nj37Babirusa(body,M);else if(type==='tiger')cat(body,M,r);else if(['reptile','monitor'].includes(type))lizard(body,M);else if(type==='bird'||type==='kingfisher')bird(body,M,type);else if(type==='paradise'||type==='maleo'||type==='garuda')bird(body,M,type);else if(type==='anoa'||type==='lembuswana')bovine(body,M,type);else if(type==='bekantan')monkey(body,M);
+function makeAvatar(r, portraitMode=false, auditPhase=null){
+ const renderPhase=auditPhase===null?(renderPhase):
+ Math.max(0,Math.min(7,Math.floor(Number(auditPhase)||0)));
+ const type=r[4],M=mats(r),group=new THREE.Group();group.name='NJ35_MODEL_'+r[0];let body=new THREE.Group();body.name='anatomy';group.add(body);
+ if(r[0]==='kura_ambon')nj70Cuora(body,M,renderPhase);else if(r[0]==='sembrani')nj630Sembrani(body,M,renderPhase);else if(r[0]==='ebu_gogo')nj630Ebu(body,M,renderPhase);else if(r[0]==='kuda_lumping')nj630Lumping(body,M,renderPhase);else if(r[0]==='warak_ngendog')nj629Warak(body,M,renderPhase);else if(r[0]==='boraspati_tano')nj629Boraspati(body,M,renderPhase);else if(r[0]==='bujang_ganong')nj629Ganong(body,M,renderPhase);else if(r[0]==='hanoman')nj628Hanoman(body,M,renderPhase);else if(r[0]==='jatayu')nj628Jatayu(body,M,renderPhase);else if(r[0]==='makara_candi')nj628Makara(body,M,renderPhase);else if(r[0]==='dewi_sri')nj627Sri(body,M,renderPhase);else if(r[0]==='batara_kala')nj627Kala(body,M,renderPhase);else if(r[0]==='putri_mandalika')nj627Mandalika(body,M,renderPhase);else if(r[0]==='nyi_roro_kidul')nj626SeaQueen(body,M,renderPhase);else if(r[0]==='jaka_tarub')nj626JakaTarub(body,M,renderPhase);else if(r[0]==='kebo_iwa')nj626KeboIwa(body,M,renderPhase);else if(r[0]==='singa_barong_reog')nj625Reog(body,M,renderPhase);else if(r[0]==='rangda')nj625Rangda(body,M,renderPhase);else if(r[0]==='wewe')nj625Wewe(body,M,renderPhase);else if(r[0]==='garuda')nj624Garuda(body,M,renderPhase);else if(r[0]==='barong')nj624Barong(body,M,renderPhase);else if(r[0]==='kuyang')nj624Kuyang(body,M,renderPhase);else if(r[0]==='lembuswana')nj619Lembuswana(body,M);else if(r[0]==='naga_basuki')nj619Basuki(body,M);else if(r[0]==='bunian')nj614Bunian(body,M);else if(r[0]==='siluman_harimau')nj614SilumanHarimau(body,M);else if(r[0]==='macan_putih')nj614MacanPutih(body,M);else if(r[0]==='babi_ngepet')nj613BabiNgepet(body,M);else if(r[0]==='ahool')nj613Ahool(body,M);else if(r[0]==='pocong')nj612Pocong(body,M);else if(r[0]==='kuntilanak')nj612Kuntilanak(body,M);else if(r[0]==='tuyul')nj612Tuyul(body,M);else if(r[0]==='buto_ijo')nj611ButoIjo(body,M);else if(r[0]==='sundel_bolong')nj611SundelBolong(body,M);else if(r[0]==='naga_antaboga')nj611Antaboga(body,M);else if(r[0]==='leak')nj610Leak(body,M);else if(r[0]==='genderuwo')nj610Genderuwo(body,M);else if(r[0]==='jenglot')nj610Jenglot(body,M);else if(r[0]==='begu_ganjang')nj610Begu(body,M);else if(r[0]==='barong')nj69Barong(body,M);else if(r[0]==='banaspati')nj69Banaspati(body,M);else if(r[0]==='palasik')nj69Palasik(body,M);else if(r[0]==='kuyang')nj68Kuyang(body,M);else if(r[0]==='wewe')nj68Wewe(body,M);else if(r[0]==='rangda')nj68Rangda(body,M);else if(NJ67_BIRD_DESIGNS[r[0]])nj67Bird(body,M,r);else if(r[0]==='hiu_martil_bergerigi')nj67Hammerhead(body,M);else if(r[0]==='kancil_jawa')nj67Kancil(body,M);else if(NJ56_SCULPTORS[r[0]])NJ56_SCULPTORS[r[0]](body,M);else if(nj54Sculptors[r[0]])nj54Sculptors[r[0]](body,M);else if(nj53Sculptors[r[0]])nj53Sculptors[r[0]](body,M);else if(nj52Sculptors[r[0]])nj52Sculptors[r[0]](body,M);else if(nj51Sculptors[r[0]])nj51Sculptors[r[0]](body,M);else if(nj50Sculptors[r[0]])nj50Sculptors[r[0]](body,M);else if(nj47Sculptors[r[0]])nj47Sculptors[r[0]](body,M);else if(nj46Sculptors[r[0]])nj46Sculptors[r[0]](body,M);else if(nj42Sculptors[r[0]])nj42Sculptors[r[0]](body,M);else if(nj41Sculptors[r[0]])nj41Sculptors[r[0]](body,M);else if(nj40Sculptors[r[0]])nj40Sculptors[r[0]](body,M);else if(nj39Sculptors[r[0]])nj39Sculptors[r[0]](body,M);else if(nj38Sculptors[r[0]])nj38Sculptors[r[0]](body,M);else if(type==='elephant')nj37Elephant(body,M);else if(type==='rhino')nj37Rhino(body,M);else if(type==='deer')nj37Deer(body,M);else if(type==='tarsier')nj37Tarsier(body,M);else if(['turtle','pignose','snakeneck','loggerhead','ridley','flatback'].includes(type))nj37Turtle(body,M);else if(type==='dugong')nj37Dugong(body,M);else if(type==='arowana')nj37Fish(body,M);else if(['starling','eagle','hornbill','cassowary','cockatoo','peafowl'].includes(type))nj37Bird(body,M,type);else if(type==='orangutan'||type==='gibbon')nj37Gibbon(body,M,type==='orangutan');else if(type==='babirusa')nj37Babirusa(body,M);else if(type==='tiger')cat(body,M,r);else if(['reptile','monitor'].includes(type))lizard(body,M);else if(type==='bird'||type==='kingfisher')bird(body,M,type);else if(type==='paradise'||type==='maleo'||type==='garuda')bird(body,M,type);else if(type==='anoa'||type==='lembuswana')bovine(body,M,type);else if(type==='bekantan')monkey(body,M);
  else if(type==='kuyang'||type==='palasik'||type==='banaspati')floating(body,M,type);
  else if(r[0]==='nyai_blora')serpentWoman(body,M);
  else if(r[0]==='hantu_banyu')waterWraith(body,M);
@@ -4378,19 +4393,66 @@ function makeAvatar(r, portraitMode=false){const type=r[4],M=mats(r),group=new T
  else humanoid(body,M,type);
  if(!['babi_ngepet','ahool','lembuswana','naga_basuki','garuda','barong','kuyang','singa_barong_reog','rangda','wewe','nyi_roro_kidul','jaka_tarub','kebo_iwa','dewi_sri','batara_kala','putri_mandalika','hanoman','jatayu','makara_candi','warak_ngendog','boraspati_tano','bujang_ganong','sembrani','ebu_gogo','kuda_lumping'].includes(r[0]) && !NJ611_FOLKLORE[r[0]] && !NJ612_FOLKLORE[r[0]] && sculptSignatures[r[0]])sculptSignatures[r[0]](body,M);
  if(type==='garuda'&&r[0]!=='garuda'){let crown=new THREE.Mesh(new THREE.ConeGeometry(.25,.54,6),M.gold);crown.position.set(0,2.05,.33);body.add(crown)}
- const living=portraitMode?null:gamePet();
- if(living)decorateStage(group,body,living,M);
- if(['warak_ngendog','boraspati_tano','bujang_ganong'].includes(r[0]))nj633Metamorph(body,M,r[0],portraitMode?5:gamePet()?.phase??5);
- nj77Morph(group,body,M,r[0],portraitMode?5:gamePet()?.phase??5);
- nj88Morph(group,body,M,r[0],portraitMode?5:gamePet()?.phase??5);
- window.NUSAJIWA_MORPH89?.(group,body,M,r[0],portraitMode?5:gamePet()?.phase??5,THREE,ell,tube);
- window.NUSAJIWA_MORPH40?.(group,body,M,r[0],portraitMode?5:gamePet()?.phase??5,THREE,ell,tube);
- window.NUSAJIWA_MORPH94?.(group,body,M,r[0],portraitMode?5:gamePet()?.phase??5,THREE,ell,tube);
+ const living=auditPhase===null?(portraitMode?null:gamePet()):{phase:renderPhase,legend:null};
+ if(living)decorateStage(group,body,living,M,r);
+ if(['warak_ngendog','boraspati_tano','bujang_ganong'].includes(r[0]))nj633Metamorph(body,M,r[0],renderPhase);
+ nj77Morph(group,body,M,r[0],renderPhase);
+ nj88Morph(group,body,M,r[0],renderPhase);
+ window.NUSAJIWA_MORPH89?.(group,body,M,r[0],renderPhase,THREE,ell,tube);
+ window.NUSAJIWA_MORPH40?.(group,body,M,r[0],renderPhase,THREE,ell,tube);
+ window.NUSAJIWA_MORPH94?.(group,body,M,r[0],renderPhase,THREE,ell,tube);
  group.userData={...group.userData,body,type,base:body.position.y,phase:(living?.phase??null),legend:(living?.legend??null)};
  return group;
 }
+
+/* Visual QA: inspect production 3D models WITHOUT affecting game persistence. */
+let nj95Preview=null;
+function nj95ClearPreview(){
+ if(!nj95Preview||!world)return;
+ world.avatarRoot.remove(nj95Preview);
+ nj95Preview.traverse(o=>{
+  if(o.geometry&&o.geometry!==nj37SharedSphere)o.geometry.dispose?.();
+  if(o.material)for(const m of Array.isArray(o.material)?o.material:[o.material])m.dispose?.();
+ });
+ nj95Preview=null;
+}
+window.NUSAJIWA_FOLKLORE_VISUAL_QA={
+ catalog:()=>CREATURES.filter(r=>r[2]!=='Fauna'&&r[2]!=='Fauna domestik')
+   .map(r=>({id:r[0],name:r[1],category:r[2],region:r[3]})),
+ ready:()=>!!(THREE&&world?.avatarRoot&&three),
+ preview:(id,phase=5)=>{
+  if(!THREE||!world?.avatarRoot)return {error:'3D belum siap'};
+  const row=CREATURES.find(r=>r[0]===id);
+  if(!row||row[2]==='Fauna'||row[2]==='Fauna domestik')return {error:'ID bukan folklore'};
+  nj95ClearPreview();
+  const s=Math.max(0,Math.min(7,Math.floor(Number(phase)||0)));
+  nj95Preview=makeAvatar(row,false,s);
+  nj95Preview.name='NJ95_QA_'+id+'_F'+s;
+  nj95Preview.scale.setScalar(.83);
+  world.avatarRoot.add(nj95Preview);
+  if(avatar)avatar.visible=false;
+  if(njtLivingDecor)njtLivingDecor.visible=false;
+  let meshes=0,visible=0,triangles=0;
+  nj95Preview.traverse(o=>{
+   if(!o.isMesh)return;
+   meshes++;
+   if(o.visible&&o.parent?.visible!==false)visible++;
+   const g=o.geometry;triangles+=(g?.index?g.index.count/3:g?.getAttribute?.('position')?.count/3)||0;
+  });
+  const size=new THREE.Vector3();
+  new THREE.Box3().setFromObject(nj95Preview).getSize(size);
+  return {id,name:row[1],category:row[2],phase:s,meshes,visible,
+   triangles:Math.round(triangles),
+   bounds:[size.x,size.y,size.z].map(v=>Math.round(v*100)/100),
+   warning:Math.min(size.x,size.y,size.z)<.05?'Geometri terlalu tipis':null};
+ },
+ angle:deg=>{if(!nj95Preview)return false;nj95Preview.rotation.y=(Number(deg)||0)*Math.PI/180;return true;},
+ capture:()=>{if(!nj95Preview||!three)return null;three.render(world.scene,world.camera);return canvas.toDataURL('image/png')},
+ reset:()=>{nj95ClearPreview();if(avatar)avatar.visible=true;if(njtLivingDecor)njtLivingDecor.visible=true;}
+};
+
 // Eight stages are geometrically different; Legend form uses the chosen original stone.
-function decorateStage(group,body,pet,M){
+function decorateStage(group,body,pet,M,auditRecord=null){
  // Each phase gains non-scale anatomy / heraldry details. The overall silhouette remains species-specific.
  if(pet.phase>=1 && pet.phase<=5){
    const phase=pet.phase,mat=phase<3?M.light:phase===3?M.gold:M.white;
@@ -4402,7 +4464,7 @@ function decorateStage(group,body,pet,M){
  }
  if(pet.phase===0){
   body.visible=false;
-  const shell=new THREE.Mesh(new THREE.SphereGeometry(1,24,18),new THREE.MeshPhysicalMaterial({color:record()[5],roughness:.31,metalness:.14,clearcoat:.7}));
+  const shell=new THREE.Mesh(new THREE.SphereGeometry(1,24,18),new THREE.MeshPhysicalMaterial({color:(auditRecord||record())[5],roughness:.31,metalness:.14,clearcoat:.7}));
   shell.scale.set(.58,.80,.59);shell.position.y=1.18;shell.castShadow=true;group.add(shell);
   for(let j=0;j<4;j++){
    const ring=new THREE.Mesh(new THREE.TorusGeometry(.31+j*.065,.017,8,42),M.gold);
@@ -4410,7 +4472,7 @@ function decorateStage(group,body,pet,M){
   }
   tube(group,[[.19,1.62,.45],[.06,1.47,.56],[.15,1.34,.56],[-.03,1.13,.58]],.016,M.white);
   // 6.24 symbolic identity-specific egg ornaments; folklore beings do not canonically hatch.
-  const eggIdentity=record()[0];
+  const eggIdentity=(auditRecord||record())[0];
   if(eggIdentity==='garuda'){
    for(const side of [-1,1])for(let j=0;j<4;j++){
     const feather=ell(group,side*(.16+j*.085),1.16+j*.10,.53-j*.08,.08,.14,.035,j%2?M.gold:M.light);

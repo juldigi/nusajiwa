@@ -287,5 +287,33 @@
       "persistence": "uses existing Tamagotchi save; ephemeral round sequences are not saved",
       "validation": "tests/nusajiwa-play-smoke.mjs"
     }
-  ]
+  ],
+  "visual_audit": {
+    "id": "nj95",
+    "status": "MERGED",
+    "modelSource": "original game production WebGL makeAvatar",
+    "includedCategories": "all non-Fauna and non-Fauna-domestik",
+    "unique_identities": 61,
+    "game_stages_per_identity": 8,
+    "preview_constructs": 488,
+    "view_angles_deg": [
+      0,
+      90,
+      180,
+      270
+    ],
+    "browser_route": "/?audit=folklore",
+    "file": "nj95-visual-audit.js",
+    "regression": "tests/nusajiwa-folklore-visual-95.mjs",
+    "repaired": [
+      "Poppo youth no longer has full ghost torso",
+      "Nyai Blora juvenile has female head above serpent lower body",
+      "Sundel Bolong dark ellipsoid removed from actual perforated back",
+      "Hantu Jeruk Purut adult distinct headless body instead of same head as Si Manis"
+    ],
+    "quality_coverage": "All 61 catalog IDs selectable; screenshot PNG and structural measurements available, not an aesthetic approval",
+    "field_visual_verification": "PENDING: needs real browser/Safari inspection",
+    "save_changes": "none",
+    "catalog_size": 300
+  }
 }
