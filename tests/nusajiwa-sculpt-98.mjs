@@ -46,9 +46,15 @@ test('All eight stages of each character create DIFFERENT mesh identities and ma
    assert.equal(rig.userData.phase,stage);
    assert.equal(rig.userData.reconstructed,true);
    assert.ok(rig.children.length>=(stage===0?4:6),'not enough differentiable parts for '+id+'/'+stage);
-   assert.equal(original.visible,false,'source adult must not overlap '+id+'/'+stage);
-   assert.equal(oldOverlay.visible,false,'previous overlay must not overlap '+id+'/'+stage);
-   if(stage===0)assert.equal(group.children[1].visible,false,'old egg must be hidden');
+   if(stage===0){
+    // Entire body ancestor is masked for symbolic eggs; descendant visibility
+    // flags are intentionally unchanged so old source meshes can be reused.
+    assert.equal(body.visible,false,'old adult ancestor must be hidden in egg phase');
+    assert.equal(group.children[1].visible,false,'old egg must be hidden');
+   }else{
+    assert.equal(original.visible,false,'source adult must not overlap '+id+'/'+stage);
+    assert.equal(oldOverlay.visible,false,'previous overlay must not overlap '+id+'/'+stage);
+   }
    const names=rig.children.map(n=>n.name.slice((id+'-F'+stage+'-').length)).sort();
    const signature=names.join('|');
    assert.equal(signatures.has(signature),false,'identical component topology '+id+'/'+stage);
