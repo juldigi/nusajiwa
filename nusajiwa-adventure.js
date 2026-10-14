@@ -5,6 +5,7 @@
 if(window.NUSAJIWA_ADVENTURE)return;
 const KEY='nusajiwa-adventure-v1';
 const LEVELS_PER_WORLD=5;
+const WORLD_INFO={sumatra:{name:'RIMBA SUMATRA',icon:'🌳',hint:'Hutan, sungai dan batu elemen'},jawa:{name:'TANAH JAWA',icon:'🏯',hint:'Lereng, persawahan dan ujian segel'},kalimantan:{name:'RIMBA KALIMANTAN',icon:'🌿',hint:'Hutan hujan, arus, angin dan segel penjaga'}};
 const LEVELS=[
  {name:'Gerbang Rimba',world:'sumatra',theme:'jungle',tag:'Lompati akar & temukan Jiwa',length:84,ground:[[0,20],[23,43],[46,66],[69,86]],ledges:[[9,1.6,4],[29,1.6,4],[52,1.8,4]],hazards:[13,32,58,75],checkpoints:[26,51],gem:39,element:'tanah',sky:0x92d9be},
  {name:'Sungai Berliku',tag:'Lewati aliran sungai dan tepian',length:88,ground:[[0,16],[19,34],[37,54],[57,71],[74,90]],ledges:[[8,1.8,4],[24,1.8,4],[43,2.0,5],[62,1.6,4]],hazards:[12,27,48,65,80],checkpoints:[23,50],gem:45,element:'air',sky:0x8bcacb},
@@ -15,7 +16,12 @@ const LEVELS=[
  {name:'Teras Sawah',tag:'Platform sawah dan jalan setapak',world:'jawa',theme:'terrace',length:90,ground:[[0,20],[23,42],[45,61],[64,78],[81,92]],ledges:[[10,1.7,5],[31,1.9,5],[52,2.0,4],[71,1.8,5]],hazards:[16,36,57,74,86],patrols:[[28,38,.55,1.6],[66,76,.55,1.9]],checkpoints:[26,66],gem:54,element:'tanah',sky:0xbad9ac},
  {name:'Aliran Batu',tag:'Menyeberang arus dan jembatan batu',world:'jawa',theme:'river',length:94,ground:[[0,19],[22,38],[41,59],[62,77],[80,96]],ledges:[[12,2,5],[30,1.9,4],[50,2.1,5],[69,2,4],[87,1.9,4]],hazards:[15,34,54,71,88],patrols:[[25,35,.55,1.8],[65,74,.55,2]],checkpoints:[24,65],gem:71,element:'air',sky:0xa5c5cb},
  {name:'Lorong Candi',tag:'Memecahkan segel batu pada lorong kuno',world:'jawa',theme:'temple',length:96,ground:[[0,20],[23,41],[44,61],[64,79],[82,98]],ledges:[[12,1.8,4],[30,2,5],[50,2.2,4],[72,1.8,5]],hazards:[16,35,56,75,91],patrols:[[26,37,.55,2.0],[67,76,.55,1.7]],checkpoints:[26,66],gem:51,element:'cahaya',sky:0xd7c5a7},
- {name:'Penjaga Gerbang Batu',tag:'Aktifkan tiga segel untuk membuka gerbang',world:'jawa',theme:'temple',length:102,ground:[[0,20],[23,40],[43,60],[63,81],[84,104]],ledges:[[13,2,5],[31,2,4],[51,1.9,5],[73,2,4],[93,1.9,4]],hazards:[17,35,55,76,91],patrols:[[27,37,.55,1.8],[47,57,.55,2.2],[69,79,.55,2.1],[87,95,.55,1.8]],checkpoints:[26,66],gem:74,element:'cahaya',sky:0xe5c5a2,sigils:[[13,1.15],[50,1.15],[93,1.15]]}
+ {name:'Penjaga Gerbang Batu',tag:'Aktifkan tiga segel untuk membuka gerbang',world:'jawa',theme:'temple',length:102,ground:[[0,20],[23,40],[43,60],[63,81],[84,104]],ledges:[[13,2,5],[31,2,4],[51,1.9,5],[73,2,4],[93,1.9,4]],hazards:[17,35,55,76,91],patrols:[[27,37,.55,1.8],[47,57,.55,2.2],[69,79,.55,2.1],[87,95,.55,1.8]],checkpoints:[26,66],gem:74,element:'cahaya',sky:0xe5c5a2,sigils:[[13,1.15],[50,1.15],[93,1.15]]},
+ {name:'Danau Kabut',tag:'Ikuti cahaya di tepian danau',world:'kalimantan',theme:'lake',length:90,ground:[[0,19],[22,39],[42,58],[61,78],[81,92]],ledges:[[11,1.7,5],[30,2,4],[51,1.9,5],[69,2,4]],hazards:[15,32,53,70,87],patrols:[[25,36,.55,1.65],[65,75,.55,1.8]],checkpoints:[26,64],gem:49,element:'air',sky:0xaddbc9,gusts:[[27,33,-2.2]]},
+ {name:'Akar Raksasa',tag:'Seimbangkan langkah di akar hutan',world:'kalimantan',theme:'roots',length:94,ground:[[0,18],[21,40],[43,60],[63,80],[83,96]],ledges:[[10,1.7,5],[30,2.2,4],[51,2,5],[70,1.9,4]],hazards:[13,34,54,75,89],patrols:[[25,37,.55,1.6],[66,78,.55,1.8]],checkpoints:[25,65],gem:71,element:'tanah',sky:0xa9d9a0,gusts:[[27,32,-2.4],[69,74,2.5]]},
+ {name:'Tebing Embun',tag:'Lewati hembusan angin dari lembah',world:'kalimantan',theme:'highland',length:98,ground:[[0,20],[23,42],[45,62],[65,82],[85,100]],ledges:[[10,1.9,4],[30,2.1,5],[53,2.25,4],[72,2.1,4],[91,1.8,4]],hazards:[16,36,56,75,91],patrols:[[28,39,.55,1.7],[68,80,.55,1.9]],checkpoints:[27,68],gem:58,element:'angin',sky:0xa5d0d1,gusts:[[31,36,2.8],[69,74,-3.2]]},
+ {name:'Sungai Hitam',tag:'Arus dan jalur rahasia di tepian',world:'kalimantan',theme:'river',length:99,ground:[[0,19],[22,41],[44,63],[66,82],[85,101]],ledges:[[10,1.9,4],[30,2,5],[52,2.2,4],[73,2,5],[91,1.8,4]],hazards:[15,35,57,77,94],patrols:[[26,38,.55,1.6],[69,79,.55,1.9]],checkpoints:[26,70],gem:72,element:'bayangan',sky:0x91b9ad,gusts:[[25,32,-2.4],[70,76,3.0]]},
+ {name:'Gerbang Hutan Hujan',tag:'Tiga segel penjaga alam',world:'kalimantan',theme:'guardian',length:104,ground:[[0,20],[23,42],[45,64],[67,83],[86,106]],ledges:[[11,2,4],[31,2.1,4],[52,2.1,5],[72,1.9,5],[95,2,4]],hazards:[17,36,56,77,93],patrols:[[26,38,.55,1.6],[48,60,.55,1.8],[71,80,.55,1.7],[89,99,.55,1.9]],checkpoints:[27,70],gem:74,element:'cahaya',sky:0xbad6b9,gusts:[[27,33,2.2],[70,76,-2.5]],sigils:[[12,1.15],[51,1.15],[99,1.15]]}
 ];
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const getPet=()=>{try{const s=window.NUSAJIWA_TAMAGOTCHI?.getSave();const p=s?.pets?.[s.active];return p&&!p.retired?p:null;}catch(_){return null}};
@@ -66,11 +72,11 @@ function levelMenu(){
  if(p.stage===0||p.sleep||p.sick){let message=p.stage===0?'Telur harus menetas terlebih dahulu.':p.sleep?'Sahabat sedang tidur. Nyalakan lampunya dahulu.':'Sahabat sedang sakit. Obati dahulu.';
  present('Sahabat perlu istirahat','<p>'+message+'</p>',[['exit','Kembali merawat']]);return;}
  const r=record(p.id);
- const entries=LEVELS.map((l,i)=>{const unlocked=i===0||!!r.completed[i-1];const title=i===0||i===LEVELS_PER_WORLD?
-  '<div class="nja-world-heading"><b>'+(i===0?'🌳 WORLD 1 · RIMBA SUMATRA':'🏯 WORLD 2 · TANAH JAWA')+'</b><small>'+(i===0?'Hutan, sungai dan batu elemen':'Lereng, persawahan dan ujian segel')+'</small></div>':'';
+ const entries=LEVELS.map((l,i)=>{const unlocked=i===0||!!r.completed[i-1];const info=WORLD_INFO[l.world||'sumatra'];const title=i%LEVELS_PER_WORLD===0?
+  '<div class="nja-world-heading"><b>'+info.icon+' WORLD '+(Math.floor(i/LEVELS_PER_WORLD)+1)+' · '+info.name+'</b><small>'+info.hint+'</small></div>':'';
   return title+'<button type="button" class="nja-level '+(unlocked?'':'locked')+'" data-nja="level" data-value="'+i+'" '+(unlocked?'':'disabled')+'><b>'+(Math.floor(i/LEVELS_PER_WORLD)+1)+'—'+((i%LEVELS_PER_WORLD)+1)+' · '+safe(l.name)+'</b><small>'+safe(l.tag)+'</small><em>'+(r.completed[i]?'✓ '+r.completed[i]+' ★':unlocked?'MAINKAN':'🔒 Terkunci')+'</em></button>';}).join('');
  const ability=pet.type==='spirit'?'Melayang':pet.type==='bird'?'Terbang sekali':pet.type==='tiger'?'Lari kilat':'Lompat dorong';
- present('Jelajah Evolusi','<p>Sepuluh level di dua dunia 2.5D bersama <b>'+safe(p.id.replaceAll('_',' '))+'</b>. '+(p.stage===1?'Tahap Bayi: latihan dapat dimainkan sejak dini. ':'')+'Kemampuan khusus: <b>'+ability+'</b>. Kumpulkan Jiwa, sentuh checkpoint dan capai gerbang.</p><div class="nja-levels">'+entries+'</div><p class="nja-tip">iPhone: ◀ ▶, LOMPAT, SKILL · Komputer: ← →, ↑/Spasi, X. Kualitas perawatan tetap memengaruhi evolusi.</p>',[['exit','Kembali ke Habitat']]);
+ present('Jelajah Evolusi','<p>Lima belas level di tiga dunia 2.5D bersama <b>'+safe(p.id.replaceAll('_',' '))+'</b>. '+(p.stage===1?'Tahap Bayi: latihan dapat dimainkan sejak dini. ':'')+'Kemampuan khusus: <b>'+ability+'</b>. Kumpulkan Jiwa, sentuh checkpoint dan capai gerbang.</p><div class="nja-levels">'+entries+'</div><p class="nja-tip">iPhone: ◀ ▶, LOMPAT, SKILL · Komputer: ← →, ↑/Spasi, X. Kualitas perawatan tetap memengaruhi evolusi.</p>',[['exit','Kembali ke Habitat']]);
 }
 function buildCoins(l){const coins=[];for(let x=5;x<l.length-2;x+=5){const seg=l.ground.find(g=>x>=g[0]+.5&&x<=g[1]-.5);if(seg)coins.push({x,y:1+(x%3===0?.7:0),got:false});}l.ledges.forEach(p=>coins.push({x:p[0],y:p[1]+.85,got:false}));return coins;}
 function begin(n){
@@ -80,7 +86,7 @@ function begin(n){
   sigils:(level.sigils||[]).map(([x,y])=>({x,y,got:false})),gateHintAt:-20,x:2,y:0,vx:0,vy:0,grounded:true,coyote:.12,jumpBuffer:0,double:false,heroFacing:1,health:3,score:0,checkpoint:2,usedCp:[],hurtUntil:0,skillUntil:0,skillCool:0,seconds:0,accum:0,fx:[],cameraX:2.5,ended:false};
  mode='play';playing=true;overlay.hidden=true;clearInput();
  $('#njaAudio').textContent=soundEnabled?'♫':'♪̸';
- $('#njaRegion').textContent='JELAJAH EVOLUSI · '+(level.world==='jawa'?'TANAH JAWA':'RIMBA SUMATRA');
+ $('#njaRegion').textContent='JELAJAH EVOLUSI · '+WORLD_INFO[level.world||'sumatra'].name;
  try{setupVisual()}catch(e){console.warn('Adventure 3D fallback:',e);set2D()}
  announce('✦ '+level.name+' · Sampai ke gerbang!');
  last=0;accumulator=0;
@@ -175,6 +181,9 @@ function physics(dt){
  const dir=(input.right?1:0)-(input.left?1:0),speed=getAbility()==='tiger'&&s.skillUntil>0?11:6.0;
  const wasGrounded=s.grounded;
  s.vx+=(dir*speed-s.vx)*Math.min(1,dt*(wasGrounded?18:11));
+ // Hembusan angin menggeser pemain pelan, tetapi kendali tetap sepenuhnya di tangan pemain.
+ const gust=(s.level.gusts||[]).find(g=>s.x>=g[0]&&s.x<=g[1]);
+ s.vx+=gust?gust[2]*dt:0;s.currentGust=gust?Math.sign(gust[2]):0;
  if(dir)s.heroFacing=dir;
  const prevY=s.y;s.x=clamp(s.x+s.vx*dt,.2,s.level.length+.5);
  const float=getAbility()==='spirit'&&s.skillUntil>0&&s.vy<0;
@@ -236,7 +245,7 @@ function setupVisual(){
  if(render3d){render3d.dispose();render3d=null;swapCanvas()}
  if(!THREE){set2D();return}
  if(ctx){swapCanvas();ctx=null;}
- const T=THREE,l=run.level,isJava=l.world==='jawa',scene=new T.Scene();
+ const T=THREE,l=run.level,isJava=l.world==='jawa',isBorneo=l.world==='kalimantan',scene=new T.Scene();
  scene.background=new T.Color(l.sky);scene.fog=new T.Fog(l.sky,18,56);
  const camera=new T.OrthographicCamera(-8,8,4.9,-4.9,.1,100);
  camera.position.set(0,4,18);camera.lookAt(0,2.6,0);
@@ -247,7 +256,7 @@ function setupVisual(){
  const sun=new T.DirectionalLight(0xffe6b4,2.6);sun.position.set(-6,12,10);scene.add(sun);
  const geo=[],materials=[];
  const material=(color,metalness=0)=>{const m=new T.MeshStandardMaterial({color,roughness:.7,metalness});materials.push(m);return m};
- const soil=material(isJava?0x80624f:0x4b6a56),grass=material(isJava?0x83ac6b:0x6fbc75),wood=material(0x7b573b),leaf=material(0x2a8059),leaf2=material(0x68a678),gold=material(0xf4d586,.25),rock=material(isJava?0x857d76:0x748f88),danger=material(0xe67b62),white=material(0xfbf3dc),dark=material(0x25434b),orange=material(0xd98848);
+ const soil=material(isJava?0x80624f:isBorneo?0x365a53:0x4b6a56),grass=material(isJava?0x83ac6b:isBorneo?0x54b98b:0x6fbc75),wood=material(0x7b573b),leaf=material(isBorneo?0x176c55:0x2a8059),leaf2=material(isBorneo?0x52ab87:0x68a678),gold=material(0xf4d586,.25),rock=material(isJava?0x857d76:0x748f88),danger=material(0xe67b62),white=material(0xfbf3dc),dark=material(0x25434b),orange=material(0xd98848);
 
  function mesh(g,m,x,y,z,sz){geo.push(g);const o=new T.Mesh(g,m);o.position.set(x,y,z);if(sz)o.scale.set(...sz);scene.add(o);return o}
  const box=(m,x,y,z,w,h,d)=>mesh(new T.BoxGeometry(w,h,d),m,x,y,z);
@@ -269,6 +278,13 @@ function setupVisual(){
    const roof=mesh(new T.ConeGeometry(2.1,1,4),dark,x,3.05,-7.2);roof.rotation.y=Math.PI/4;
    mesh(new T.ConeGeometry(.9,2.1,6),leaf,x+4,2.2,-6.6);
   }
+ }else if(isBorneo){
+  // Kanopi berlapis dan akar banir, interpretasi fantasi hutan hujan (bukan situs budaya).
+  for(let x=-4;x<l.length+10;x+=5.2){
+   mesh(new T.CylinderGeometry(.24,.56,4.1,7),wood,x,1.4,-7.4);
+   for(let k=0;k<3;k++)mesh(new T.IcosahedronGeometry(1.4,0),k===1?leaf2:leaf,x+(k-1)*1.05,3.3+k*.52,-7.4,[1.4,1.05,1.2]);
+   for(const side of [-1,1]){const root=box(wood,x+side*.61,-.18,-6.9,.36,.65,1.5);root.rotation.z=side*.45;}
+  }
  }else{
  for(let x=-3;x<l.length+9;x+=4.5){const n=1+Math.sin(x*7.1)*.23;
   const trunk=mesh(new T.CylinderGeometry(.23,.38,2.2,6),wood,x,1.1,-5);
@@ -277,6 +293,7 @@ function setupVisual(){
   trunk.rotation.z=.03*Math.sin(x);
  }
  }
+ const gustVisuals=(l.gusts||[]).map(([a,b,push])=>{const mark=mesh(new T.TorusGeometry(.35,.08,6,12),white,(a+b)/2,1.25,1.4);mark.rotation.z=push>0?-.42:.42;return mark;});
  const patrolVisuals=run.patrols.map(e=>mesh(new T.DodecahedronGeometry(.39,0),danger,patrolX(e,0),e.y,.8));
  const sealVisuals=run.sigils.map(s=>mesh(new T.TorusGeometry(.43,.12,8,12),gold,s.x,s.y,.55));
  const collect=[];
@@ -372,13 +389,15 @@ function setupVisual(){
 function draw2d(){
  if(!ctx||!run)return;
  const w=canvas.width,h=canvas.height;
- ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle=run.level.world==='jawa'?'#e4d0ae':'#92d9be';ctx.fillRect(0,0,w,h);
+ ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle=run.level.world==='jawa'?'#e4d0ae':run.level.world==='kalimantan'?'#a7d8c1':'#92d9be';ctx.fillRect(0,0,w,h);
  const narrow=w/h<.8;const unit=Math.min(w/(narrow?9:14.8),h/9),sx=x=>w*.46+(x-run.cameraX)*unit,sy=y=>h*.66-y*unit;
  ctx.fillStyle=run.level.world==='jawa'?'#c6ba9c':'#b3e5cb';for(let x=0;x<run.level.length+12;x+=6){ctx.beginPath();ctx.arc(sx(x),sy(-1),unit*3,Math.PI,2*Math.PI);ctx.fill();}
  if(run.level.world==='jawa'){ctx.fillStyle='#958d77';for(let x=0;x<run.level.length+10;x+=7){ctx.fillRect(sx(x),sy(3.4),unit*2.8,unit*3.8);ctx.beginPath();ctx.moveTo(sx(x-.5),sy(3.4));ctx.lineTo(sx(x+1.4),sy(4.5));ctx.lineTo(sx(x+3.3),sy(3.4));ctx.fill();}}
+ if(run.level.world==='kalimantan'){ctx.fillStyle='#497f69';for(let x=0;x<run.level.length+10;x+=6){ctx.beginPath();ctx.ellipse(sx(x),sy(-.9),unit*3.5,unit*2.7,0,Math.PI,2*Math.PI);ctx.fill();}}
  ctx.fillStyle='#3d8366';for(const g of run.level.ground){ctx.fillRect(sx(g[0]),sy(0),Math.max(0,(g[1]-g[0])*unit),h-sy(0));ctx.fillStyle='#7cbd72';ctx.fillRect(sx(g[0]),sy(.08),Math.max(0,(g[1]-g[0])*unit),unit*.25);ctx.fillStyle='#3d8366'}
  ctx.fillStyle='#896b4d';for(const p of run.level.ledges){ctx.fillRect(sx(p[0]-p[2]/2),sy(p[1]),p[2]*unit,.3*unit)}
  ctx.fillStyle='#e9876b';for(const x of run.level.hazards){ctx.beginPath();ctx.moveTo(sx(x-.45),sy(0));ctx.lineTo(sx(x),sy(.82));ctx.lineTo(sx(x+.45),sy(0));ctx.fill()}
+ if(run.level.gusts){ctx.strokeStyle='#e3fff2';ctx.lineWidth=Math.max(2,unit*.08);for(const [a,b,push] of run.level.gusts){const x=sx((a+b)/2),y=sy(1.5),dx=(push>0?1:-1)*unit*.4;ctx.beginPath();ctx.moveTo(x-dx,y);ctx.lineTo(x+dx,y);ctx.lineTo(x+dx-Math.sign(dx)*unit*.17,y-unit*.12);ctx.moveTo(x+dx,y);ctx.lineTo(x+dx-Math.sign(dx)*unit*.17,y+unit*.12);ctx.stroke();}}
  ctx.fillStyle='#d76b5e';for(const enemy of run.patrols){const x=patrolX(enemy,run.seconds);ctx.beginPath();ctx.arc(sx(x),sy(enemy.y),unit*.36,0,Math.PI*2);ctx.fill()}
  ctx.strokeStyle='#ffea9b';ctx.lineWidth=Math.max(2,unit*.1);for(const seal of run.sigils){if(seal.got)continue;ctx.beginPath();ctx.arc(sx(seal.x),sy(seal.y),unit*.35,0,Math.PI*2);ctx.stroke()}
  ctx.fillStyle='#f6d27d';for(const c of run.coins){if(c.got)continue;ctx.beginPath();ctx.arc(sx(c.x),sy(c.y),unit*.20,0,Math.PI*2);ctx.fill()}
@@ -466,6 +485,6 @@ document.addEventListener('keyup',e=>{if(!opened||!keyNames[e.code])return;e.pre
 window.addEventListener('blur',()=>{if(opened&&playing)pause()});
 document.addEventListener('visibilitychange',()=>{if(opened&&playing&&document.hidden)pause()});
 window.addEventListener('resize',resize,{passive:true});
-window.NUSAJIWA_ADVENTURE={version:'8.2',open,close:exit,levels:LEVELS.map(l=>l.name),getSave:()=>JSON.parse(JSON.stringify(progress)),isOpen:()=>opened,
+window.NUSAJIWA_ADVENTURE={version:'8.3',open,close:exit,levels:LEVELS.map(l=>l.name),getSave:()=>JSON.parse(JSON.stringify(progress)),isOpen:()=>opened,
  getRunStatus:()=>run?{level:levelIndex,x:run.x,y:run.y,vx:run.vx,vy:run.vy,grounded:run.grounded,score:run.score,health:run.health,skillCool:run.skillCool,particles:run.fx.length,playing}:null};
 })();
