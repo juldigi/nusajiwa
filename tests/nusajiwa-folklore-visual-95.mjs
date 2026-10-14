@@ -67,7 +67,7 @@ test('The real production model bridge inspects 8 stages from 4 angles without c
  assert.ok(engine.includes('decorateStage(group,body,living,M,r)'));
  assert.ok(engine.includes('window.NUSAJIWA_FOLKLORE_VISUAL_QA='));
  assert.ok(engine.includes('nj95Preview=makeAvatar(row,false,s)'));
- assert.ok(engine.includes('new THREE.Box3().setFromObject(nj95Preview)'));
+ assert.ok(engine.includes('visibleBounds.union(new THREE.Box3().setFromObject(o))'));
  assert.equal(/localStorage\s*\.\s*(setItem|removeItem|clear|getItem)\s*\(/.test(visual),false);
  assert.ok(visual.includes("searchParams.delete('audit')"));
  assert.ok(visual.includes('Foto PNG'));
