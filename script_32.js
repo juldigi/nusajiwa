@@ -4433,14 +4433,23 @@ window.NUSAJIWA_FOLKLORE_VISUAL_QA={
   if(avatar)avatar.visible=false;
   if(njtLivingDecor)njtLivingDecor.visible=false;
   let meshes=0,visible=0,triangles=0;
+  const visibleBounds=new THREE.Box3();visibleBounds.makeEmpty();
+  nj95Preview.updateMatrixWorld(true);
   nj95Preview.traverse(o=>{
    if(!o.isMesh)return;
    meshes++;
-   if(o.visible&&o.parent?.visible!==false)visible++;
-   const g=o.geometry;triangles+=(g?.index?g.index.count/3:g?.getAttribute?.('position')?.count/3)||0;
+   let rendered=true;
+   for(let p=o;p;p=p.parent)if(p.visible===false){rendered=false;break;}
+   if(!rendered)return;
+   visible++;
+   const g=o.geometry;
+   triangles+=(g?.index?g.index.count/3:g?.getAttribute?.('position')?.count/3)||0;
+   // Count bounds from displayed meshes only; hidden adult sculpt should not
+   // make the egg look 3 meters high in the diagnostic report.
+   visibleBounds.union(new THREE.Box3().setFromObject(o));
   });
   const size=new THREE.Vector3();
-  new THREE.Box3().setFromObject(nj95Preview).getSize(size);
+  if(!visibleBounds.isEmpty())visibleBounds.getSize(size);
   return {id,name:row[1],category:row[2],phase:s,meshes,visible,
    triangles:Math.round(triangles),
    bounds:[size.x,size.y,size.z].map(v=>Math.round(v*100)/100),
