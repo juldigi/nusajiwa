@@ -711,7 +711,10 @@ const nj45Thumbs=new Map();let nj45ThumbRenderer=null,nj45ThumbScene=null,nj45Th
 function thumbnailInit(){if(!THREE||!three)return false;if(nj45ThumbRenderer)return true;
  try{nj45ThumbRenderer=new THREE.WebGLRenderer({alpha:true,antialias:false,preserveDrawingBuffer:true,powerPreference:'low-power'});nj45ThumbRenderer.setPixelRatio(1);nj45ThumbRenderer.setSize(180,136,false);nj45ThumbScene=new THREE.Scene();nj45ThumbCamera=new THREE.PerspectiveCamera(36,180/136,.1,40);nj45ThumbCamera.position.set(3.6,2.9,6.8);nj45ThumbCamera.lookAt(0,1.35,0);nj45ThumbScene.add(new THREE.HemisphereLight(0xf8e6b9,0x27535e,2.7));const lamp=new THREE.DirectionalLight(0xffe2a2,2.2);lamp.position.set(3,7,6);nj45ThumbScene.add(lamp);return true}catch(e){console.warn('Portrait renderer unavailable',e);nj45ThumbRenderer=null;return false}}
 function thumbnailGenerate(id){if(nj45Thumbs.has(id))return nj45Thumbs.get(id);if(!thumbnailInit())return null;const r=CREATURES.find(x=>x[0]===id);if(!r)return null;
- let g=null;try{g=makeAvatar(r,true);g.scale.setScalar(.95);nj45ThumbScene.add(g);nj45ThumbRenderer.render(nj45ThumbScene,nj45ThumbCamera);const url=nj45ThumbRenderer.domElement.toDataURL('image/webp',.78);nj45Thumbs.set(id,url);return url}catch(e){console.warn('3D portrait skipped',id,e);return null}finally{if(g){nj45ThumbScene.remove(g);g.traverse(o=>{if(o.geometry&&o.geometry!==nj37SharedSphere)o.geometry.dispose();if(o.material&&!Array.isArray(o.material))o.material.dispose()})}}}
+ let g=null;try{g=makeAvatar(r,true);g.scale.setScalar(.95);
+ const frame=window.NUSAJIWA_RENDER97?.framing(g.userData.visualMetrics,180/136,1,'portrait');
+ if(frame){nj45ThumbCamera.position.set(frame.targetX+frame.distance*.42,frame.targetY+frame.distance*.24,frame.targetZ+frame.distance*.91);nj45ThumbCamera.lookAt(frame.targetX,frame.targetY,frame.targetZ);}
+ nj45ThumbScene.add(g);nj45ThumbRenderer.render(nj45ThumbScene,nj45ThumbCamera);const url=nj45ThumbRenderer.domElement.toDataURL('image/webp',.78);nj45Thumbs.set(id,url);return url}catch(e){console.warn('3D portrait skipped',id,e);return null}finally{if(g){nj45ThumbScene.remove(g);g.traverse(o=>{if(o.geometry&&o.geometry!==nj37SharedSphere)o.geometry.dispose();if(o.material&&!Array.isArray(o.material))o.material.dispose()})}}}
 let nj45ThumbObserver=null;
 function thumbnailHydrate(){
  if(!three||!THREE||!sideOpen)return;
@@ -4396,12 +4399,15 @@ function makeAvatar(r, portraitMode=false, auditPhase=null){
  const living=auditPhase===null?(portraitMode?null:gamePet()):{phase:renderPhase,legend:null};
  if(living)decorateStage(group,body,living,M,r);
  if(['warak_ngendog','boraspati_tano','bujang_ganong'].includes(r[0]))nj633Metamorph(body,M,r[0],renderPhase);
- nj77Morph(group,body,M,r[0],renderPhase);
+ // NJ97: no overlapping fully independent folklore sculptures in the same phase.
+ const nj97LegacyFolk=['banaspati','palasik','sundel_bolong'].includes(r[0]);
+ if(!nj97LegacyFolk||renderPhase<=4)nj77Morph(group,body,M,r[0],renderPhase);
  nj88Morph(group,body,M,r[0],renderPhase);
  window.NUSAJIWA_MORPH89?.(group,body,M,r[0],renderPhase,THREE,ell,tube);
- window.NUSAJIWA_MORPH40?.(group,body,M,r[0],renderPhase,THREE,ell,tube);
+ if(!nj97LegacyFolk||renderPhase>=5)window.NUSAJIWA_MORPH40?.(group,body,M,r[0],renderPhase,THREE,ell,tube);
  window.NUSAJIWA_MORPH94?.(group,body,M,r[0],renderPhase,THREE,ell,tube);
  window.NUSAJIWA_MORPH96?.(group,body,M,r[0],renderPhase,THREE,ell,tube);
+ window.NUSAJIWA_RENDER97?.prepare(group,THREE,r[0],renderPhase);
  group.userData={...group.userData,body,type,base:body.position.y,phase:(living?.phase??null),legend:(living?.legend??null)};
  return group;
 }
@@ -4421,10 +4427,10 @@ window.NUSAJIWA_FOLKLORE_VISUAL_QA={
  catalog:()=>CREATURES.filter(r=>r[2]!=='Fauna'&&r[2]!=='Fauna domestik')
    .map(r=>({id:r[0],name:r[1],category:r[2],region:r[3]})),
  ready:()=>!!(THREE&&world?.avatarRoot&&three),
- preview:(id,phase=5)=>{
+ preview:(id,phase=5,includeFauna=false)=>{
   if(!THREE||!world?.avatarRoot)return {error:'3D belum siap'};
   const row=CREATURES.find(r=>r[0]===id);
-  if(!row||row[2]==='Fauna'||row[2]==='Fauna domestik')return {error:'ID bukan folklore'};
+  if(!row||(!includeFauna&&(row[2]==='Fauna'||row[2]==='Fauna domestik')))return {error:'ID bukan folklore'};
   nj95ClearPreview();
   const s=Math.max(0,Math.min(7,Math.floor(Number(phase)||0)));
   nj95Preview=makeAvatar(row,false,s);
@@ -4460,18 +4466,23 @@ window.NUSAJIWA_FOLKLORE_VISUAL_QA={
  capture:()=>{if(!nj95Preview||!three)return null;three.render(world.scene,world.camera);return canvas.toDataURL('image/png')},
  reset:()=>{nj95ClearPreview();if(avatar)avatar.visible=true;if(njtLivingDecor)njtLivingDecor.visible=true;}
 };
+window.NUSAJIWA_ALL_MODEL_QA={
+ catalog:()=>CREATURES.map(r=>({id:r[0],name:r[1],category:r[2],region:r[3]})),
+ ready:()=>window.NUSAJIWA_FOLKLORE_VISUAL_QA.ready(),
+ preview:(id,phase=5)=>{
+  const result=window.NUSAJIWA_FOLKLORE_VISUAL_QA.preview(id,phase,true);
+  if(nj95Preview?.userData?.visualMetrics)result.geometry=nj95Preview.userData.visualMetrics;
+  return result;
+ },
+ angle:deg=>window.NUSAJIWA_FOLKLORE_VISUAL_QA.angle(deg),
+ capture:()=>window.NUSAJIWA_FOLKLORE_VISUAL_QA.capture(),
+ reset:()=>window.NUSAJIWA_FOLKLORE_VISUAL_QA.reset()
+};
 
 // Eight stages are geometrically different; Legend form uses the chosen original stone.
 function decorateStage(group,body,pet,M,auditRecord=null){
- // Each phase gains non-scale anatomy / heraldry details. The overall silhouette remains species-specific.
- if(pet.phase>=1 && pet.phase<=5){
-   const phase=pet.phase,mat=phase<3?M.light:phase===3?M.gold:M.white;
-   if(phase===1){for(let side of [-1,1])ell(body,side*.24,1.61,.96,.07,.09,.07,mat);}
-   if(phase===2){for(let side of [-1,1]){const feather=ell(body,side*.42,1.42,-.37,.08,.15,.16,mat);feather.rotation.z=side*.42;}}
-   if(phase===3){for(let k=-2;k<=2;k++){const diamond=new THREE.Mesh(new THREE.OctahedronGeometry(.052),mat);diamond.position.set(k*.19,1.62-Math.abs(k)*.04,-.43);body.add(diamond);}}
-   if(phase===4){for(let side of [-1,1]){const bud=new THREE.Mesh(new THREE.ConeGeometry(.08,.21,7),mat);bud.position.set(side*.32,2.19,.34);bud.rotation.z=side*.18;body.add(bud);}}
-   if(phase===5){const ring=new THREE.Mesh(new THREE.TorusGeometry(.44,.018,6,42),M.gold);ring.rotation.x=Math.PI/2;ring.position.y=2.41;body.add(ring);}
- }
+ // NJ97: preserve species-specific anatomy; never attach universal fake horns,
+ // generic wings, gems or levitating halo to all 300 types.
  if(pet.phase===0){
   body.visible=false;
   const shell=new THREE.Mesh(new THREE.SphereGeometry(1,24,18),new THREE.MeshPhysicalMaterial({color:(auditRecord||record())[5],roughness:.31,metalness:.14,clearcoat:.7}));
@@ -4506,28 +4517,18 @@ function decorateStage(group,body,pet,M,auditRecord=null){
    ell(group,0,1.38,.56,.19,.18,.04,M.dark);
    for(let j=0;j<7;j++)tube(group,[[(j-3)*.06,1.43,.56],[(j-3)*.075,1.21,.58],[(j-3)*.09,1.05,.51]],.014,M.black);
   }
- }else if(pet.phase===6){
-  for(let j=0;j<5;j++){
-   const bead=ell(group,(j-2)*.13,2.16+Math.sin(j)*.07,.48,.045,.07,.05,M.white);
-   bead.rotation.z=(j-2)*.26;
-  }
  }else if(pet.phase===7){
-  const palette={api:'#ff9e64',air:'#72d4f1',angin:'#c2ffe2',tanah:'#a2ebae',cahaya:'#ffe5a1',bayangan:'#8c79ac',fire:'#ff9e64',water:'#72d4f1',wind:'#c2ffe2',diamond:'#e1e7ff',nature:'#a2ebae',spirit:'#c6a2ee',light:'#ffe5a1',shadow:'#8c79ac'};
-  const e=pet.legend||'light',c=palette[e]||palette.light;
-  const mm=new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:.78,depthWrite:false});
+  // Quiet elemental seal BELOW the body. Prior chest rings obscured all anatomy.
+  const colors={api:'#ff9e64',air:'#72d4f1',angin:'#c2ffe2',tanah:'#a2ebae',
+   cahaya:'#ffe5a1',bayangan:'#8c79ac',fire:'#ff9e64',water:'#72d4f1',
+   wind:'#c2ffe2',diamond:'#e1e7ff',nature:'#a2ebae',spirit:'#c6a2ee',
+   light:'#ffe5a1',shadow:'#8c79ac'};
+  const color=colors[pet.legend]||colors.light;
+  const mat=new THREE.MeshBasicMaterial({color,transparent:true,opacity:.32,depthWrite:false});
   const glyph=new THREE.Group();glyph.name='nj-element-morph';group.add(glyph);
-  for(let j=0;j<3;j++){
-   const ring=new THREE.Mesh(new THREE.TorusGeometry(1+j*.12,.023,6,64),mm);
-   ring.position.y=1.1+j*.34;ring.rotation.set(Math.PI/2+j*.18,j*.35,.16*j);glyph.add(ring)
-  }
-  for(let j=0;j<8;j++){
-   const a=j*Math.PI/4,rad=e==='diamond'?1.3:1.12;
-   const crystal=new THREE.Mesh(new THREE.OctahedronGeometry(.12+(.04*(j%3))),mm);
-   crystal.position.set(Math.sin(a)*rad,.65+(j%3)*.42,Math.cos(a)*rad);glyph.add(crystal)
-  }
-  if(['fire','wind','api','angin'].includes(e))for(let sx of [-1,1]){
-   const energy=new THREE.Mesh(new THREE.ConeGeometry(.14,.74,6),mm);
-   energy.position.set(sx*.80,1.7,.1);energy.rotation.z=-sx*.45;glyph.add(energy)
+  for(let k=0;k<2;k++){
+   const r=new THREE.Mesh(new THREE.TorusGeometry(.78+k*.17,.018,6,50),mat);
+   r.rotation.x=Math.PI/2;r.position.y=.055+k*.028;glyph.add(r);
   }
   group.userData.morph=glyph;
  }
@@ -4928,7 +4929,14 @@ function animate(t){if(sceneDisposed)return;requestAnimationFrame(animate);if(do
  }
  for(let q=fx.length-1;q>=0;q--){const f=fx[q];f.age+=dt;f.node.position.y+=dt*f.speed;f.node.position.x+=Math.cos(f.a)*dt*.17;f.node.position.z+=Math.sin(f.a)*dt*.17;f.node.material.opacity=Math.max(0,.95-f.age/1.15);if(f.age>1.15){world.scene.remove(f.node);f.node.geometry.dispose();f.node.material.dispose();fx.splice(q,1)}}
  for(let f of world.fireflies){f.node.position.y=.22+f.seed%6*.14+Math.sin(tick*(.6+f.seed%3*.33)+f.phase)*.20*slow;f.node.material.opacity=.8;}
- const W=world;if(W.crystal)W.crystal.rotation.y+=dt*.45;const tamaPortrait=sceneEl.classList.contains('njt-on')&&innerWidth<=650;let theta=rotation+.2,rad=(tamaPortrait?9.2:10)*zoom;W.camera.position.set(Math.sin(theta)*rad,(tamaPortrait?4.05:4.4)+pitch*rad,Math.cos(theta)*rad);W.camera.lookAt(0,tamaPortrait?.56:.86,0);three.render(W.scene,W.camera);
+ const W=world;if(W.crystal)W.crystal.rotation.y+=dt*.45;const tamaPortrait=sceneEl.classList.contains('njt-on')&&innerWidth<=650;let theta=rotation+.2;
+ const observed=nj95Preview||avatar;
+ const ratio=canvas.clientWidth/Math.max(1,canvas.clientHeight);
+ const fit=window.NUSAJIWA_RENDER97?.framing(observed?.userData.visualMetrics,ratio,zoom,'live');
+ const rad=fit?.distance??(tamaPortrait?9.2:10)*zoom;
+ const aimX=fit?.targetX??0,aimY=fit?.targetY??.90,aimZ=fit?.targetZ??0;
+ W.camera.position.set(aimX+Math.sin(theta)*rad,aimY+rad*(.25+pitch*.16),aimZ+Math.cos(theta)*rad);
+ W.camera.lookAt(aimX,aimY,aimZ);three.render(W.scene,W.camera);
 }
 // Engine import: one low-cost CDN dependency; the classic game remains fully usable when offline.
 async function boot3D(){let needsGPU=!!(document.createElement('canvas').getContext('webgl2')||document.createElement('canvas').getContext('webgl'));if(!needsGPU)throw new Error('WebGL tidak tersedia di perangkat ini');
