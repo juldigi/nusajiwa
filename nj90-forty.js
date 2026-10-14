@@ -66,7 +66,7 @@ window.NUSAJIWA_MORPH40=function(group,body,M,id,phase,T,ell,tube){
   e('barong-ornamental-fur-'+j,Math.sin(a)*.54,1.15+(j%4)*.21,Math.cos(a)*.38,.11,.23,.13,M.light);}break;
  case 'mask':e('puppet-performer-mask',0,1.86,.70,.39,.33,.23,M.gold);break;
  case 'headless':e('headless-clerical-collar',0,1.99,.12,.24,.1,.19,M.white);
-  e('empty-neck-space',0,2.20,.12,.18,.06,.12,M.dark);break;
+  e('dark-neckline-recess',0,1.93,.20,.16,.035,.08,M.black);break;
  case 'cloak':e('shrouded-cloak-back',0,1.02,-.32,.52,.79,.20,M.dark);trail('cloak');break;
  case 'stripes':for(const z of [-.53,-.12,.31])pair(d=>t('tiger-side-stripe-'+z+'-'+d,
   [[d*.25,1.34,z-.17],[d*.5,1.14,z],[d*.46,1.00,z+.14]],.044,M.dark));break;
@@ -125,7 +125,7 @@ window.NUSAJIWA_MORPH40=function(group,body,M,id,phase,T,ell,tube){
     e('short-hominid-head',0,1.79,.15,.32,.33,.25,M.light);
     pair(d=>t('short-long-ape-arm-'+d,[[d*.28,1.4,.04],[d*.49,.79,.15],[d*.44,.38,.19]],.085,M.dark));break;
   case 'spirit':e('spectral-shoulderless-core',0,1.05,-.06,.29,.55,.20,M.dark);
-    e('spectral-human-face',0,1.75,.17,.32,.36,.24,M.light);trail('early-spirit');break;
+    if(id!=='hantu_jeruk_purut')e('spectral-human-face',0,1.75,.17,.32,.36,.24,M.light);trail('early-spirit');break;
   }
  };
  if(s===0){
