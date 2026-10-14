@@ -52,8 +52,8 @@ test('Game is integrated into Tamagotchi, authentic elemental stones and save ba
  assert.match(engine,/rewardTamaAdventure:njtRewardAdventure/);
  assert.match(tama,/p\.adventureMarks/);
  assert.match(tama,/dailyKey/);
- assert.match(html,/nusajiwa-adventure\.css\?v=8\.1\.0/);
- assert.match(html,/nusajiwa-adventure\.js\?v=8\.1\.0/);
+ assert.match(html,/nusajiwa-adventure\.css\?v=8\.2\.0/);
+ assert.match(html,/nusajiwa-adventure\.js\?v=8\.2\.0/);
  assert.ok(html.indexOf('tamagotchi-3d.js?v=8.1.0')<html.indexOf('nusajiwa-adventure.js?v=8.1.0'));
  assert.match(tama,/adventure:localStorage\.getItem/);
  assert.match(tama,/localStorage\.setItem\('nusajiwa-adventure-v1'/);
