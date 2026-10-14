@@ -77,7 +77,7 @@ test('Entrypoint order, Pages packaging, and release registry stay consistent',(
  for(const x of batches){assert.equal(x.stage_count,8);assert.equal(x.structurally_tested,80);}
 });
 test('Distinctive anatomical traits are present instead of arbitrary shared monsters',()=>{
- for(const key of ['posterior-gown-void','lembuswana-elephant-trunk','dugderan-ceremonial',
-  'sasak-tenun','batak-gecko','bedawang-cosmic','dewi-sri-rice','floating-human'])
+ for(const key of ['posterior-gown-void','lembuswana-elephant-trunk','ceremonial-ngendog-egg',
+  'sasak-tenun','batak-gecko','bedawang-cosmic','rice-stem','disconnected-human-flying-head'])
   assert.ok(module.includes(key),'Missing species specific silhouette landmark: '+key);
 });
