@@ -512,7 +512,7 @@ else if(!store.introduced){store.introduced=true;save();show('help');}
 function awardAdventure(result){
  const p=active(),lvl=Number(result?.level);
  if(!p||p.id!==result?.id||p.retired||p.stage===0||p.sleep||p.sick||
-    !Number.isInteger(lvl)||lvl<0||lvl>=10)return {earned:false,reason:'Sahabat tidak siap'};
+    !Number.isInteger(lvl)||lvl<0||lvl>=15)return {earned:false,reason:'Sahabat tidak siap'};
  p.adventureMarks=Array.isArray(p.adventureMarks)?p.adventureMarks:[];
  const firstKey='first:'+lvl,stoneKey='stone:'+lvl;
  const dailyKey='daily:'+new Date().toLocaleDateString('en-CA')+':'+lvl;
@@ -526,7 +526,7 @@ function awardAdventure(result){
  if(!API.rewardTamaAdventure?.(p.id,xp,spirit,stone?element:null))return {earned:false,reason:'Progres 3D belum siap'};
  if(first)p.adventureMarks.push(firstKey);
  if(stone)p.adventureMarks.push(stoneKey);
- if((lvl===4||lvl===9)&&!p.adventureMarks.includes('trial:'+lvl)){
+ if((lvl===4||lvl===9||lvl===14)&&!p.adventureMarks.includes('trial:'+lvl)){
   p.adventureMarks.push('trial:'+lvl);
   p.studied=Math.max(0,Number(p.studied)||0)+1;
  }
