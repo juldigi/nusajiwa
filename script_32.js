@@ -4407,6 +4407,8 @@ function makeAvatar(r, portraitMode=false, auditPhase=null){
  if(!nj97LegacyFolk||renderPhase>=5)window.NUSAJIWA_MORPH40?.(group,body,M,r[0],renderPhase,THREE,ell,tube);
  window.NUSAJIWA_MORPH94?.(group,body,M,r[0],renderPhase,THREE,ell,tube);
  window.NUSAJIWA_MORPH96?.(group,body,M,r[0],renderPhase,THREE,ell,tube);
+ // NJ98 final authoritative geometry for eight mistis identities (no overlapping native sculpt).
+ window.NUSAJIWA_SCULPT98?.(group,body,M,r[0],renderPhase,THREE,ell,tube);
  window.NUSAJIWA_RENDER97?.prepare(group,THREE,r[0],renderPhase);
  group.userData={...group.userData,body,type,base:body.position.y,phase:(living?.phase??null),legend:(living?.legend??null)};
  return group;

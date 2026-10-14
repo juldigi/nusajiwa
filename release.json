@@ -2,7 +2,7 @@
   "project": "NUSAJIWA",
   "version": "8.3",
   "branch": "main",
-  "updated_on": "2026-10-14",
+  "updated_on": "2026-10-15",
   "purpose": "Single release ledger; do not count unmerged local work as published.",
   "release_history": [
     {
@@ -304,6 +304,31 @@
       "catalog_identity_delta": 0,
       "visual_device_verification": "NOT_DONE",
       "fantasy_lifecycle_notice": "Artificial egg for mammals and legendary transformations are game-only; do not describe as actual zoology."
+    },
+    {
+      "batch": "nj98",
+      "status": "MERGED",
+      "identity_ids": [
+        "kuyang",
+        "leak",
+        "kuntilanak",
+        "pocong",
+        "genderuwo",
+        "tuyul",
+        "wewe",
+        "jenglot"
+      ],
+      "stage_count": 8,
+      "constructions": 64,
+      "module": "nj98-mistis-batch1.js",
+      "test_file": "tests/nusajiwa-sculpt-98.mjs",
+      "style": "Complete sole-visible original 3D rig replacement, not overlay on previous adult",
+      "source_identity_basis": "Regional/academic sources and game-specific visual interpretations",
+      "save_schema": "unchanged",
+      "visual_webgl_iphone": "NOT_VERIFIED",
+      "qa_scope": "node geometry/topology regression and release checks; not professional human four-angle aesthetic signoff",
+      "other_batches": "unchanged",
+      "asset_footprint": "procedural WebGL, no remote GLB"
     }
   ],
   "merged_gameplay_improvements": [
@@ -351,7 +376,7 @@
     "save_changes": "none",
     "catalog_size": 300
   },
-  "last_character_patch": "NJ96",
+  "last_character_patch": "NJ98-B01",
   "visual_ui": {
     "patch": "NJ642",
     "status": "MERGED",
