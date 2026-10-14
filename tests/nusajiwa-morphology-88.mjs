@@ -27,5 +27,5 @@ test('Other creatures are left intact and runtime integration stays active',()=>
  const body=new T.Group(),group=new T.Group(),original={visible:true};body.add(original);
  morph(group,body,{white:{},dark:{},gold:{},light:{}},'garuda',7);
  assert.equal(original.visible,true);assert.equal(group.children.length,0);
- assert.ok(engine.includes(" nj88Morph(group,body,M,r[0],portraitMode?5:gamePet()?.phase??5);"));
+ assert.ok(engine.includes(" nj88Morph(group,body,M,r[0],renderPhase);"));
 });
