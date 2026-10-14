@@ -18,7 +18,6 @@ const LEVELS=[
  {name:'Penjaga Gerbang Batu',tag:'Aktifkan tiga segel untuk membuka gerbang',world:'jawa',theme:'temple',length:102,ground:[[0,20],[23,40],[43,60],[63,81],[84,104]],ledges:[[13,2,5],[31,2,4],[51,1.9,5],[73,2,4],[93,1.9,4]],hazards:[17,35,55,76,91],patrols:[[27,37,.55,1.8],[47,57,.55,2.2],[69,79,.55,2.1],[87,95,.55,1.8]],checkpoints:[26,66],gem:74,element:'cahaya',sky:0xe5c5a2,sigils:[[13,1.15],[50,1.15],[93,1.15]]}
 ];
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-const day=()=>new Date().toLocaleDateString('en-CA');
 const getPet=()=>{try{const s=window.NUSAJIWA_TAMAGOTCHI?.getSave();const p=s?.pets?.[s.active];return p&&!p.retired?p:null;}catch(_){return null}};
 function readSave(){try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s&&s.version===1&&s.pets&&typeof s.pets==='object')return s;}catch(_){}return {version:1,pets:{}}}
 let progress=readSave();
@@ -45,7 +44,7 @@ root.innerHTML='<div class="nja-stage">'+
 document.body.append(root);
 const $=q=>root.querySelector(q),overlay=$('#njaOverlay'),menu=$('#njaMenu');
 let canvas=$('#njaCanvas');
-let opened=false,playing=false,mode='menu',pet=null,levelIndex=0,run=null,THREE=null,render3d=null,ctx=null,raf=0,last=0,accumulator=0,lastUi=0,returnHidden=false,importToken=0;
+let opened=false,playing=false,mode='menu',pet=null,levelIndex=0,run=null,THREE=null,render3d=null,ctx=null,raf=0,last=0,accumulator=0,lastUi=0,returnHidden=false,importToken=0,fxAudio=null,soundEnabled=true,lastSound=0;
 let input={left:false,right:false,jump:false,special:false,jumpRequest:false,specialRequest:false};
 const ACTIVE_KEYS=new Set(['ArrowLeft','ArrowRight','ArrowUp','Space',' ','KeyA','KeyD','KeyW','KeyX','KeyJ','KeyK','Escape']);
 function setInput(k,on){if(k==='left'||k==='right'){input[k]=on;return}
@@ -76,7 +75,7 @@ function begin(n){
  if(!pet||!Number.isInteger(n)||n<0||n>=LEVELS.length||n>0&&!record(pet.id).completed[n-1])return;
  levelIndex=n;const level=LEVELS[n];const coins=buildCoins(level);
  run={level,coins,gem:{x:level.gem,y:2.1,got:false},patrols:(level.patrols||[]).map(([start,end,y,speed])=>({start,end,y,speed})),
-  sigils:(level.sigils||[]).map(([x,y])=>({x,y,got:false})),gateHintAt:-20,x:2,y:0,vx:0,vy:0,grounded:true,double:false,heroFacing:1,health:3,score:0,checkpoint:2,usedCp:[],hurtUntil:0,skillUntil:0,skillCool:0,seconds:0,accum:0,cameraX:2.5,ended:false};
+  sigils:(level.sigils||[]).map(([x,y])=>({x,y,got:false})),gateHintAt:-20,x:2,y:0,vx:0,vy:0,grounded:true,coyote:.12,jumpBuffer:0,double:false,heroFacing:1,health:3,score:0,checkpoint:2,usedCp:[],hurtUntil:0,skillUntil:0,skillCool:0,seconds:0,accum:0,fx:[],cameraX:2.5,ended:false};
  mode='play';playing=true;overlay.hidden=true;clearInput();
  $('#njaRegion').textContent='JELAJAH EVOLUSI · '+(level.world==='jawa'?'TANAH JAWA':'RIMBA SUMATRA');
  try{setupVisual()}catch(e){console.warn('Adventure 3D fallback:',e);set2D()}
@@ -85,23 +84,62 @@ function begin(n){
  cancelAnimationFrame(raf);raf=requestAnimationFrame(loop);
 }
 function announce(text){const el=$('#njaMessage');el.textContent=text;el.classList.add('on');clearTimeout(announce.t);announce.t=setTimeout(()=>{if(opened)el.classList.remove('on')},2350)}
+/* Fixed-size visual feedback: lightweight particles remain in the existing render
+   loop; no DOM nodes or geometry are created on individual pickups. */
+function emitFx(x,y,type,count=6){
+ if(!run||run.ended)return;
+ for(let i=0;i<count;i++){
+  const a=Math.PI*2*i/count+Math.random()*.2,force=1.05+Math.random()*1.8;
+  run.fx.push({x,y,vx:Math.cos(a)*force,vy:Math.sin(a)*force+1.1,
+   type,ttl:.42+Math.random()*.32,max:.75});
+ }
+ if(run.fx.length>48)run.fx.splice(0,run.fx.length-48);
+}
+function playFx(name){
+ if(!soundEnabled||!opened)return;
+ const Audio=window.AudioContext||window.webkitAudioContext;
+ if(!Audio)return;
+ try{
+  if(!fxAudio)fxAudio=new Audio();
+  if(fxAudio.state==='suspended')fxAudio.resume();
+  const t=fxAudio.currentTime;
+  if(t-lastSound<.055)return;
+  lastSound=t;
+  const frequencies={jump:480,land:210,coin:710,gem:930,seal:770,skill:630,hurt:170,checkpoint:640,win:880};
+  const osc=fxAudio.createOscillator(),gain=fxAudio.createGain(),f=frequencies[name]||520;
+  osc.type=name==='hurt'?'sawtooth':name==='land'?'triangle':'sine';
+  osc.frequency.setValueAtTime(f,t);osc.frequency.exponentialRampToValueAtTime(name==='hurt'?90:f*1.18,t+.09);
+  gain.gain.setValueAtTime(.0001,t);gain.gain.exponentialRampToValueAtTime(.065,t+.012);
+  gain.gain.exponentialRampToValueAtTime(.0001,t+.14);
+  osc.connect(gain);gain.connect(fxAudio.destination);
+  osc.start(t);osc.stop(t+.15);osc.onended=()=>{osc.disconnect();gain.disconnect()};
+ }catch(_){/* Browsers without Web Audio remain playable. */}
+}
 function getAbility(){return pet?.type||'forest'}
 function jump(){
- if(run.grounded){run.vy=9.3;run.grounded=false;run.double=false;return}
- if(getAbility()==='bird'&&!run.double){run.vy=7.5;run.double=true;announce('↟ Kepakan sayap!');}
+ if(run.grounded||run.coyote>0){
+  run.vy=9.3;run.grounded=false;run.coyote=0;run.jumpBuffer=0;run.double=false;
+  emitFx(run.x,run.y+.1,'dust',5);playFx('jump');return true;
+ }
+ return false;
 }
 function special(){
  if(run.skillCool>0)return;
- if(getAbility()==='bird'){if(!run.grounded&&!run.double)jump();else announce('Lompat dulu untuk mengepak sayap.');return}
- if(getAbility()==='spirit'&&!run.grounded){run.skillUntil=1.55;run.skillCool=3;announce('✦ Melayang!');return}
- if(getAbility()==='tiger'){run.skillUntil=.5;run.skillCool=2.6;announce('⚡ Lari kilat!');return}
- if(!run.grounded){run.vy=Math.max(run.vy,5.1);run.skillCool=3;announce('✦ Dorongan alam!')}
+ if(getAbility()==='bird'){
+  if(!run.grounded&&!run.double){run.vy=7.5;run.double=true;run.skillCool=.65;emitFx(run.x,run.y+.4,'magic',7);playFx('skill');announce('↟ Kepakan sayap!')}
+  else announce('Lompat dulu untuk mengepak sayap.');
+  return;
+ }
+ if(getAbility()==='spirit'&&!run.grounded){run.skillUntil=1.55;run.skillCool=3;emitFx(run.x,run.y+.4,'magic',6);playFx('skill');announce('✦ Melayang!');return}
+ if(getAbility()==='tiger'){run.skillUntil=.5;run.skillCool=2.6;emitFx(run.x,run.y+.2,'magic',5);playFx('skill');announce('⚡ Lari kilat!');return}
+ if(!run.grounded){run.vy=Math.max(run.vy,5.1);run.skillCool=3;emitFx(run.x,run.y+.4,'magic',7);playFx('skill');announce('✦ Dorongan alam!')}
 }
 function hurt(){
  if(run.hurtUntil>0||run.ended)return;
  run.health--;run.hurtUntil=1.15;
- if(run.health<=0){run.ended=true;playing=false;present('Coba Lagi','<p>Kamu terjatuh, tetapi perjalanan belum selesai. Checkpoint dan hadiah hanya disimpan setelah gerbang tercapai.</p>',[['retry','↻ Ulangi level'],['levels','Pilih level']]);return}
- run.x=run.checkpoint;run.y=0;run.vy=0;run.vx=0;run.grounded=true;
+ if(run.health<=0){emitFx(run.x,run.y+.6,'hurt',10);playFx('hurt');run.ended=true;playing=false;present('Coba Lagi','<p>Kamu terjatuh, tetapi perjalanan belum selesai. Checkpoint dan hadiah hanya disimpan setelah gerbang tercapai.</p>',[['retry','↻ Ulangi level'],['levels','Pilih level']]);return}
+ emitFx(run.x,run.y+.6,'hurt',9);playFx('hurt');
+ run.x=run.checkpoint;run.y=0;run.vy=0;run.vx=0;run.grounded=true;run.coyote=.12;run.jumpBuffer=0;
  announce('♥ Kembali ke checkpoint · '+run.health+' nyawa tersisa');
 }
 function finish(){
@@ -121,17 +159,29 @@ function patrolX(enemy,time){return (enemy.start+enemy.end)/2+Math.sin(time*enem
 function physics(dt){
  const s=run;if(!s||s.ended)return;
  s.seconds+=dt;s.skillCool=Math.max(0,s.skillCool-dt);s.hurtUntil=Math.max(0,s.hurtUntil-dt);s.skillUntil=Math.max(0,s.skillUntil-dt);
- if(input.jumpRequest){jump();input.jumpRequest=false}
+ if(input.jumpRequest){s.jumpBuffer=.14;input.jumpRequest=false}
  if(input.specialRequest){special();input.specialRequest=false}
+ if(s.jumpBuffer>0){if(!jump())s.jumpBuffer=Math.max(0,s.jumpBuffer-dt)}
  const dir=(input.right?1:0)-(input.left?1:0),speed=getAbility()==='tiger'&&s.skillUntil>0?11:6.0;
- s.vx=dir*speed;if(dir)s.heroFacing=dir;
+ const wasGrounded=s.grounded;
+ s.vx+=(dir*speed-s.vx)*Math.min(1,dt*(wasGrounded?18:11));
+ if(dir)s.heroFacing=dir;
  const prevY=s.y;s.x=clamp(s.x+s.vx*dt,.2,s.level.length+.5);
- s.vy+=(-22)*(getAbility()==='spirit'&&s.skillUntil>0&&s.vy<0?.19:1)*dt;
+ const float=getAbility()==='spirit'&&s.skillUntil>0&&s.vy<0;
+ const shortJump=!input.jump&&s.vy>0;
+ s.vy+=-22*(float?.19:shortJump?1.52:1)*dt;
  s.y+=s.vy*dt;s.grounded=false;
  if(s.vy<=0){const surfaces=s.level.ground.map(g=>[(g[0]+g[1])/2,0,g[1]-g[0]]).concat(s.level.ledges);
    for(const g of surfaces){if(s.x+.23<g[0]-g[2]/2||s.x-.23>g[0]+g[2]/2)continue;
     if(prevY>=g[1]-.07&&s.y<=g[1]&&s.y>=g[1]-1.4){s.y=g[1];s.vy=0;s.grounded=true;s.double=false;break;}}
  }
+ if(s.grounded){
+  s.coyote=.12;
+  if(!wasGrounded){emitFx(s.x,s.y+.08,'dust',6);playFx('land')}
+  if(s.jumpBuffer>0)jump();
+ }else s.coyote=Math.max(0,s.coyote-dt);
+ for(const f of s.fx){f.ttl-=dt;f.x+=f.vx*dt;f.y+=f.vy*dt;f.vy-=4*dt}
+ s.fx=s.fx.filter(f=>f.ttl>0);
  if(s.y< -3.5){hurt();return}
  for(const h of s.level.hazards){if(Math.abs(s.x-h)<.54&&s.y<.68&&s.y>-.45){hurt();return}}
  for(const enemy of s.patrols){
@@ -140,12 +190,12 @@ function physics(dt){
  }
  for(const seal of s.sigils){
   if(!seal.got&&Math.hypot(s.x-seal.x,s.y+.55-seal.y)<.95){
-   seal.got=true;s.score+=15;announce('◇ Segel '+s.sigils.filter(v=>v.got).length+'/'+s.sigils.length+' aktif!');
+   seal.got=true;s.score+=15;emitFx(seal.x,seal.y,'magic',12);playFx('seal');announce('◇ Segel '+s.sigils.filter(v=>v.got).length+'/'+s.sigils.length+' aktif!');
   }
  }
- for(const coin of s.coins){if(!coin.got&&Math.hypot(s.x-coin.x,s.y+.5-coin.y)<.85){coin.got=true;s.score+=5}}
- if(!s.gem.got&&Math.hypot(s.x-s.gem.x,s.y+.5-s.gem.y)<1.05){s.gem.got=true;s.score+=25;announce('◆ Batu '+s.level.element+' ditemukan!')}
- for(const cp of s.level.checkpoints){if(!s.usedCp.includes(cp)&&s.x>=cp){s.checkpoint=cp;s.usedCp.push(cp);announce('⚑ Checkpoint disimpan')}}
+ for(const coin of s.coins){if(!coin.got&&Math.hypot(s.x-coin.x,s.y+.5-coin.y)<.85){coin.got=true;s.score+=5;emitFx(coin.x,coin.y,'coin',5);playFx('coin')}}
+ if(!s.gem.got&&Math.hypot(s.x-s.gem.x,s.y+.5-s.gem.y)<1.05){s.gem.got=true;s.score+=25;emitFx(s.gem.x,s.gem.y,'magic',14);playFx('gem');announce('◆ Batu '+s.level.element+' ditemukan!')}
+ for(const cp of s.level.checkpoints){if(!s.usedCp.includes(cp)&&s.x>=cp){s.checkpoint=cp;s.usedCp.push(cp);emitFx(cp,1,'magic',7);playFx('checkpoint');announce('⚑ Checkpoint disimpan')}}
  const narrow=(canvas.clientWidth||window.innerWidth)/Math.max(1,canvas.clientHeight||window.innerHeight)<.8;
  const lead=narrow?1.25:3.2,minimum=narrow?3:6.6;
  s.cameraX+=(clamp(s.x+lead,minimum,s.level.length-(narrow?3:5.5))-s.cameraX)*Math.min(1,dt*5.5);
