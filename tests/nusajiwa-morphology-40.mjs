@@ -11,7 +11,7 @@ const morph=context.window.NUSAJIWA_MORPH40,
  rebuild=new Set(["hantu_jeruk_purut","macan_putih","timun_mas","nyai_blora","hantu_banyu","ular_naga","suanggi","orang_pendek","cindaku","nenek_pakande","nawang_wulan","orang_bati","lembuswana","naga_basuki","poppo","parakang","bedawang_nala","naga_padoha"]);
 const Three={
  Group:class{constructor(){this.children=[];this.userData={}}add(o){this.children.push(o)}},
- Mesh:class{constructor(){this.position={set(){} ,z:0};this.visible=true;this.name=''}},
+ Mesh:class{constructor(){this.position={set(){} ,z:0};this.rotation={x:0,y:0,z:0};this.visible=true;this.name=''}},
  ConeGeometry:class{},TorusGeometry:class{},ShapeGeometry:class{},
  Shape:class{moveTo(){}lineTo(){}closePath(){}}
 };
