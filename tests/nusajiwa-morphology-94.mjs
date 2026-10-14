@@ -59,7 +59,7 @@ test('Unlisted IDs unaffected; module loads before engine and is included in Pag
  const group=new T.Group(),body=new T.Group(),native={visible:true};body.add(native);
  assert.equal(morph(group,body,M,'not_in_nj94',3,T,prim,prim),false);
  assert.equal(body.children.length,1);assert.equal(native.visible,true);
- assert.ok(engine.includes('window.NUSAJIWA_MORPH94?.(group,body,M,r[0],portraitMode?5:gamePet()?.phase??5,THREE,ell,tube);'));
+ assert.ok(engine.includes('window.NUSAJIWA_MORPH94?.(group,body,M,r[0],renderPhase,THREE,ell,tube);'));
  assert.ok(html.includes('./nj94-fauna.js'));
  assert.ok(html.indexOf('./nj94-fauna.js')<html.indexOf('./script_32.js'));
  const workflow=read('.github/workflows/pages.yml');
