@@ -101,3 +101,22 @@
  #nja .nja-world-heading b{font-size:10px}
  #nja .nja-world-heading small{font-size:9px}
 }
+
+/* 8.2 — tactile audiovisual controls remain readable without obscuring the arena. */
+#nja .nja-audio-btn{width:39px;flex-basis:39px;font-size:18px;border-color:#f5dda781;background:#174452cf}
+#nja .nja-audio-btn:active{transform:scale(.94)}
+#nja .nja-pad button:focus-visible,#nja .nja-hud-btn:focus-visible{outline:3px solid #fff0b1;outline-offset:3px}
+#nja .nja-pad button[data-hold="special"]{background:linear-gradient(155deg,#355d72e7,#182b44d9)}
+#nja .nja-pad button[data-hold="jump"]{font-size:27px}
+#nja .nja-progress i{transition:width .12s linear}
+body.nja-playing #nj35{display:none!important}
+@media(max-width:650px){
+ #nja .nja-audio-btn{width:34px;flex-basis:34px;font-size:17px}
+ #nja .nja-stats span{padding:7px 5px}
+ #nja .nja-title small{font-size:7px;letter-spacing:0}
+}
+@media(max-width:374px){
+ #nja .nja-stats #njaLives{display:none}
+ #nja .nja-hud{gap:4px}
+ #nja .nja-title b{font-size:13px}
+}
