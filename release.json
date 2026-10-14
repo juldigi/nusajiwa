@@ -78,5 +78,22 @@
       "regression_test": "tests/nusajiwa-morphology-88.mjs",
       "visual_device_verification": "NOT_DONE"
     }
+  ],
+  "merged_gameplay_improvements": [
+    {
+      "id": "trail-memory",
+      "base_version": "8.3",
+      "status": "MERGED",
+      "minigame": "Jejak Nusantara",
+      "rounds": 3,
+      "pattern_lengths": [
+        2,
+        3,
+        4
+      ],
+      "award": "Happiness +2 for >=2 correct rounds, otherwise +1; one play per finished session",
+      "persistence": "uses existing Tamagotchi save; ephemeral round sequences are not saved",
+      "validation": "tests/nusajiwa-play-smoke.mjs"
+    }
   ]
 }

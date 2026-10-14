@@ -259,6 +259,65 @@ function guess(v){
  save();toast(win?'✦ Kamu menang! Bahagia +2':'Mainnya seru! Ayo coba lagi.');
  screen='home';mini=null;growth(p);render();
 }
+/* 8.3 gameplay expansion — Jejak Nusantara: three-round, accessible memory game.
+   No timers: players can study a pattern before explicitly concealing it.
+   Only a complete session can award care progress; its state is never persisted. */
+const TRAIL_ICONS=['🐾','🌿','✦'];
+function trailSequence(length){return Array.from({length},()=>Math.floor(Math.random()*TRAIL_ICONS.length));}
+function beginTrail(){
+ const p=active();
+ if(!p||p.stage===0){hatch();return}
+ if(p.retired||p.sleep||p.sick){toast('Sahabat harus sehat dan bangun sebelum bermain.');return}
+ mini={kind:'trail',petId:p.id,round:0,score:0,sequence:trailSequence(2),
+  picks:0,phase:'preview',correct:null};
+ screen='trailgame';panelCursor=0;render();
+}
+function trailReady(){
+ if(!mini||mini.kind!=='trail'||mini.phase!=='preview')return;
+ mini.phase='answer';mini.picks=0;panelCursor=0;render();
+}
+function trailPick(v){
+ if(!mini||mini.kind!=='trail'||mini.phase!=='answer'||
+    !Number.isInteger(v)||v<0||v>=TRAIL_ICONS.length)return;
+ if(!active()||active().id!==mini.petId){mini=null;screen='home';render();return}
+ if(mini.sequence[mini.picks]!==v){
+  mini.correct=false;mini.phase='result';beep(250);panelCursor=0;render();return;
+ }
+ mini.picks++;beep(650);
+ if(mini.picks===mini.sequence.length){
+  mini.score++;mini.correct=true;mini.phase='result';beep(820);
+ }
+ panelCursor=0;render();
+}
+function trailNext(){
+ if(!mini||mini.kind!=='trail'||mini.phase!=='result')return;
+ if(mini.round<2){
+  mini.round++;mini.sequence=trailSequence(mini.round+2);mini.picks=0;
+  mini.phase='preview';mini.correct=null;panelCursor=0;render();return;
+ }
+ const result=mini,p=active();mini=null;screen='home';panelCursor=0;
+ if(!p||p.retired||p.id!==result.petId){render();return}
+ const win=result.score>=2;
+ p.games++;p.happy=clamp(p.happy+(win?2:1));p.weight=Math.max(3,p.weight-1);
+ if(win){nativeCare('play');pacify(p)}
+ save();growth(p);render();toast(win?'✦ Jejak terbaca! Bahagia +2':'Bagus sudah berlatih! Bahagia +1');
+}
+function trailMarkup(){
+ const stage=mini,score='<div class="njt-mini-score">PUTARAN '+(stage.round+1)+'/3 · BERHASIL '+stage.score+'</div>';
+ const icons=seq=>'<div class="njt-memory-pattern">'+seq.map(n=>'<span>'+TRAIL_ICONS[n]+'</span>').join('')+'</div>';
+ if(stage.phase==='preview')return score+'<p>Hafalkan urutan jejak berikut. Setelah siap, sembunyikan dan ulangi sesuai ingatanmu.</p>'+
+  icons(stage.sequence)+'<button class="njt-primary" data-tama="trailReady">Sudah hafal · Mulai jawab</button>';
+ if(stage.phase==='answer')return score+'<p>Ulangi pola sesuai urutan. Langkah '+(stage.picks+1)+' dari '+stage.sequence.length+'.</p>'+
+  '<div class="njt-memory-progress" aria-label="'+stage.picks+' langkah terjawab">'+
+  stage.sequence.map((_,i)=>'<span>'+(i<stage.picks?'●':'○')+'</span>').join('')+'</div>'+
+  '<div class="njt-memory-choices">'+TRAIL_ICONS.map((icon,i)=>
+  '<button type="button" data-tama="trailPick" data-value="'+i+'" aria-label="'+['Jejak','Daun','Jiwa'][i]+'">'+icon+
+  '<small>'+['Jejak','Daun','Jiwa'][i]+'</small></button>').join('')+'</div>';
+ return score+'<p class="njt-memory-feedback">'+(stage.correct?'✓ Benar! Semua urutan cocok.':'◇ Belum tepat. Ini urutan yang benar:')+'</p>'+
+  icons(stage.sequence)+'<button class="njt-primary" data-tama="trailNext">'+
+  (stage.round===2?'Lihat hasil & kembali':'Lanjut putaran berikutnya')+'</button>';
+}
+
 function thought(p){
  if(!p)return 'Pilih makhluk pertamamu untuk memulai.';
  if(p.retired)return 'Satu kisah selesai. Lihat Album Kenangan.';
@@ -317,7 +376,7 @@ function drawPanel(){
  let title='',content='';
  if(screen==='food'){title='🍙 Beri Makan';content='<p>Isi perutnya secukupnya. Camilan menambah kebahagiaan tetapi juga berat badan.</p>'+
  choices([['meal','🍚 Makanan utama','Kenyang +2, berat +1'],['snack','🍡 Camilan','Kenyang +1, bahagia +1, berat +2']]);}
- else if(screen==='playChoices'){title='✦ Ayo Bermain';content='<p>Pilih permainan: latihan cepat ala Tamagotchi atau berpetualang di Rimba Sumatra untuk memperoleh pengalaman evolusi.</p>'+choices([['quickGame','◈ Tebak Arah · 5 ronde','Menambah kebahagiaan'],['adventure','🎮 Jelajah Evolusi · 5 level','Platformer 2.5D, hadiah Jiwa & XP']]);}
+ else if(screen==='playChoices'){title='✦ Ayo Bermain';content='<p>Mainkan permainan klasik untuk merawat sahabat, atau jelajahi tiga dunia petualangan 3D untuk pengalaman evolusi.</p>'+choices([['quickGame','◈ Tebak Arah · 5 ronde','Permainan tebakan klasik'],['trailGame','🐾 Jejak Nusantara · Ingat Pola','Tiga putaran, 2–4 simbol'],['adventure','🎮 Jelajah Evolusi · 15 level','Platformer 2.5D, Jiwa & XP']]);}
  else if(screen==='light'){title='☾ Lampu & Tidur';content='<p>Padamkan lampu saat istirahat seperti Tamagotchi klasik. Nyalakan saat ingin bermain lagi.</p>'+
  choices([['lightOff','☾ Matikan lampu','Sahabat beristirahat'],['lightOn','☀ Nyalakan lampu','Sahabat bangun']]);}
  else if(screen==='status'){title='♥ Buku Kesehatan';content=statusContent(p);}
@@ -326,6 +385,9 @@ function drawPanel(){
  else if(screen==='minigame'&&mini){title='✦ Tebak Arah';content='<p>Tebak ke mana cahaya akan pergi. Menangkan 3 dari 5 ronde!</p>'+
  '<div class="njt-mini-score">RONDE '+(mini.round+1)+'/5 · BENAR '+mini.score+'</div>'+
  '<div class="njt-guess-mark">✧ ? ✧</div><div class="njt-guess"><button data-tama="left">◀ KIRI</button><button data-tama="right">KANAN ▶</button></div>';}
+ else if(screen==='trailgame'&&mini?.kind==='trail'){
+  title='🐾 Jejak Nusantara';content=trailMarkup();
+ }
  else if(screen==='codex'){
   title='▤ Kitab Makhluk Nusantara';
   const f=find(focused)||LIST[0],profile=API.getTamaCodexProfile?.(f?.id),fact=window.NJ45_CODEX?.[f?.id];
@@ -397,7 +459,7 @@ function drawPanel(){
  '<ol><li>Tombol <b>A</b>: berpindah ikon, <b>B</b>: OK, <b>C</b>: kembali.</li><li>Perhatikan kenyang, senang, kedisiplinan, sakit, dan toilet.</li>'+
  '<li>Jika ia memanggil, berikan perhatian. Jangan memarahi tanpa alasan.</li><li>Matikan lampu saat istirahat. Bermain tebak arah untuk menaikkan kebahagiaan.</li>'+
  '<li>Pertumbuhan membutuhkan waktu nyata, pengalaman, perawatan, dan batu elemen untuk Legenda.</li>'+
- '<li>Ikon Main kini menyediakan Tebak Arah serta Jelajah Evolusi 2.5D: lima level, checkpoint, Jiwa, dan batu elemen.</li><li>Ensiklopedia memuat fakta/kisah dan sumber, berbeda dari evolusi fantasi.</li></ol>'+
+ '<li>Ikon Main menyediakan Tebak Arah, Jejak Nusantara (permainan ingatan), dan Jelajah Evolusi 2.5D dengan 15 level di Sumatra, Jawa, serta Kalimantan.</li><li>Ensiklopedia memuat fakta/kisah dan sumber, berbeda dari evolusi fantasi.</li></ol>'+
  '<p>Saat game ditutup, kebutuhan bergerak perlahan sampai maksimum 12 jam per pembaruan. Simpanan permainan berada di browser perangkat ini.</p>'+
  choices([['settings','⚙ Pengaturan & backup'],['back','Mulai bermain']]);}
  else if(screen==='settings'){title='⚙ Pengaturan';content='<p>Progres 3D dan Kodex yang sudah ada tetap dipertahankan.</p>'+
@@ -431,7 +493,7 @@ function render(){
  drawPanel();
 }
 function back(){
- if(screen!=='home'){screen='home';query='';render();return}
+ if(screen!=='home'){if(screen==='trailgame'||screen==='minigame')mini=null;screen='home';query='';render();return}
  show(active()?'status':'collection');
 }
 function buttonA(){if(screen!=='home'){const b=panelButtons();if(b.length){panelCursor=(panelCursor+1)%b.length;markPanelCursor();b[panelCursor].scrollIntoView({block:'nearest',behavior:'smooth'});beep(390)}return;}store.selected=(store.selected+1)%ACTIONS.length;beep(390);save();render()}
@@ -455,6 +517,10 @@ element.addEventListener('click',ev=>{
  if(a==='praise'||a==='scold'){care('discipline',a);screen='home';render();return}
  if(a==='left'||a==='right'){guess(a==='left'?0:1);return}
  if(a==='quickGame'){beginMini();return}
+ if(a==='trailGame'){beginTrail();return}
+ if(a==='trailReady'){trailReady();return}
+ if(a==='trailPick'){trailPick(Number(b.dataset.value));return}
+ if(a==='trailNext'){trailNext();return}
  if(a==='adventure'){show('adventure');return}
  if(a==='hatch'){hatch();screen='home';render();return}
  if(a==='expedition'||a==='evolution'){show(a);return}

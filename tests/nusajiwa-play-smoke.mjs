@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import {Script} from 'node:vm';
 
 const code=readFileSync(new URL('../tamagotchi-3d.js',import.meta.url),'utf8');
-function boot(old={}){
+function boot(old={}, rng=Math.random){
  const memory=new Map(Object.entries(old)),events=new Map(),nodes=new Map(),seen=[];
  function el(){return {innerHTML:'',textContent:'',hidden:false,dataset:{},style:{},
   classList:{add(){},remove(){},toggle(){},contains(){return false}},
@@ -34,7 +34,7 @@ function boot(old={}){
  const document={getElementById:id=>id==='nj35'?scene:null,createElement:()=>el(),
   body:{classList:{contains(){return true}},append(){}},addEventListener(){}};
  const localStorage={getItem:k=>memory.get(k)||null,setItem:(k,v)=>memory.set(k,v),removeItem:k=>memory.delete(k)};
- new Script(code).runInNewContext({window,document,localStorage,Date,console,setTimeout(){return 1},
+ new Script(code).runInNewContext({window,document,localStorage,Date,Math:Object.assign(Object.create(Math),{random:rng}),console,setTimeout(){return 1},
   clearTimeout(){},setInterval(){return 1},confirm:()=>true});
  const click=(type,p={})=>events.get('click')({target:{closest:()=>({dataset:{tama:type,...p}})}});
  return {click,scene,api,engine,memory,seen,game:window.NUSAJIWA_TAMAGOTCHI};
@@ -131,4 +131,38 @@ test('Java guardian trial grants evolution XP and one permanent milestone to thi
  const oldStudied=p.studied;
  assert.equal(a.game.awardAdventure({id:'komodo',level:9,stars:3,gem:true,element:'cahaya'}).earned,false);
  assert.equal(a.game.getSave().pets.komodo.studied,oldStudied);
+});
+
+test('Jejak Nusantara memory minigame: 3 rounds and earned happiness, without new save keys',()=>{
+ const a=boot({},()=>0);
+ a.click('choose',{id:'komodo'});a.click('hatch');
+ const start=a.game.getSave().pets.komodo;
+ a.game.open('game');
+ assert.match(a.scene.child.querySelector('#njtPanel').innerHTML,/Jejak Nusantara/);
+ a.click('trailGame');
+ const panel=()=>a.scene.child.querySelector('#njtPanel').innerHTML;
+ for(const length of [2,3,4]){
+  assert.match(panel(),/Hafalkan urutan/,'Each round must begin with observable pattern');
+  a.click('trailReady');
+  assert.match(panel(),/Langkah 1 dari/);
+  for(let i=0;i<length;i++)a.click('trailPick',{value:'0'});
+  assert.match(panel(),/Benar!/);
+  a.click('trailNext');
+ }
+ const end=a.game.getSave().pets.komodo;
+ assert.equal(end.games,start.games+1);
+ assert.ok(end.happy>=start.happy);
+ assert.equal(a.game.getSave().version,1);
+ assert.ok(a.memory.has('nusajiwa-tama-v70'));
+ assert.equal(a.memory.has('nusajiwa-memory-v1'),false,'No redundant save database');
+});
+test('Jejak Nusantara wrong answers still encourage care; cancel cannot yield rewards',()=>{
+ const a=boot({},()=>0);a.click('choose',{id:'komodo'});a.click('hatch');
+ a.click('trailGame');a.click('trailReady');a.click('trailPick',{value:'2'});
+ assert.match(a.scene.child.querySelector('#njtPanel').innerHTML,/Belum tepat/);
+ a.click('trailNext');
+ a.click('back');
+ const afterExit=a.game.getSave().pets.komodo.games;
+ a.click('trailNext');a.click('trailPick',{value:'0'});
+ assert.equal(a.game.getSave().pets.komodo.games,afterExit,'Abandoned sessions must not grant play rewards');
 });
