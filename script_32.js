@@ -4465,7 +4465,7 @@ function changeRegion(){
  world.mats.grass.color.setHex(palette[0]);world.sun.color.setHex(palette[1]);world.scene.fog.color.setHex(palette[2]);world.accent.intensity=nightTime?19:(viewZone==='kalimantan'?31:27);world.sun.intensity=nightTime?1.75:3.3;world.scene.fog.density=nightTime?.032:.022;
  rebuildBiome();njtApplyLiving(true);notify('⌖ '+regions.find(r=>r[0]===viewZone)[1]);
 }
-function animate(t){if(sceneDisposed)return;requestAnimationFrame(animate);if(document.hidden||sceneEl.hidden)return;if(!three)return;
+function animate(t){if(sceneDisposed)return;requestAnimationFrame(animate);if(document.hidden||sceneEl.hidden||document.body.classList.contains('nja-playing')){lastFrame=0;return;}if(!three)return;
  const rawDelta=(t-lastFrame)/1000||.016;const dt=Math.min(.035,rawDelta);lastFrame=t;tick+=dt;if(quality==='auto'){fpsSamples++;if(rawDelta>.038)slowTicks++;if(fpsSamples>=140){if(slowTicks>75&&frameScale>0.69){frameScale=.68;three.setPixelRatio(rateQuality());resize()}else if(slowTicks<18&&frameScale<1){frameScale=1;three.setPixelRatio(rateQuality());resize()}fpsSamples=0;slowTicks=0}}let slow=respectMotion?.18:1;
  let bob=Math.sin(tick*1.9)*.075*slow;
  if(avatar){let b=avatar.userData.body,btype=avatar.userData.type;
