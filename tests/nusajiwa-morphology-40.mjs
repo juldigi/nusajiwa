@@ -8,8 +8,7 @@ const context={window:{}};runInNewContext(module,context);
 const morph=context.window.NUSAJIWA_MORPH40,
  records=Array.from(context.window.NUSAJIWA_MORPH40_CATALOG),
  ids=Array.from(context.window.NUSAJIWA_MORPH40_IDS),
- rebuild=new Set(['hantu_jeruk_purut','macan_putih','timun_mas','nyai_blora','hantu_banyu',
- 'ular_naga','suanggi','orang_pendek','cindaku','nenek_pakande','nawang_wulan']);
+ rebuild=new Set(["hantu_jeruk_purut","macan_putih","timun_mas","nyai_blora","hantu_banyu","ular_naga","suanggi","orang_pendek","cindaku","nenek_pakande","nawang_wulan","orang_bati","lembuswana","naga_basuki","poppo","parakang","bedawang_nala","naga_padoha"]);
 const Three={
  Group:class{constructor(){this.children=[];this.userData={}}add(o){this.children.push(o)}},
  Mesh:class{constructor(){this.position={set(){} ,z:0};this.visible=true;this.name=''}},
@@ -80,4 +79,28 @@ test('Distinctive anatomical traits are present instead of arbitrary shared mons
  for(const key of ['posterior-gown-void','lembuswana-elephant-trunk','ceremonial-ngendog-egg',
   'sasak-tenun','batak-gecko','bedawang-cosmic','rice-stem','disconnected-human-flying-head'])
   assert.ok(module.includes(key),'Missing species specific silhouette landmark: '+key);
+});
+
+test('Previously static adulthood-only models now have reconstructed 1-4 stage anatomies',()=>{
+ for(const id of ['orang_bati','lembuswana','naga_basuki','poppo','parakang',
+  'bedawang_nala','naga_padoha']){
+  assert.ok(rebuild.has(id));
+  const seen=new Set();
+  for(let stage=1;stage<=4;stage++){
+   const g=new Three.Group(),b=new Three.Group(),native={visible:true};b.add(native);
+   assert.equal(morph(g,b,M,id,stage,Three,make,make),true);
+   assert.equal(native.visible,false,id+' must have reconstructed early anatomy');
+   const shape=b.children.at(-1).children.map(z=>z.name.replace(id+'_'+stage+'_','')).sort().join('|');
+   assert.ok(!seen.has(shape),id+' stage is repeated');seen.add(shape);
+  }
+ }
+});
+test('Culturally distinctive forms are not generic sprites',()=>{
+ for(const token of [
+  'juvenile-seram-bat-membrane','young-quadruped-chimera-chest',
+  'juvenile-cosmic-tortoise-shell','kutai-guardian-elephant-trunk',
+  'borneo-river-phantom-waterfall','batak-primordial-underworld-scroll',
+  'rangda-ritual-extended-tongue','bedawang-distinct-continental-scute',
+  'nawang-wulan-lifted-selendang'
+ ])assert.ok(module.includes(token),token);
 });

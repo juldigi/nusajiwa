@@ -133,7 +133,12 @@
       "game_evolution_is_fictional": true,
       "graphics_scope": "unique egg engraving, 7 differentiated growth rigs, regional character anatomy; preservation of existing bespoke sculpts",
       "visual_safari_device_verification": "NOT_DONE",
-      "stage_policy": "11 formerly generic juvenile creatures reconstructed, others get bespoke anatomical augmentation"
+      "stage_policy": "18 stage-agnostic juvenile identity rigs rebuilt to avoid adult look in infancy; existing stage-aware bespoke rig preserved; late elder/legend custom silhouettes.",
+      "rebuilt_juvenile_identity_ids": [
+        "orang_bati",
+        "hantu_jeruk_purut",
+        "macan_putih"
+      ]
     },
     {
       "batch": "nj91",
@@ -157,7 +162,11 @@
       "game_evolution_is_fictional": true,
       "graphics_scope": "unique egg engraving, 7 differentiated growth rigs, regional character anatomy; preservation of existing bespoke sculpts",
       "visual_safari_device_verification": "NOT_DONE",
-      "stage_policy": "11 formerly generic juvenile creatures reconstructed, others get bespoke anatomical augmentation"
+      "stage_policy": "18 stage-agnostic juvenile identity rigs rebuilt to avoid adult look in infancy; existing stage-aware bespoke rig preserved; late elder/legend custom silhouettes.",
+      "rebuilt_juvenile_identity_ids": [
+        "lembuswana",
+        "naga_basuki"
+      ]
     },
     {
       "batch": "nj92",
@@ -181,7 +190,12 @@
       "game_evolution_is_fictional": true,
       "graphics_scope": "unique egg engraving, 7 differentiated growth rigs, regional character anatomy; preservation of existing bespoke sculpts",
       "visual_safari_device_verification": "NOT_DONE",
-      "stage_policy": "11 formerly generic juvenile creatures reconstructed, others get bespoke anatomical augmentation"
+      "stage_policy": "18 stage-agnostic juvenile identity rigs rebuilt to avoid adult look in infancy; existing stage-aware bespoke rig preserved; late elder/legend custom silhouettes.",
+      "rebuilt_juvenile_identity_ids": [
+        "timun_mas",
+        "nyai_blora",
+        "hantu_banyu"
+      ]
     },
     {
       "batch": "nj93",
@@ -205,7 +219,19 @@
       "game_evolution_is_fictional": true,
       "graphics_scope": "unique egg engraving, 7 differentiated growth rigs, regional character anatomy; preservation of existing bespoke sculpts",
       "visual_safari_device_verification": "NOT_DONE",
-      "stage_policy": "11 formerly generic juvenile creatures reconstructed, others get bespoke anatomical augmentation"
+      "stage_policy": "18 stage-agnostic juvenile identity rigs rebuilt to avoid adult look in infancy; existing stage-aware bespoke rig preserved; late elder/legend custom silhouettes.",
+      "rebuilt_juvenile_identity_ids": [
+        "ular_naga",
+        "suanggi",
+        "orang_pendek",
+        "cindaku",
+        "poppo",
+        "parakang",
+        "bedawang_nala",
+        "naga_padoha",
+        "nenek_pakande",
+        "nawang_wulan"
+      ]
     }
   ],
   "merged_gameplay_improvements": [

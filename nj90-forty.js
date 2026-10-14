@@ -5,7 +5,7 @@
 'use strict';
 if(window.NUSAJIWA_MORPH40)return;
 const CATALOG=[["banaspati","fire","orb","flame","Jawa"],["palasik","spirit","head","entrails","Minangkabau"],["sundel_bolong","spirit","rearhole","hair","Jawa"],["wewe","spirit","hair","arms","Jawa"],["kuyang","spirit","head","entrails","Kalimantan"],["orang_bati","bat","wing","claw","Seram"],["rangda","mask","fang","tongue","Bali"],["barong","beast","mane","mask","Bali"],["hantu_jeruk_purut","spirit","headless","cloak","Jakarta"],["macan_putih","tiger","stripes","tail","Jawa"],["lembuswana","hybrid","trunk","wing","Kutai"],["naga_basuki","serpent","coil","water","Bali"],["garuda","bird","wing","claw","Nusantara"],["hanoman","ape","tail","crown","Wayang"],["jatayu","bird","beak","wing","Wayang"],["sembrani","horse","muzzle","wing","Jawa"],["makara_candi","serpent","snout","scale","Jawa"],["warak_ngendog","hybrid","snout","egg","Semarang"],["boraspati_tano","lizard","toes","scale","Batak"],["batara_kala","mask","brow","fang","Wayang"],["dewi_sri","human","rice","crown","Jawa/Sunda"],["nyi_roro_kidul","human","water","crown","Pesisir Selatan Jawa"],["putri_mandalika","human","textile","water","Lombok"],["jaka_tarub","human","cloth","sandal","Jawa"],["kebo_iwa","giant","fist","shoulder","Bali"],["bujang_ganong","mask","mask","hair","Ponorogo"],["ebu_gogo","ape","hair","arms","Flores"],["timun_mas","human","gourd","pouch","Jawa"],["nyai_blora","serpent","coil","hair","Jawa"],["hantu_banyu","spirit","water","cloak","Kalimantan"],["ular_naga","serpent","coil","crown","Nusantara"],["suanggi","spirit","cloak","shadow","Maluku"],["orang_pendek","ape","hair","arms","Sumatra"],["cindaku","tiger","stripes","tail","Kerinci"],["poppo","spirit","head","entrails","Sulawesi Selatan"],["parakang","spirit","shadow","claw","Sulawesi Selatan"],["bedawang_nala","turtle","shell","coil","Bali"],["naga_padoha","serpent","coil","scale","Batak Toba"],["nenek_pakande","spirit","elder","hair","Bugis"],["nawang_wulan","human","cloth","crown","Jawa"]];
-const REBUILD=new Set(["hantu_jeruk_purut","macan_putih","timun_mas","nyai_blora","hantu_banyu","ular_naga","suanggi","orang_pendek","cindaku","nenek_pakande","nawang_wulan"]);
+const REBUILD=new Set(["hantu_jeruk_purut","macan_putih","timun_mas","nyai_blora","hantu_banyu","ular_naga","suanggi","orang_pendek","cindaku","nenek_pakande","nawang_wulan","orang_bati","lembuswana","naga_basuki","poppo","parakang","bedawang_nala","naga_padoha"]);
 window.NUSAJIWA_MORPH40_IDS=Object.freeze(CATALOG.map(r=>r[0]));
 window.NUSAJIWA_MORPH40_CATALOG=Object.freeze(CATALOG);
 window.NUSAJIWA_MORPH40=function(group,body,M,id,phase,T,ell,tube){
@@ -111,8 +111,54 @@ window.NUSAJIWA_MORPH40=function(group,body,M,id,phase,T,ell,tube){
  }
  }
  const buildJuvenile=()=>{
-  // Replaces generic geometry ONLY for the 11 never-bespoke juveniles.
+  // Replace 18 stage-agnostic adult rigs during juvenile phases 1-4.
+  // Prior phase-aware bespoke originals remain untouched throughout.
+
   switch(family){
+  case 'bat':{
+   // Orang Bati: start as a winged crouching humanoid, not a giant feathered bird.
+   e('juvenile-seram-compact-humanoid',0,1.01,-.07,.19+s*.065,.35+s*.07,.25,M.main);
+   e('juvenile-seram-short-faced-head',0,1.63,.22,.22+s*.035,.22,.23,M.light);
+   pair(d=>{
+     const r=.29+s*.26,shape=new T.Shape();
+     shape.moveTo(d*.19,1.42);shape.lineTo(d*r,1.80+s*.09);
+     shape.lineTo(d*(r+.15),1.25);shape.lineTo(d*(r*.57),1.02);shape.closePath();
+     const w=new T.Mesh(new T.ShapeGeometry(shape),M.dark);
+     w.position.set(0,0,-.11);w.name=tag('juvenile-seram-bat-membrane-'+d);root.add(w);
+     t('membrane-finger-bone-'+d,[[d*.19,1.42,-.1],[d*r,1.80+s*.09,-.1]],.024,M.light);
+     e('splayed-bat-foot-'+d,d*.18,.27,.18,.12,.21,.16,M.dark);
+   });
+   if(s>=3)pair(d=>c('growing-membrane-thumb-claw-'+d,d*(.38+s*.19),
+     1.47,-.08,.052,.21,M.white));
+   break;
+  }
+  case 'hybrid':{
+   // Four legs + muzzle; the stage-gated wing and trunk ornaments come later.
+   e('young-quadruped-chimera-chest',0,.92,-.11,.30+s*.06,.32+s*.055,.48+s*.06,M.main);
+   e('young-hybrid-given-head',0,1.48,.51,.24+s*.035,.24,.29,M.light);
+   pair(d=>{
+    for(const z of [-.39,.37])e('distinct-ceremonial-fourleg-'+d+'-'+z,
+      d*.30,.33,z,.11,.28,.14,M.dark);
+   });
+   if(s>=2)e('early-celebratory-collar',0,1.34,.16,.32,.11,.16,M.gold);
+   if(s>=3)pair(d=>{
+     e('new-shoulder-wing-muscle-'+d,d*.35,1.29,-.28,.20,.22,.14,M.main);
+     t('first-structural-hybrid-feather-'+d,[[d*.35,1.36,-.28],
+       [d*(.37+s*.12),1.83,-.30]],.053,M.gold);
+   });
+   break;
+  }
+  case 'turtle':{
+   // Bedawang Nala is a cosmic turtle, not an ordinary humanoid.
+   e('juvenile-cosmic-tortoise-shell',0,.80,-.16,.35+s*.065,.26+s*.039,.46+s*.05,M.dark);
+   e('juvenile-wide-tortoise-head',0,.70,.58,.23+s*.026,.20,.25,M.main);
+   pair(d=>{for(const z of [-.37,.31])e('supporting-tortoise-foot-'+d+'-'+z,
+       d*.39,.25,z,.13,.23,.16,M.light);});
+   if(s>=2)e('small-island-on-shell',0,1.10,-.22,.28+s*.038,.15,.32,M.gold);
+   if(s>=3)pair(d=>t('individual-shell-seam-'+d,[[d*.18,1.14,-.43],
+      [d*.32,1.16,-.18],[d*.22,1.14,.19]],.035,M.light));
+   break;
+  }
   case 'tiger':e('young-quad-body',0,.80,-.12,.40+.07*s,.38,.68,M.main);
     e('distinct-cat-head',0,1.22,.54,.30,.30,.31,M.light);
     pair(d=>{for(const z of [-.37,.37])e('young-tiger-paw-'+d+'-'+z,d*.32,.25,z,.14,.23,.18,M.main);});break;
@@ -143,7 +189,172 @@ window.NUSAJIWA_MORPH40=function(group,body,M,id,phase,T,ell,tube){
   if(reconstruct)body.children.forEach(child=>child.visible=false);
   body.add(root);
   if(reconstruct)buildJuvenile();
+
   feature(f1);feature(f2);
+  // Individual anatomical keys beyond family and the two baseline motifs.
+  // These are geometry (not CSS filters, not scale-only). Characters used as
+  // ceremonial objects remain objects rather than claimed biological beasts.
+  if(id==='banaspati'){
+    if(s>=3)pair(d=>c('isolated-ember-sculpt-'+d,d*.48,1.72,-.11,.10,.54,M.gold));
+    if(s===7)e('legend-pyre-second-heart',0,1.63,-.23,.58,.78,.23,M.glow);
+  }else if(id==='palasik'){
+    t('minang-floating-black-hair-column',[[0,2.12,-.19],[.21,1.41,-.23],
+      [.29,.78,-.32]],.057,M.black);
+    if(s>=6)e('late-palasik-hair-root',0,2.18,-.12,.42,.21,.25,M.black);
+  }else if(id==='sundel_bolong'){
+    pair(d=>t('hanging-shroud-edge-'+d,[[d*.27,1.61,-.35],
+      [d*.39,.92,-.49],[d*.42,.22,-.58]],.046,M.white));
+    if(s===7)e('sundel-open-rear-gown-hem',0,.45,-.49,.48,.21,.18,M.white);
+  }else if(id==='wewe'){
+    pair(d=>t('wewe-embracing-hand-'+d,[[d*.31,1.54,-.05],
+      [d*.70,1.10,.09],[d*.50,.50,.23]],.061,M.dark));
+    if(s===7)e('wewe-sheltering-night-shawl',0,.98,-.39,.65,.83,.17,M.black);
+  }else if(id==='kuyang'){
+    t('kuyang-separate-organ-tail',[[0,1.46,.09],[-.23,.91,-.14],
+      [-.46,.29,-.23]],.041,M.pink);
+    if(s===7)e('kuyang-floating-dark-scalp',0,2.22,-.12,.51,.25,.25,M.black);
+  }else if(id==='orang_bati'){
+    pair(d=>t('independent-wing-finger-'+d,[[d*.18,1.47,-.14],
+      [d*(.51+s*.16),1.88,-.19]],.040,M.dark));
+    if(s===7)pair(d=>e('legend-leather-wing-shoulder-'+d,d*.54,1.44,-.26,.36,.47,.20,M.dark));
+  }else if(id==='rangda'){
+    t('rangda-ritual-extended-tongue',[[0,1.59,.76],[0,1.06,.87],
+      [.12,.38,.88]],.071,M.pink);
+    if(s>=6)pair(d=>c('rangda-mask-side-fang-'+d,d*.26,1.44,.71,.054,.35,M.white));
+  }else if(id==='barong'){
+    if(s>=2)for(let j=0;j<3+s;j++)e('barong-bushy-parade-tuft-'+j,
+      Math.sin(j*2.4)*.49,1.44+(j%4)*.24,Math.cos(j*2.4)*.36,.11,.18,.13,M.main);
+    if(s===7)e('barong-ceremonial-full-blanket',0,1.31,-.45,.77,.46,.27,M.dark);
+  }else if(id==='hantu_jeruk_purut'){
+    e('empty-head-neck-recess',0,1.80,.21,.21,.08,.13,M.black);
+    pair(d=>t('distinct-urban-white-sleeve-'+d,[[d*.24,1.41,.17],
+      [d*.42,.88,.25],[d*.48,.39,.21]],.072,M.white));
+  }else if(id==='macan_putih'){
+    pair(d=>{for(let j=0;j<4;j++)t('striped-white-guardian-flank-'+d+'-'+j,
+      [[d*.23,1.31,-.59+j*.26],[d*.45,1.10,-.48+j*.26],
+      [d*.37,1.01,-.40+j*.26]],.022,M.dark);});
+    if(s===7)e('guardian-white-shoulder-fur',0,1.28,-.16,.72,.32,.49,M.white);
+  }else if(id==='lembuswana'){
+    t('kutai-guardian-elephant-trunk',[[0,1.65,.72],[0,1.22,1.02],
+      [.18,.83,1.13]],.11,M.main);
+    pair(d=>c('kutai-short-ivory-tusk-'+d,d*.27,1.29,.82,.055,.26,M.white));
+    if(s===7)e('legend-huge-kutai-saddle-cloth',0,1.38,-.25,.78,.31,.38,M.gold);
+  }else if(id==='naga_basuki'){
+    pair(d=>t('balinese-basuki-water-crest-'+d,[[d*.17,1.94,.65],
+      [d*.35,2.26,.58],[d*.31,2.57,.43]],.055,M.gold));
+    if(s>=6)t('second-balinese-water-coil',[[-.84,.41,-.24],[-1.10,.89,-.43],
+      [0,1.22,-.72],[1.14,.73,-.24]],.154,M.main);
+  }else if(id==='garuda'){
+    pair(d=>{for(let j=0;j<4;j++)t('garuda-independent-pinions-'+d+'-'+j,
+       [[d*.25,1.42,-.22],[d*(.70+j*.16),1.96+j*.08,-.31],
+       [d*(.89+j*.16),1.34-j*.05,-.30]],.059,M.gold);});
+    if(s===7)e('garuda-heroic-chest-jewel',0,1.19,.42,.21,.28,.07,M.gold);
+  }else if(id==='hanoman'){
+    t('wayang-hanoman-simian-tail',[[0,.84,-.30],[.32,.96,-.73],
+      [.54,1.53,-.93],[.33,1.85,-.90]],.085,M.white);
+    if(s>=6)pair(d=>e('hanoman-gold-armband-'+d,d*.51,1.32,.12,.12,.17,.11,M.gold));
+  }else if(id==='jatayu'){
+    c('jatayu-hook-bill',0,1.71,.66,.12,.29,M.gold).rotation.x=.46;
+    if(s>=6)pair(d=>t('jatayu-huge-last-feathers-'+d,[[d*.33,1.44,-.20],
+      [d*1.19,2.16,-.24],[d*1.37,1.49,-.26]],.079,M.main));
+  }else if(id==='sembrani'){
+    t('sembrani-flowing-mane',[[0,1.97,.16],[0,1.78,-.19],
+      [.19,1.16,-.42]],.068,M.gold);
+    if(s>=6)pair(d=>t('winged-horse-longest-plumes-'+d,[[d*.21,1.34,-.23],
+      [d*1.18,2.21,-.26],[d*1.40,1.81,-.28]],.062,M.white));
+  }else if(id==='makara_candi'){
+    t('candi-makara-ornamental-snout',[[0,1.51,.62],[0,1.14,1.03],
+      [.17,1.47,1.22]],.12,M.main);
+    if(s>=6)pair(d=>e('architectural-candi-makara-scroll-'+d,d*.59,1.48,-.30,.23,.44,.14,M.gold));
+  }else if(id==='warak_ngendog'){
+    e('dugderan-separate-festival-egg',.66,.39,.11,.18,.23,.17,M.white);
+    if(s===7)pair(d=>e('warak-banner-side-'+d,d*.66,1.36,-.26,.23,.38,.14,M.gold));
+  }else if(id==='boraspati_tano'){
+    pair(d=>t('boraspati-house-guardian-spread-toes-'+d,
+      [[d*.22,.78,.37],[d*.46,.34,.49],[d*.66,.14,.68]],.047,M.light));
+    if(s>=6)e('batak-house-lizard-brow-relief',0,1.73,.45,.30,.11,.19,M.gold);
+  }else if(id==='batara_kala'){
+    e('kala-enormous-mouth-recess',0,1.55,.52,.41,.22,.15,M.dark);
+    if(s>=6)pair(d=>c('kala-devouring-side-fang-'+d,d*.25,1.33,.74,.074,.33,M.white));
+  }else if(id==='dewi_sri'){
+    pair(d=>t('dewi-sri-grown-rice-cluster-'+d,[[d*.25,.43,.04],
+      [d*.44,1.18,.17],[d*.61,1.99,.23]],.039,M.gold));
+    if(s===7)e('abundant-rice-goddess-stole',0,1.44,-.22,.59,.17,.26,M.main);
+  }else if(id==='nyi_roro_kidul'){
+    pair(d=>t('southern-ocean-queen-scarf-'+d,[[d*.21,1.39,-.21],
+      [d*.49,.88,-.41],[d*.71,.29,-.62]],.066,M.main));
+    if(s===7)e('queen-ocean-horizon',0,.28,-.39,.79,.13,.43,M.glow);
+  }else if(id==='putri_mandalika'){
+    e('mandalika-sasak-twist-textile',0,.81,.30,.34,.43,.11,M.gold);
+    if(s>=6)for(let j=0;j<4;j++)t('nyale-mandalika-sea-thread-'+j,
+     [[0,.83,.0],[Math.sin(j*2.39)*.30,.38,-.32],[Math.sin(j*2.39)*.53,.14,-.43]],.037,M.light);
+  }else if(id==='jaka_tarub'){
+    e('javanese-country-headcloth',0,2.01,-.06,.31,.11,.27,M.dark);
+    if(s===7)e('folk-hunter-staff',.57,1.05,.12,.06,1.03,.06,M.main);
+  }else if(id==='kebo_iwa'){
+    pair(d=>e('bali-kebo-iwa-massive-arm-fist-'+d,d*.73,.71,.18,.29,.29,.30,M.main));
+    if(s===7)e('giant-earth-strong-back',0,1.38,-.52,.68,.49,.26,M.dark);
+  }else if(id==='bujang_ganong'){
+    e('reog-bujang-ganong-painted-red-mask',0,1.80,.60,.30,.29,.19,M.main);
+    pair(d=>t('bujang-wide-dancer-hair-'+d,[[d*.19,2.06,-.12],
+      [d*.45,1.64,-.28],[d*.67,1.14,-.32]],.061,M.black));
+  }else if(id==='ebu_gogo'){
+    e('ebu-gogo-flattened-wide-nose',0,1.64,.45,.18,.11,.14,M.dark);
+    if(s>=6)for(let j=0;j<6;j++)e('flores-hominin-hair-'+j,
+      Math.sin(j*2.39)*.29,1.15+(j%4)*.20,Math.cos(j*2.39)*.28,.05,.17,.06,M.dark);
+  }else if(id==='timun_mas'){
+    e('heroine-golden-cucumber',.47,.63,.22,.15,.30,.16,M.gold);
+    if(s===7)for(let j=0;j<4;j++)e('fantasy-magic-cucumber-seed-'+j,
+      .46+Math.sin(j*Math.PI/2)*.27,.53+Math.cos(j*Math.PI/2)*.25,.39,.055,.09,.035,M.gold);
+  }else if(id==='nyai_blora'){
+    e('serpent-woman-longface',0,1.82,.27,.26,.31,.19,M.light);
+    if(s>=6)pair(d=>t('siluman-ular-loose-hair-'+d,
+      [[d*.19,2.12,-.07],[d*.40,1.37,-.29],[d*.43,.74,-.32]],.059,M.black));
+  }else if(id==='hantu_banyu'){
+    pair(d=>t('borneo-river-phantom-waterfall-'+d,
+      [[d*.22,1.48,-.17],[d*.49,.78,-.31],[d*.60,.12,-.48]],.091,M.glow));
+    if(s===7)e('hantu-banyu-river-current-back',0,.72,-.43,.70,.55,.14,M.main);
+  }else if(id==='ular_naga'){
+    pair(d=>t('taksaka-naga-side-whisker-'+d,[[d*.18,1.65,.90],
+      [d*.39,1.51,1.13],[d*.65,1.50,1.31]],.046,M.gold));
+    if(s===7)e('taksaka-jade-forehead',0,2.10,1.01,.12,.14,.075,M.gold);
+  }else if(id==='suanggi'){
+    e('eastern-suanggi-changing-shadow-mouth',0,1.54,.41,.22,.18,.16,M.dark);
+    if(s>=6)pair(d=>t('regional-suanggi-shadow-fingers-'+d,
+      [[d*.24,1.49,-.10],[d*.50,.70,-.31],[d*.73,.24,-.41]],.076,M.dark));
+  }else if(id==='orang_pendek'){
+    e('sumatran-orang-pendek-flat-broad-nose',0,1.61,.40,.25,.12,.13,M.light);
+    if(s>=6)pair(d=>t('orang-pendek-forest-forearm-'+d,
+      [[d*.24,1.40,-.10],[d*.43,.76,.18],[d*.56,.21,.23]],.121,M.dark));
+  }else if(id==='cindaku'){
+    if(s>=3)e('cindaku-hybrid-hunchback',0,1.41,-.31,.52,.34,.28,M.main);
+    if(s===7)t('kerinci-cindaku-spirit-tiger-tail',[[0,1.08,-.72],
+      [.48,1.48,-1.22],[.21,1.89,-1.43]],.151,M.main);
+  }else if(id==='poppo'){
+    e('poppo-detached-head-high',0,1.91,.28,.31,.32,.25,M.main);
+    if(s>=6)t('flying-poppo-hair-stream',[[0,2.11,-.10],
+      [.41,1.52,-.30],[.61,.81,-.43]],.074,M.black);
+  }else if(id==='parakang'){
+    pair(d=>t('parakang-shapeshift-arm-'+d,[[d*.23,1.43,-.03],
+      [d*.47,.86,-.28],[d*.64,.27,.13]],.064,M.dark));
+    if(s===7)e('parakang-multi-shadow-veil',0,.85,-.42,.69,.69,.08,M.glow);
+  }else if(id==='bedawang_nala'){
+    for(let j=0;j<5;j++)e('bedawang-distinct-continental-scute-'+j,
+      Math.sin(j*1.257)*.38,1.29,Math.cos(j*1.257)*.31,.16,.07,.16,M.gold);
+    if(s===7)e('bedawang-island-platform',0,1.56,-.22,.63,.17,.49,M.gold);
+  }else if(id==='naga_padoha'){
+    t('batak-primordial-underworld-scroll',[[-.74,.44,-.31],[-1.03,.70,-.45],
+      [0,1.07,-.68],[.90,.74,-.19]],.135,M.dark);
+    if(s===7)e('cosmic-padoha-earth-stone',0,.29,-.37,.83,.12,.49,M.gold);
+  }else if(id==='nenek_pakande'){
+    e('bugis-elder-ogress-jaw',0,1.48,.55,.27,.23,.17,M.light);
+    if(s>=6)pair(d=>t('nenek-pakande-straggly-grey-hair-'+d,
+     [[d*.22,2.15,-.13],[d*.48,1.39,-.21],[d*.52,.75,-.34]],.061,M.white));
+  }else if(id==='nawang_wulan'){
+    pair(d=>t('nawang-wulan-lifted-selendang-'+d,[[d*.19,1.42,-.18],
+      [d*.63,1.55,-.36],[d*(.77+s*.05),1.07,-.54]],.064,M.gold));
+    if(s===7)e('nawang-wulan-celestial-robe',0,.78,-.46,.72,.64,.18,M.light);
+  }
   // Anatomically different development at EVERY phase; not only material or scaling.
   if(s===1){e('infant-neck-fold',0,1.49,.16,.24,.13,.15,M.light);}
   if(s===2)pair(d=>e('emerging-scapular-joint-'+d,d*.31,1.34,.05,.14,.21,.16,M.main));
