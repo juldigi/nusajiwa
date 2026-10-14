@@ -33,8 +33,8 @@ test('Eighty unique anatomy constructions, four replacements per identity and ma
    assert.ok(node.children.length>=2,'Detailed silhouette needed: '+id+'/'+stage);
    if(stage>0&&stage<=4)assert.equal(base.visible,false,'Must replace generic adult: '+id+'/'+stage);
    if(stage>=5)assert.equal(base.visible,true,'Keep native sculptor: '+id+'/'+stage);
-   const signature=node.children.map(z=>z.name).sort().join('|');
-   assert.ok(!one.has(signature),id+' stages have identical anatomy');one.add(signature);
+   const signature=node.children.map(z=>z.name.replace(id+'-'+stage+'-','')).sort().join('|');
+   assert.ok(!one.has(signature),id+' stages have identical anatomy after removing phase labels');one.add(signature);
    const unique=id+'/'+signature;assert.ok(!all.has(unique));all.add(unique);
   }
   assert.equal(one.size,8);
@@ -49,4 +49,15 @@ test('Unrelated species remain unchanged; browser and Pages load the module in c
  assert.ok(html.indexOf('./nj89-ten.js')>0&&html.indexOf('./nj89-ten.js')<html.indexOf('./script_32.js'));
  const pages=read('.github/workflows/pages.yml');
  assert.ok(pages.includes('cp index.html atlas-evolusi.html script_*.js nj89-ten.js'));
+});
+
+test('Jenglot keeps native miniature body size; the phase overlay is not doubly scaled',()=>{
+ assert.match(engine,/function nj610Jenglot\\(g,M\\)\\{[\\s\\S]*?g\\.scale\\.setScalar\\(\\.52\\)/);
+ const jenglot=source.slice(source.indexOf("case 'jenglot':"),source.indexOf("case 'begu_ganjang':"));
+ assert.doesNotMatch(jenglot,/root\\.scale\\.setScalar\\(\\.52\\)/);
+});
+test('Phase anatomy is not simply inherited primitive sizes',()=>{
+ const specials=['second-scalloped-membrane','crawling-heavy-palm','specimen-hair',
+  'broad-giant-brow-ridge','human-like-hybrid-upper-arm','early-royal-neck-frill'];
+ for(const marker of specials)assert.ok(source.includes(marker),'Missing distinct phase-specific part: '+marker);
 });
