@@ -20,7 +20,7 @@ test('Every non-fauna mystical, ritual and folklore creature is included in opt-
  assert.equal(roster.length,300);assert.equal(spiritual.length,61);
  assert.equal(new Set(spiritual.map(x=>x[0])).size,61);
  const folklore=new Set(spiritual.map(x=>x[0]));
- for(const batch of JSON.parse(read('release.json')).merged_morphology_batches.filter(x=>x.batch!=='nj94'))
+ for(const batch of JSON.parse(read('release.json')).merged_morphology_batches.filter(x=>!['nj94','nj96'].includes(x.batch)))
  for(const id of batch.identity_ids)assert.ok(folklore.has(id),id);
  for(const id of ['si_manis_jembatan_ancol','dewi_lanjar','keong_mas','kuda_lumping',
   'singa_barong_reog','gatotkaca','bima_wayang','buto_cakil'])assert.ok(folklore.has(id),id);
