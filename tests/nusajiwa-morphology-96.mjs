@@ -84,5 +84,5 @@ test('Unlisted ID unaffected and full production bridge/deploy includes NJ96',()
  for(const name of ['.github/workflows/pages.yml','.github/workflows/tamagotchi-quality.yml']){
   assert.ok(read(name).includes('node --check nj96-fauna.js'),name);
  }
- assert.ok(read('.github/workflows/pages.yml').includes('nj96-fauna.js nj95-visual-audit.js pages-fixes.js'));
+ assert.ok(read('.github/workflows/pages.yml').includes('nj96-fauna.js nj95-visual-audit.js nj642-living.js pages-fixes.js'));
 });

@@ -78,6 +78,6 @@ test('GitHub Pages packages opt-in audit UI and QA is included in full test suit
  assert.ok(html.includes('./nj95-visual-audit.js'));
  assert.ok(html.indexOf('./script_32.js')<html.indexOf('./nj95-visual-audit.js'));
  assert.ok(read('.github/workflows/pages.yml').includes('node --check nj95-visual-audit.js'));
- assert.ok(read('.github/workflows/pages.yml').includes('nj95-visual-audit.js pages-fixes.js'));
+ assert.ok(read('.github/workflows/pages.yml').includes('nj95-visual-audit.js nj642-living.js pages-fixes.js'));
  assert.ok(read('.github/workflows/tamagotchi-quality.yml').includes('nj95-visual-audit.js'));
 });
