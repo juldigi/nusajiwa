@@ -291,6 +291,12 @@ function setupVisual(){
   for(const dx of [-.65,.65])mesh(new T.OctahedronGeometry(.24),gold,l.length-3.9+dx,1.3,-2.15);
  }
  const hero=new T.Group();scene.add(hero);
+ const animatedParts=[];
+ const shade=mesh(new T.CircleGeometry(.58,20),material(0x1c4235),run.x,.012,1.1);
+ shade.rotation.x=-Math.PI/2;shade.material.transparent=true;shade.material.opacity=.26;
+ const particleGeometry=new T.SphereGeometry(.085,6,4);geo.push(particleGeometry);
+ const particleMaterials={coin:gold,magic:white,dust:soil,hurt:danger};
+ const particleMeshes=Array.from({length:42},()=>{const m=new T.Mesh(particleGeometry,gold);m.visible=false;scene.add(m);return m});
  const nativeModel=window.NJ35?.getAdventureAvatar?.(pet.id);
  if(nativeModel){
   const bounds=new T.Box3().setFromObject(nativeModel);
@@ -302,13 +308,15 @@ function setupVisual(){
   nativeModel.traverse(o=>{
    if(o.geometry)geo.push(o.geometry);
    if(o.material)for(const m of (Array.isArray(o.material)?o.material:[o.material]))materials.push(m);
+   if(o!==nativeModel&&o.name&&/(?:wing|leg|foot|tail)/i.test(o.name)&&animatedParts.length<18)
+    animatedParts.push({o,base:o.rotation.z,kind:/wing/i.test(o.name)?'wing':/tail/i.test(o.name)?'tail':'leg'});
   });
  }else{
  function part(g,m,x,y,z,scale){const o=new T.Mesh(g,m);o.position.set(x,y,z);if(scale)o.scale.set(...scale);hero.add(o);geo.push(g);return o}
  const sphere=(m,x,y,z,sx,sy,sz)=>part(new T.SphereGeometry(1,11,8),m,x,y,z,[sx,sy,sz]);
  if(pet.type==='tiger'){
   sphere(orange,0,.75,0,.61,.37,.35);sphere(orange,.46,.98,.05,.29,.29,.28);
-  for(const x of [-.35,.33])for(const z of [-.23,.24])sphere(orange,x,.33,z,.11,.33,.12);
+  for(const x of [-.35,.33])for(const z of [-.23,.24]){const leg=sphere(orange,x,.33,z,.11,.33,.12);animatedParts.push({o:leg,base:leg.rotation.z,kind:'leg'})}
   for(let i=0;i<4;i++)part(new T.BoxGeometry(.07,.27,.71),dark,-.29+i*.2,1.06,.05);
   sphere(white,.67,.84,.16,.16,.10,.2);
  }else if(pet.type==='bird'){
@@ -329,8 +337,26 @@ function setupVisual(){
   const viewportW=Math.max(200,canvas.clientWidth||window.innerWidth),viewportH=Math.max(140,canvas.clientHeight||window.innerHeight),aspect=viewportW/viewportH,hh=aspect<.88?7:4.8;
   camera.left=-hh*aspect;camera.right=hh*aspect;camera.top=hh;camera.bottom=-hh;
   camera.position.set(run.cameraX,3.4,19);camera.lookAt(run.cameraX,1.6,0);camera.updateProjectionMatrix();
-  hero.position.set(run.x,run.y+(pet.type==='spirit'?.08:0),1.2);hero.scale.x=run.heroFacing;
-  hero.rotation.z=run.vx*.015;hero.visible=run.hurtUntil<=0||Math.floor(run.seconds*13)%2===0;
+
+  const moving=Math.min(1,Math.abs(run.vx)/6),step=run.seconds*(10+moving*5),inAir=!run.grounded;
+  const trot=run.grounded?Math.abs(Math.sin(step))*.07*moving:0;
+  hero.position.set(run.x,run.y+(pet.type==='spirit'?.10:0)+trot,1.2);
+  hero.scale.set(run.heroFacing*(inAir?1.035:1-.022*moving),inAir?1.06:1-.05*trot,1);
+  hero.rotation.z=clamp(-run.vx*.013,-.17,.17);
+  hero.rotation.x=inAir?clamp(run.vy*.018,-.14,.14):0;
+  animatedParts.forEach((v,i)=>{
+   const amplitude=v.kind==='wing'?(inAir?.21:.06):v.kind==='tail'?.10:(run.grounded?.19*moving:.10);
+   v.o.rotation.z=v.base+Math.sin(step+(i%2?Math.PI:0))*amplitude;
+  });
+  hero.visible=run.hurtUntil<=0||Math.floor(run.seconds*13)%2===0;
+  shade.position.x=run.x;shade.scale.setScalar(clamp(1-run.y*.07,.58,1));shade.visible=run.y>=-.3;
+  particleMeshes.forEach((o,i)=>{
+   const f=run.fx[i];
+   if(!f){o.visible=false;return}
+   o.visible=true;o.material=particleMaterials[f.type]||gold;
+   o.position.set(f.x,f.y,1.85);
+   o.scale.setScalar(Math.max(.01,f.ttl/f.max));
+  });
   portal.rotation.z=run.seconds*.3;
   portal.visible=run.sigils.every(s=>s.got);
   patrolVisuals.forEach((o,i)=>{o.position.x=patrolX(run.patrols[i],run.seconds);o.rotation.y=run.seconds*2});
