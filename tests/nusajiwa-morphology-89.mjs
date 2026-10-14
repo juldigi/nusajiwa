@@ -45,7 +45,7 @@ test('Unrelated species remain unchanged; browser and Pages load the module in c
  const group=new T.Group(),body=new T.Group(),base={visible:true};body.add(base);
  assert.equal(morph(group,body,M,'garuda',5,T,fake,fake),false);
  assert.equal(base.visible,true);assert.equal(body.children.length,1);
- assert.ok(engine.includes('window.NUSAJIWA_MORPH89?.(group,body,M,r[0],portraitMode?5:gamePet()?.phase??5,THREE,ell,tube);'));
+ assert.ok(engine.includes('window.NUSAJIWA_MORPH89?.(group,body,M,r[0],renderPhase,THREE,ell,tube);'));
  assert.ok(html.indexOf('./nj89-ten.js')>0&&html.indexOf('./nj89-ten.js')<html.indexOf('./script_32.js'));
  const pages=read('.github/workflows/pages.yml');
  assert.ok(pages.includes('cp index.html atlas-evolusi.html script_*.js nj89-ten.js'));
