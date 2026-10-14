@@ -108,3 +108,9 @@ Sumber budaya: [Perda Kutai/Kukar tentang unsur lambang Lembu Suana](https://jdi
 
 #### Audit anatomi NJ90–NJ93 (lanjutan)
 Perbaikan regresi: tahap 1–4 pada 18 identitas tanpa model remaja bawaan kini membangun anatomi berbeda, termasuk Orang Bati (tulang membran kelelawar), Lembuswana (hewan berkaki empat dan sayap), Naga Basuki dan Naga Padoha (tubuh ular tanpa kaki), Bedawang Nala (kura-kura kosmik) serta Poppo dan Parakang. Identitas yang sudah punya sculpt phase-aware tetap mempertahankannya. Ditambahkan 40 penanda detail karakter khusus, sementara 8 fase per makhluk diaudit secara struktural (bukan pengujian renderer WebGL nyata).
+
+### NJ94 — 10 fauna ikon × 8 fase (80 konstruksi)
+
+Komodo, Harimau Sumatra, Cendrawasih, Anoa, Maleo, Bekantan, Orangutan Kalimantan, Badak Jawa, Gajah Sumatra, Jalak Bali. Juvenil (1–4) memakai anatomi ulang, dewasa (5) mempertahankan model asli, tua dan legenda (6–7) menambah ciri spesifik. Telur mamalia dan legenda adalah simbol fiksi gameplay, bukan biologi. Jalak Bali memperoleh area biru di seputar mata, Bekantan bayi wajah kebiruan, Badak Jawa memakai satu tanduk native (tidak ditumpuk dua). Validasi 80 bentuk berbasis simulator geometri + CI, belum pemeriksaan visual Safari iPhone.
+
+Rujukan: Smithsonian National Zoo [Komodo](https://nationalzoo.si.edu/animals/komodo-dragon) dan [Orangutan](https://nationalzoo.si.edu/animals/orangutan); Ornithological Applications [Maleo](https://academic.oup.com/condor/article/127/3/duaf022/8124486); IUCN SSC Asian Rhino Specialist Group [Badak Jawa](https://asianrhinos.group/rhinos/javan/); San Diego Zoo [Jalak Bali](https://animals.sandiegozoo.org/animals/bali-myna).

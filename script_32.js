@@ -4385,6 +4385,7 @@ function makeAvatar(r, portraitMode=false){const type=r[4],M=mats(r),group=new T
  nj88Morph(group,body,M,r[0],portraitMode?5:gamePet()?.phase??5);
  window.NUSAJIWA_MORPH89?.(group,body,M,r[0],portraitMode?5:gamePet()?.phase??5,THREE,ell,tube);
  window.NUSAJIWA_MORPH40?.(group,body,M,r[0],portraitMode?5:gamePet()?.phase??5,THREE,ell,tube);
+ window.NUSAJIWA_MORPH94?.(group,body,M,r[0],portraitMode?5:gamePet()?.phase??5,THREE,ell,tube);
  group.userData={...group.userData,body,type,base:body.position.y,phase:(living?.phase??null),legend:(living?.legend??null)};
  return group;
 }

@@ -232,6 +232,43 @@
         "nenek_pakande",
         "nawang_wulan"
       ]
+    },
+    {
+      "batch": "nj94",
+      "status": "MERGED",
+      "identity_ids": [
+        "komodo",
+        "tiger",
+        "cendrawasih",
+        "anoa",
+        "maleo",
+        "bekantan",
+        "orangutan",
+        "badak_jawa",
+        "gajah_sumatra",
+        "jalak_bali"
+      ],
+      "stage_count": 8,
+      "staged_constructions": 80,
+      "module": "nj94-fauna.js",
+      "test_file": "tests/nusajiwa-morphology-94.mjs",
+      "adult_unchanged": true,
+      "juvenile_replacement_stages": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "childhood_morphology": "Distinct anatomies and species-specific stage alterations, not scaling only",
+      "wildlife_basis": [
+        "Smithsonian National Zoo",
+        "San Diego Zoo",
+        "IUCN SSC Asian Rhino Specialist Group",
+        "Ornithological Applications"
+      ],
+      "legend_note": "Fantasy anatomy belongs to gameplay, not zoology; egg emblems are fictional for mammals",
+      "visual_Safari_iPhone": "NOT_VERIFIED",
+      "catalogue_size_still_300": true
     }
   ],
   "merged_gameplay_improvements": [
