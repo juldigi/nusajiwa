@@ -61,7 +61,7 @@ test('Module does not touch other catalogue identities or save keys',()=>{
  assert.equal(module.includes('localStorage'),false);
 });
 test('Entrypoint order, Pages packaging, and release registry stay consistent',()=>{
- assert.ok(engine.includes('window.NUSAJIWA_MORPH40?.(group,body,M,r[0],portraitMode?5:gamePet()?.phase??5,THREE,ell,tube);'));
+ assert.ok(engine.includes('window.NUSAJIWA_MORPH40?.(group,body,M,r[0],renderPhase,THREE,ell,tube);'));
  assert.ok(html.includes('./nj90-forty.js'));
  assert.ok(html.indexOf('./nj90-forty.js')<html.indexOf('./script_32.js'));
  const pages=read('.github/workflows/pages.yml');
