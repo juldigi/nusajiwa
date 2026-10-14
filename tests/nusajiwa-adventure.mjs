@@ -127,3 +127,19 @@ test('World 2 Java and three-seal guardian trial are playable and collision-safe
  assert.match(source,/#njaRegion/,'Adventure HUD must identify current world');
  assert.match(source,/LEVELS_PER_WORLD=5/,'Two worlds need independent numbered stages');
 });
+
+test('Adventure 8.2 delivers responsive animation, audiovisual options and keeps iPhone GPU safe',()=>{
+ assert.match(source,/version:'8\.2'/);
+ assert.match(source,/jumpBuffer=\.14/,'Jump press should buffer before landing');
+ assert.match(source,/coyote=\.12/,'Small jump grace period prevents missed edges');
+ assert.match(source,/const shortJump=!input\.jump/,'Variable jump height should respond to button release');
+ assert.match(source,/function emitFx\(x,y,type,count/,'Particles are driven by gameplay events');
+ assert.match(source,/particleMeshes=Array\.from/,'3D particles are pooled, not created every frame');
+ assert.match(source,/animatedParts\.forEach/,'Character model parts are articulated');
+ assert.match(source,/hero\.scale\.set/,'Running and jumping should alter 3D poses');
+ assert.match(source,/function unlockAudio\(\)/,'Audio on mobile must be unlocked from a user gesture');
+ assert.match(source,/progress\.sound=soundEnabled/,'Sound preferences must persist');
+ assert.match(source,/getRunStatus:/,'Expose read-only performance and state diagnostics');
+ assert.match(css,/body\.nja-playing #nj35\{display:none!important\}/,'Habitat stays hidden while Adventure uses the screen');
+ assert.match(engine,/document\.body\.classList\.contains\('nja-playing'\)/,'Original Three.js loop must pause to avoid double GPU use');
+});
