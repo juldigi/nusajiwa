@@ -12,6 +12,8 @@ on:
       - 'nj94-fauna.js'
       - 'nj96-fauna.js'
       - 'nj95-visual-audit.js'
+      - 'nj642-living.js'
+      - 'nj642-living.css'
       - 'tamagotchi-3d.js'
       - 'tamagotchi-3d.css'
       - 'nusajiwa-adventure.js'
@@ -45,5 +47,6 @@ jobs:
           node --check nj94-fauna.js
           node --check nj96-fauna.js
           node --check nj95-visual-audit.js
+          node --check nj642-living.js
       - name: Verify game and collection invariants
         run: node --test tests/*.mjs

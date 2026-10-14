@@ -563,7 +563,7 @@ element.addEventListener('input',e=>{
  if(el){el.focus();try{el.setSelectionRange(pos,pos)}catch(_){}}
 });
 document.addEventListener('keydown',e=>{
- if(!document.body.classList.contains('nj35-playing')||e.target.matches('input,textarea,select')||e.metaKey||e.ctrlKey)return;
+ if(document.body.classList.contains('nj42-living')||!document.body.classList.contains('nj35-playing')||e.target.matches('input,textarea,select')||e.metaKey||e.ctrlKey)return;
  if(e.key==='ArrowLeft'||e.key.toLowerCase()==='a'){e.preventDefault();buttonA()}
  else if(e.key==='Enter'||e.key===' '){e.preventDefault();buttonB()}
  else if(e.key==='Escape'||e.key==='Backspace'){e.preventDefault();back()}

@@ -351,5 +351,19 @@
     "save_changes": "none",
     "catalog_size": 300
   },
-  "last_character_patch": "NJ96"
+  "last_character_patch": "NJ96",
+  "visual_ui": {
+    "patch": "NJ642",
+    "status": "MERGED",
+    "default_mode": "living",
+    "alternate_mode": "retro",
+    "source_reference": "NUSAJIWA_6_42_Rev9_Selective_Morph_Merge.zip",
+    "implementation": "NJ642 scoped restyling and reversible mode bridge, adapted from source design; not a byte-for-byte import of css_35.css/script_34.js",
+    "source_assets_in_release": [
+      "nj642-living.css",
+      "nj642-living.js"
+    ],
+    "checks": "tests/nusajiwa-visual-642.mjs",
+    "device_visual_verification": "PENDING"
+  }
 }
