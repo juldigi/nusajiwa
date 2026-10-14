@@ -11,14 +11,17 @@ function levels(){
  assert.ok(first>=0&&end>first);
  return runInNewContext(source.slice(first+'const LEVELS='.length,end+1));
 }
-test('Ten stages across Sumatra and Java with reachable gaps and checkpoints',()=>{
+test('Fifteen stages across Sumatra, Java, and Kalimantan with reachable gaps and checkpoints',()=>{
  const maps=levels();
- assert.equal(maps.length,10);
- assert.equal(new Set(maps.map(x=>x.name)).size,10);
+ assert.equal(maps.length,15);
+ assert.equal(new Set(maps.map(x=>x.name)).size,15);
  assert.equal(maps[0].name,'Gerbang Rimba');
  assert.equal(maps[4].name,'Ujian Penjaga Rimba');
  assert.equal(maps[5].name,'Lereng Gunung Api');
  assert.equal(maps[9].name,'Penjaga Gerbang Batu');
+ assert.equal(maps[10].name,'Danau Kabut');
+ assert.equal(maps[14].name,'Gerbang Hutan Hujan');
+ assert.equal(maps.filter(x=>x.world==='kalimantan').length,5);
  assert.equal(maps.filter(x=>x.world==='jawa').length,5);
  for(const m of maps){
   assert.ok(m.ground.length>=4);
@@ -52,9 +55,9 @@ test('Game is integrated into Tamagotchi, authentic elemental stones and save ba
  assert.match(engine,/rewardTamaAdventure:njtRewardAdventure/);
  assert.match(tama,/p\.adventureMarks/);
  assert.match(tama,/dailyKey/);
- assert.match(html,/nusajiwa-adventure\.css\?v=8\.2\.0/);
- assert.match(html,/nusajiwa-adventure\.js\?v=8\.2\.0/);
- assert.ok(html.indexOf('tamagotchi-3d.js?v=8.1.0')<html.indexOf('nusajiwa-adventure.js?v=8.2.0'));
+ assert.match(html,/nusajiwa-adventure\.css\?v=8\.3\.0/);
+ assert.match(html,/nusajiwa-adventure\.js\?v=8\.3\.0/);
+ assert.ok(html.indexOf('tamagotchi-3d.js?v=8.1.0')<html.indexOf('nusajiwa-adventure.js?v=8.3.0'));
  assert.match(tama,/adventure:localStorage\.getItem/);
  assert.match(tama,/localStorage\.setItem\('nusajiwa-adventure-v1'/);
 });
@@ -87,7 +90,7 @@ test('Adventure opens and closes as an integrated mode while preserving Tamagotc
  new Script(source).runInNewContext({window:win,document:doc,localStorage,console,Date,
   setTimeout(){return 1},clearTimeout(){},requestAnimationFrame(){return 1},cancelAnimationFrame(){},
   navigator:{},Math});
- assert.equal(win.NUSAJIWA_ADVENTURE.levels.length,10);
+ assert.equal(win.NUSAJIWA_ADVENTURE.levels.length,15);
  assert.equal(win.NUSAJIWA_ADVENTURE.isOpen(),false);
  assert.equal(win.NUSAJIWA_ADVENTURE.open(),true);
  assert.equal(scene.hidden,true,'Tamagotchi and WebGL render must pause while Adventure runs');
@@ -125,11 +128,11 @@ test('World 2 Java and three-seal guardian trial are playable and collision-safe
  assert.match(source,/s\.sigils\.some\(v=>!v\.got\)/,'Boss gate must stay closed until all seals are activated');
  assert.match(source,/function patrolX\(enemy,time\)/,'Moving enemies must animate');
  assert.match(source,/#njaRegion/,'Adventure HUD must identify current world');
- assert.match(source,/LEVELS_PER_WORLD=5/,'Two worlds need independent numbered stages');
+ assert.match(source,/LEVELS_PER_WORLD=5/,'Each world needs independent numbered stages');
 });
 
-test('Adventure 8.2 delivers responsive animation, audiovisual options and keeps iPhone GPU safe',()=>{
- assert.match(source,/version:'8\.2'/);
+test('Adventure 8.3 retains responsive animation, audiovisual options and keeps iPhone GPU safe',()=>{
+ assert.match(source,/version:'8\.3'/);
  assert.match(source,/jumpBuffer=\.14/,'Jump press should buffer before landing');
  assert.match(source,/coyote=\.12/,'Small jump grace period prevents missed edges');
  assert.match(source,/const shortJump=!input\.jump/,'Variable jump height should respond to button release');
@@ -142,4 +145,33 @@ test('Adventure 8.2 delivers responsive animation, audiovisual options and keeps
  assert.match(source,/getRunStatus:/,'Expose read-only performance and state diagnostics');
  assert.match(css,/body\.nja-playing #nj35\{display:none!important\}/,'Habitat stays hidden while Adventure uses the screen');
  assert.match(engine,/document\.body\.classList\.contains\('nja-playing'\)/,'Original Three.js loop must pause to avoid double GPU use');
+});
+
+test('World 3 Kalimantan adds original gust zones and a nonviolent three-seal gate',()=>{
+ const maps=levels(),third=maps.slice(10),guardian=maps[14];
+ assert.equal(third.length,5);
+ assert.ok(third.every(x=>x.world==='kalimantan'&&x.gusts.length>0));
+ assert.equal(guardian.sigils.length,3);
+ for(const stage of third){
+  for(const [a,b,force] of stage.gusts){
+   assert.ok(a<b&&Math.abs(force)<=3.5,'Gust should be bounded and playable');
+   assert.ok(stage.ground.some(g=>a>=g[0]&&b<=g[1]),'Gust must sit on reachable ground: '+stage.name);
+  }
+  for(const [x,y] of stage.sigils||[]){
+   assert.ok(y>0&&stage.ground.some(g=>x>=g[0]&&x<=g[1]));
+   assert.ok(stage.hazards.every(h=>Math.abs(x-h)>1));
+  }
+ }
+ assert.match(source,/const WORLD_INFO=/);
+ assert.match(source,/const gust=\(s\.level\.gusts\|\|\[\]\)/);
+ assert.match(source,/isBorneo=l\.world==='kalimantan'/);
+ assert.match(source,/currentGust/);
+ assert.match(tama,/lvl>=15/);
+ assert.match(tama,/lvl===14/);
+});
+
+test('Tamagotchi viewport does not load redundant CSS or the floating Atlas obstruction',()=>{
+ assert.equal((html.match(/href="\.\/css_31\.css"/g)||[]).length,1);
+ assert.doesNotMatch(html,/position:fixed;right:12px;bottom:78px/);
+ assert.match(html,/data-page="codex"/,'The encyclopedia remains part of game navigation');
 });
