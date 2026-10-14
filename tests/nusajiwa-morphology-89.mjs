@@ -51,10 +51,11 @@ test('Unrelated species remain unchanged; browser and Pages load the module in c
  assert.ok(pages.includes('cp index.html atlas-evolusi.html script_*.js nj89-ten.js'));
 });
 
-test('Jenglot keeps native miniature body size; the phase overlay is not doubly scaled',()=>{
- assert.match(engine,/function nj610Jenglot\\(g,M\\)\\{[\\s\\S]*?g\\.scale\\.setScalar\\(\\.52\\)/);
- const jenglot=source.slice(source.indexOf("case 'jenglot':"),source.indexOf("case 'begu_ganjang':"));
- assert.doesNotMatch(jenglot,/root\\.scale\\.setScalar\\(\\.52\\)/);
+test('Miniature scale retained for Jenglot without nested reduction',()=>{
+ const sculpt=engine.slice(engine.indexOf('function nj610Jenglot('),engine.indexOf('function nj611ButoIjo('));
+ assert.ok(sculpt.includes('g.scale.setScalar(.52)'));
+ const morphCode=source.slice(source.indexOf("case 'jenglot':"),source.indexOf("case 'begu_ganjang':"));
+ assert.equal(morphCode.includes('root.scale.setScalar(.52)'),false);
 });
 test('Phase anatomy is not simply inherited primitive sizes',()=>{
  const specials=['second-scalloped-membrane','crawling-heavy-palm','specimen-hair',
