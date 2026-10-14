@@ -92,7 +92,8 @@ window.NUSAJIWA_MORPH89=function(group,body,M,id,phase,T,ell,tube){
   }
   case 'jenglot': {
    // Tiny, shriveled specimen-like figure, never an adult-sized humanoid.
-   root.scale.setScalar(.52);
+   // Native Jenglot sculptor already scales anatomy to 0.52 on the parent
+   // body. Do not apply an additional 0.52 to this overlay.
    if(s<=4){
     e(prefix('desiccated-seated-torso'),0,1.02,0,.115+s*.03,.31+s*.048,.16,M.dark);
     e(prefix('shrunken-head'),0,1.69+s*.04,.10,.18+s*.029,.24+s*.02,.21,M.main);
