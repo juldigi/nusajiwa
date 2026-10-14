@@ -18,7 +18,7 @@ test('Native user-edited v6.42 assets replace prior 6.42 approximation without d
  assert.ok(css.includes('#nj35.njx .nj-controls'));
  assert.ok(css.includes('#nj35.njx .nj-bottom'));
  assert.ok(js.includes('Masuk ke suaka'));
- assert.ok(bridgeCss.includes('body.nj42-sanctuary #njt{display:none!important}'));
+ assert.ok(bridgeCss.includes('body.nj42-sanctuary #njt{display:none!important;'));
 });
 test('Source preserving reversible switch keeps Tamagotchi, 3D data and 15-level adventure',()=>{
  assert.ok(bridge.includes("setMode('tamagotchi',true)"));
