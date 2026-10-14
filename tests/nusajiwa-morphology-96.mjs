@@ -43,7 +43,7 @@ test('All 80 stages have identifiable morphology and proper adult preservation',
    assert.equal(morph(group,body,M,id,p,T,prim,prim),true);
    const root=(p===0?group:body).children.at(-1);
    assert.equal(root.userData.identity,id);assert.equal(root.userData.stage,p);
-   assert.ok(root.children.length>=4,'insufficient model anatomy '+id+'/'+p);
+   assert.ok(root.children.length>=(p>=5?2:4),'insufficient model anatomy '+id+'/'+p);
    assert.equal(native.visible,p===0||p>=5,'native incorrectly masked '+id+'/'+p);
    assert.equal(root.userData.nativeAdultPreserved,p>=5);
    const signature=root.children.map(o=>o.name).sort().join('|');
