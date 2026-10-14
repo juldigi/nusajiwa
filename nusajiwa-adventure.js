@@ -183,7 +183,7 @@ function physics(dt){
  s.vx+=(dir*speed-s.vx)*Math.min(1,dt*(wasGrounded?18:11));
  // Hembusan angin menggeser pemain pelan, tetapi kendali tetap sepenuhnya di tangan pemain.
  const gust=(s.level.gusts||[]).find(g=>s.x>=g[0]&&s.x<=g[1]);
- s.vx+=gust?gust[2]*dt:0;s.currentGust=gust?Math.sign(gust[2]):0;
+ s.vx+=gust?gust[2]*dt*9:0;s.currentGust=gust?Math.sign(gust[2]):0;
  if(dir)s.heroFacing=dir;
  const prevY=s.y;s.x=clamp(s.x+s.vx*dt,.2,s.level.length+.5);
  const float=getAbility()==='spirit'&&s.skillUntil>0&&s.vy<0;
@@ -486,5 +486,5 @@ window.addEventListener('blur',()=>{if(opened&&playing)pause()});
 document.addEventListener('visibilitychange',()=>{if(opened&&playing&&document.hidden)pause()});
 window.addEventListener('resize',resize,{passive:true});
 window.NUSAJIWA_ADVENTURE={version:'8.3',open,close:exit,levels:LEVELS.map(l=>l.name),getSave:()=>JSON.parse(JSON.stringify(progress)),isOpen:()=>opened,
- getRunStatus:()=>run?{level:levelIndex,x:run.x,y:run.y,vx:run.vx,vy:run.vy,grounded:run.grounded,score:run.score,health:run.health,skillCool:run.skillCool,particles:run.fx.length,playing}:null};
+ getRunStatus:()=>run?{level:levelIndex,x:run.x,y:run.y,vx:run.vx,vy:run.vy,grounded:run.grounded,score:run.score,health:run.health,skillCool:run.skillCool,particles:run.fx.length,gust:run.currentGust||0,playing}:null};
 })();
