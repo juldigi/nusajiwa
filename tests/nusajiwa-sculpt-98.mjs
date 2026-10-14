@@ -100,7 +100,7 @@ test('Other character IDs untouched; load before engine and include in both CI a
  assert.ok(index.indexOf('./nj98-mistis-batch1.js')<index.indexOf('./script_32.js'));
  const p=read('.github/workflows/pages.yml'),q=read('.github/workflows/tamagotchi-quality.yml');
  assert.ok(p.includes('node --check nj98-mistis-batch1.js'));
- assert.ok(p.includes('nj98-mistis-batch1.js nj99-folklore-batch2.js _site/'));
+ assert.ok(p.split('\n').some(line=>line.includes('cp nj98-mistis-batch1.js')&&line.includes('nj99-folklore-batch2.js')&&line.includes('_site/')));
  assert.ok(q.includes('node --check nj98-mistis-batch1.js'));
  assert.ok(q.includes("      - 'nj98-mistis-batch1.js'"));
 });

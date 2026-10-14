@@ -83,6 +83,6 @@ test('Unlisted identities unchanged; integrated into live engine, browser and de
  assert.ok(html.indexOf('./nj99-folklore-batch2.js')<html.indexOf('./script_32.js'));
  const p=read('.github/workflows/pages.yml'),q=read('.github/workflows/tamagotchi-quality.yml');
  assert.ok(p.includes('node --check nj99-folklore-batch2.js'));
- assert.ok(p.includes('cp nj98-mistis-batch1.js nj99-folklore-batch2.js _site/'));
+ assert.ok(p.split('\n').some(line=>line.includes('cp nj98-mistis-batch1.js')&&line.includes('nj99-folklore-batch2.js')&&line.includes('_site/')));
  assert.ok(q.includes('node --check nj99-folklore-batch2.js'));
 });
