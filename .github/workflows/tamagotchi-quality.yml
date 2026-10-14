@@ -7,6 +7,7 @@ on:
       - 'index.html'
       - 'script_32.js'
       - 'script_33.js'
+      - 'nj89-ten.js'
       - 'tamagotchi-3d.js'
       - 'tamagotchi-3d.css'
       - 'nusajiwa-adventure.js'
@@ -35,5 +36,6 @@ jobs:
           node --check script_33.js
           node --check tamagotchi-3d.js
           node --check nusajiwa-adventure.js
+          node --check nj89-ten.js
       - name: Verify game and collection invariants
         run: node --test tests/*.mjs

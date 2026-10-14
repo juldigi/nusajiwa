@@ -77,6 +77,39 @@
       "scope": "Distinctive replacement silhouettes and species egg crests; phase symbolism is imaginative rather than historical.",
       "regression_test": "tests/nusajiwa-morphology-88.mjs",
       "visual_device_verification": "NOT_DONE"
+    },
+    {
+      "batch": "nj89",
+      "status": "MERGED",
+      "identity_ids": [
+        "leak",
+        "genderuwo",
+        "jenglot",
+        "begu_ganjang",
+        "buto_ijo",
+        "babi_ngepet",
+        "ahool",
+        "bunian",
+        "siluman_harimau",
+        "naga_antaboga"
+      ],
+      "stage_count": 8,
+      "staged_constructions": 80,
+      "reconstructed_phases": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "native_sculpture_retained": [
+        5,
+        6,
+        7
+      ],
+      "test_file": "tests/nusajiwa-morphology-89.mjs",
+      "new_catalogue_identity_count": 0,
+      "guarantee": "structural and CI tests only, iPhone Safari appearance needs verification",
+      "cultural_notice": "fictional evolution, not a documented cultural lifecycle"
     }
   ],
   "merged_gameplay_improvements": [

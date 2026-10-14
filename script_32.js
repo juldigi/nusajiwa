@@ -4383,6 +4383,7 @@ function makeAvatar(r, portraitMode=false){const type=r[4],M=mats(r),group=new T
  if(['warak_ngendog','boraspati_tano','bujang_ganong'].includes(r[0]))nj633Metamorph(body,M,r[0],portraitMode?5:gamePet()?.phase??5);
  nj77Morph(group,body,M,r[0],portraitMode?5:gamePet()?.phase??5);
  nj88Morph(group,body,M,r[0],portraitMode?5:gamePet()?.phase??5);
+ window.NUSAJIWA_MORPH89?.(group,body,M,r[0],portraitMode?5:gamePet()?.phase??5,THREE,ell,tube);
  group.userData={...group.userData,body,type,base:body.position.y,phase:(living?.phase??null),legend:(living?.legend??null)};
  return group;
 }
