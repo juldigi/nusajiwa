@@ -9,7 +9,7 @@ Atlas: https://juldigi.github.io/nusajiwa/atlas-evolusi.html
 
 - Pilih satu makhluk berbeda di Suaka dan tetaskan telurnya.
 - Kontrol ala Tamagotchi: A memilih, B mengonfirmasi, C kembali. Ikon diatur menjadi dua baris dengan area sentuh lebih besar untuk iPhone.
-- Sediakan makanan utama atau camilan. Bermain tebak arah, bersihkan toilet, obati saat sakit, ajari disiplin dan matikan lampu saat tidur.
+- Sediakan makanan utama atau camilan. Mainkan Tebak Arah dan Jejak Nusantara, bersihkan toilet, obati saat sakit, ajari disiplin dan matikan lampu saat tidur.
 - Pantau indikator empat hati untuk lapar, senang, kedisiplinan dan kesehatan. Tumpukan kotoran, tanda sakit, dan panggilan sahabat divisualisasikan pada habitat 3D tanpa menimpa anatomi karakter. Ada kesalahan asuh, umur, berat fantasi dan album kenangan.
 - Pertumbuhan mengikuti waktu, kondisi perawatan dan pengalaman (XP) dari mesin 3D sebelumnya. Sistem delapan fase tetap dipertahankan, dan legenda terkait batu elemen.
 - Kebutuhan tetap berubah ketika game ditutup, maksimal 12 jam per pembaruan agar ketidakhadiran sangat lama tidak memberi penalti tanpa batas.
@@ -51,6 +51,18 @@ World 1, 2 dan 3 telah diimplementasikan secara kode; empat dunia lain dari renc
 - Hadiah Tamagotchi diperluas dari level 0–9 ke 0–14 dengan pembatas anti-*farming* yang sama, termasuk bonus pengetahuan pada level final 14. Penyimpanan adventure `nusajiwa-adventure-v1` tidak diubah sehingga progres dua world lama tetap terbaca.
 - Menghapus pemanggilan CSS ganda dan tautan Atlas yang sebelumnya melayang di atas area bermain; Kodex tetap di dalam menu permainan.
 - Pembaruan baru ini **belum menggantikan** pekerjaan model individu yang belum dirilis. Verifikasi grafis Safari iPhone tetap diperlukan.
+
+### Mini-game Jejak Nusantara (penambahan setelah 8.3)
+
+- Masuk **Main → Jejak Nusantara**. Pemain melihat urutan simbol Jejak 🐾, Daun 🌿 dan Jiwa ✦, lalu menekan **Sudah hafal** untuk menyembunyikannya sebelum menjawab.
+- Ada **3 putaran** yang semakin panjang: 2, 3, lalu 4 simbol. Benar minimal dua putaran meningkatkan kebahagiaan sebanyak 2; hasil lain menambah 1. Satu sesi selesai dihitung sebagai satu kegiatan bermain, bukan progres legenda otomatis.
+- Tidak ada penghitung waktu tersembunyi, sehingga permainan mudah dipahami anak dan nyaman dengan tombol A/B/C atau sentuhan iPhone. Tombol C membatalkan sesi tanpa hadiah.
+- Fitur memakai save Tamagotchi yang sudah ada dan tidak membuat format penyimpanan baru. Kode dan simulasi interaksi diuji pada `tests/nusajiwa-play-smoke.mjs`. Ini bukan klaim validasi Safari fisik.
+
+### Morfologi folklor khusus — batch nj88
+
+- `pocong`, `kuntilanak`, dan `tuyul` telah ditambah ciri siluet sesuai identitas pada 8 fase (24 konstruksi geometri diuji dengan stub Three.js). Transformasi antar fase adalah **interpretasi game**, bukan siklus hidup tradisi.
+- Cakupan ini belum berarti seluruh 300 makhluk sudah memperoleh 2.400 model khusus, dan batch lokal nj80–nj86 yang belum terintegrasi tidak dihitung sebagai rilis. Tampilan visual di Safari iPhone belum diverifikasi.
 
 ## 300 identitas makhluk
 
