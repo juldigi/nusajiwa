@@ -110,6 +110,102 @@
       "new_catalogue_identity_count": 0,
       "guarantee": "structural and CI tests only, iPhone Safari appearance needs verification",
       "cultural_notice": "fictional evolution, not a documented cultural lifecycle"
+    },
+    {
+      "batch": "nj90",
+      "status": "MERGED",
+      "identity_ids": [
+        "banaspati",
+        "palasik",
+        "sundel_bolong",
+        "wewe",
+        "kuyang",
+        "orang_bati",
+        "rangda",
+        "barong",
+        "hantu_jeruk_purut",
+        "macan_putih"
+      ],
+      "stage_count": 8,
+      "structurally_tested": 80,
+      "module": "nj90-forty.js",
+      "test_file": "tests/nusajiwa-morphology-40.mjs",
+      "game_evolution_is_fictional": true,
+      "graphics_scope": "unique egg engraving, 7 differentiated growth rigs, regional character anatomy; preservation of existing bespoke sculpts",
+      "visual_safari_device_verification": "NOT_DONE",
+      "stage_policy": "11 formerly generic juvenile creatures reconstructed, others get bespoke anatomical augmentation"
+    },
+    {
+      "batch": "nj91",
+      "status": "MERGED",
+      "identity_ids": [
+        "lembuswana",
+        "naga_basuki",
+        "garuda",
+        "hanoman",
+        "jatayu",
+        "sembrani",
+        "makara_candi",
+        "warak_ngendog",
+        "boraspati_tano",
+        "batara_kala"
+      ],
+      "stage_count": 8,
+      "structurally_tested": 80,
+      "module": "nj90-forty.js",
+      "test_file": "tests/nusajiwa-morphology-40.mjs",
+      "game_evolution_is_fictional": true,
+      "graphics_scope": "unique egg engraving, 7 differentiated growth rigs, regional character anatomy; preservation of existing bespoke sculpts",
+      "visual_safari_device_verification": "NOT_DONE",
+      "stage_policy": "11 formerly generic juvenile creatures reconstructed, others get bespoke anatomical augmentation"
+    },
+    {
+      "batch": "nj92",
+      "status": "MERGED",
+      "identity_ids": [
+        "dewi_sri",
+        "nyi_roro_kidul",
+        "putri_mandalika",
+        "jaka_tarub",
+        "kebo_iwa",
+        "bujang_ganong",
+        "ebu_gogo",
+        "timun_mas",
+        "nyai_blora",
+        "hantu_banyu"
+      ],
+      "stage_count": 8,
+      "structurally_tested": 80,
+      "module": "nj90-forty.js",
+      "test_file": "tests/nusajiwa-morphology-40.mjs",
+      "game_evolution_is_fictional": true,
+      "graphics_scope": "unique egg engraving, 7 differentiated growth rigs, regional character anatomy; preservation of existing bespoke sculpts",
+      "visual_safari_device_verification": "NOT_DONE",
+      "stage_policy": "11 formerly generic juvenile creatures reconstructed, others get bespoke anatomical augmentation"
+    },
+    {
+      "batch": "nj93",
+      "status": "MERGED",
+      "identity_ids": [
+        "ular_naga",
+        "suanggi",
+        "orang_pendek",
+        "cindaku",
+        "poppo",
+        "parakang",
+        "bedawang_nala",
+        "naga_padoha",
+        "nenek_pakande",
+        "nawang_wulan"
+      ],
+      "stage_count": 8,
+      "structurally_tested": 80,
+      "module": "nj90-forty.js",
+      "test_file": "tests/nusajiwa-morphology-40.mjs",
+      "game_evolution_is_fictional": true,
+      "graphics_scope": "unique egg engraving, 7 differentiated growth rigs, regional character anatomy; preservation of existing bespoke sculpts",
+      "visual_safari_device_verification": "NOT_DONE",
+      "stage_policy": "11 formerly generic juvenile creatures reconstructed, others get bespoke anatomical augmentation"
     }
   ],
   "merged_gameplay_improvements": [

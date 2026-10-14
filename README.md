@@ -92,3 +92,16 @@ Versi 8.3 adalah rilis tiga-world platformer dengan animasi dan umpan balik inte
 Leak (topeng transformasi melayang), Genderuwo (sosok besar berbulu), Jenglot (spesimen kecil berambut panjang), Begu Ganjang (bayangan memanjang), Buto Ijo (raksasa hijau tanpa tanduk), Babi Ngepet (wujud babi berkaki empat), Ahool (kriptid menyerupai kelelawar bermembran; keberadaannya belum terbukti), Orang Bunian (sosok manusia berbusana, bukan elf), Siluman Harimau (transformasi manusia–harimau), dan Antaboga (naga ular bermahkota tanpa kaki/sayap). Fase 1–4 menggantikan anatomi asli dengan bentuk yang berbeda; fase dewasa mempertahankan patung khusus terdahulu dan fase tua/legenda membentuk pengembangan spesifik. Semua 80 konstruksi diuji lewat simulator geometri Three-like dan Node CI, belum verifikasi WebGL nyata atau Safari iPhone.
 
 Sumber untuk latar identitas, **bukan** fase evolusi: Begu Ganjang (https://jurnal.unimed.ac.id/2012/index.php/basastra/article/view/60953); Orang Bunian (https://openjournal.unpam.ac.id/index.php/Sasindo/article/view/30419); Antaboga (https://ejournal.unesa.ac.id/index.php/va/article/view/18220); Ahool dan status tanpa bukti ilmiah (https://www.biologyonline.com/articles/ahool). Penyimpanan lama dan katalog 300 ID tetap dipertahankan.
+
+### NJ90–NJ93 — 40 identitas, 320 fase (2026-10-14)
+
+Empat batch masing-masing sepuluh makhluk, dipilih **berdasarkan 300 ID yang memang ada di katalog**, bukan menambahkan duplikat. Pemilihan mengoreksi rencana sebelumnya: ID katalog Wewe Gombel adalah `wewe`; 11 usulan yang tidak ada di katalog diganti dengan identitas sah seperti Naga Padoha, Suanggi, Parakang, Nenek Pakande, Nawang Wulan, Bedawang Nala, dan lain-lain.
+
+- NJ90: banaspati, palasik, sundel_bolong, wewe, kuyang, orang_bati, rangda, barong, hantu_jeruk_purut, macan_putih.
+- NJ91: lembuswana, naga_basuki, garuda, hanoman, jatayu, sembrani, makara_candi, warak_ngendog, boraspati_tano, batara_kala.
+- NJ92: dewi_sri, nyi_roro_kidul, putri_mandalika, jaka_tarub, kebo_iwa, bujang_ganong, ebu_gogo, timun_mas, nyai_blora, hantu_banyu.
+- NJ93: ular_naga, suanggi, orang_pendek, cindaku, poppo, parakang, bedawang_nala, naga_padoha, nenek_pakande, nawang_wulan.
+
+40 × delapan fase = 320 konstruksi dengan pemeriksaan 8 siluet berbeda per identitas. Sebelas karakter yang sebelumnya masih memakai bentuk generik saat fase 1–4 kini memiliki anatomi khusus; bentuk asli tahap dewasa, animasi dan struktur penyimpanan lama tidak diganti. Untuk makhluk yang sudah memiliki sculptor tiga dimensi spesifik per fase, detail khusus ditambahkan tanpa menyembunyikan karya sebelumnya. Mitologi atau ritual **bukan** laporan siklus hidup nyata; evolusi adalah mekanik permainan. Perlu review visual Safari iPhone dan pemeriksaan kesesuaian dengan referensi budaya untuk kesempurnaan akhir.
+
+Sumber budaya: [Perda Kutai/Kukar tentang unsur lambang Lembu Suana](https://jdihdprd.kukarkab.go.id/dokumen/download/per_yMlRZ7NOVjY32); [Dinas Pariwisata Jawa Tengah — Warak Ngendog](https://visitjawatengah.jatengprov.go.id/id/artikel/dugderan-tradisi-sambut-ramadan-di-kota-semarang); [Museum Sonobudoyo — Naga, Basuki, Antaboga, Taksaka](https://sonobudoyo.jogjaprov.go.id/id/tulisan/read/naga).
