@@ -351,6 +351,24 @@
       "save_schema": "unchanged",
       "mobile_WebGL_and_four_angle_visual": "NOT_VERIFIED",
       "folklore_notice": "regional descriptions vary; these phase lifecycles and Legend are game fiction"
+    },
+    {
+      "batch": "nj100",
+      "status": "MERGED",
+      "identity_ids": [
+        "lembuswana",
+        "garuda",
+        "naga_basuki",
+        "naga_antaboga",
+        "ular_naga"
+      ],
+      "stage_count": 8,
+      "constructions": 40,
+      "module": "nj100-myth-batch3.js",
+      "test_file": "tests/nusajiwa-sculpt-100.mjs",
+      "production_visibility": "one authoritative sculpt rig per character and stage",
+      "caveat": "spiritual/religious imagery grounded in regional source motifs; fantasy growth phases are not canon",
+      "real_mobile_3d_visual_review": "PENDING"
     }
   ],
   "merged_gameplay_improvements": [
@@ -398,7 +416,7 @@
     "save_changes": "none",
     "catalog_size": 300
   },
-  "last_character_patch": "NJ99-B02",
+  "last_character_patch": "NJ100-B03",
   "visual_ui": {
     "patch": "NJ642",
     "status": "MERGED",

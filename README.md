@@ -146,3 +146,8 @@ Delapan identitas **kuyang, leak, kuntilanak, pocong, genderuwo, tuyul, wewe, da
 ### NJ99 — Batch 02 folklor spesifik (15 Oktober 2026)
 
 Pahat ulang geometri procedural 3D untuk 8 ID × 8 fase: Banaspati (api tidak humanoid), Buto Ijo (raksasa tanpa tanduk fantasi Barat), Palasik (kepala melayang berbeda dari Kuyang), Sundel Bolong (**jaring kain punggung berlubang nyata** bukan bola hitam tempelan), Babi Ngepet (babi berkaki empat), Begu Ganjang (postur menjulang), Orang Bunian (manusia, bukan elf), Hantu Banyu (arus air, bukan putri duyung). Modul terpisah `nj99-folklore-batch2.js`. Data pemain dan 300 ID tetap sama. Pengujian struktur otomatis belum setara verifikasi akurasi seni dari empat sudut pada Safari.
+
+
+### NJ100 — Batch 03 lima identitas mitologi (15 Oktober 2026)
+
+Lembuswana, Garuda, Naga Basuki, Antaboga, dan Taksaka mendapat total 40 rekonstruksi fase 3D khusus. Bentuk menekankan hibrida Kutai (lembu + gajah + burung + kaki ayam + sisik), Garuda kepala elang dengan tangan dan kaki manusia, Basuki yang simbolis berhubungan dengan air, Antaboga sebagai raja naga bermahkota dengan variasi wujud antropomorf dalam cerita, dan Taksaka bernuansa lengkungan penjor Bali. Seluruh telur/evolusi bersifat **fiksi gameplay**, bukan klaim asal-usul atau praktik religi. Sumber identitas tercantum di `nj100-myth-batch3.js`. Render empat sudut pada Safari belum dilakukan.
