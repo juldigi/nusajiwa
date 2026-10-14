@@ -62,5 +62,21 @@
     "Safari iPhone real-device visual/performance checks",
     "All 2400 identity-by-stage shapes specific",
     "Pending 8.6 morphology bundle integration"
+  ],
+  "merged_morphology_batches": [
+    {
+      "batch": "nj88",
+      "status": "MERGED",
+      "identity_ids": [
+        "pocong",
+        "kuntilanak",
+        "tuyul"
+      ],
+      "stage_count": 8,
+      "verified_geometry_constructions": 24,
+      "scope": "Distinctive replacement silhouettes and species egg crests; phase symbolism is imaginative rather than historical.",
+      "regression_test": "tests/nusajiwa-morphology-88.mjs",
+      "visual_device_verification": "NOT_DONE"
+    }
   ]
 }
