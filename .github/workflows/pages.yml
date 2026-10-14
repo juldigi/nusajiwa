@@ -38,7 +38,7 @@ jobs:
           const missing = refs.filter(x=>!fs.existsSync(x));
           const duplicate = refs.filter((x,i)=>refs.indexOf(x)!==i);
           if(missing.length) throw Error('Missing deployment assets: '+missing.join(', '));
-          if(duplicate.length) console.warn('Repeated asset references:', [...new Set(duplicate)].join(', '));
+          if(duplicate.length) throw Error('Repeated asset references: '+[...new Set(duplicate)].join(', '));
           for(const file of ['tamagotchi-3d.js','nusajiwa-adventure.js','script_32.js','script_33.js']){
             if(!refs.includes(file)) throw Error('Missing core runtime reference: '+file);
           }
