@@ -54,6 +54,10 @@ jobs:
           cp index.html atlas-evolusi.html script_*.js pages-fixes.js css_*.css .nojekyll _site/
           cp tamagotchi-3d.js tamagotchi-3d.css nusajiwa-adventure.js nusajiwa-adventure.css _site/
           cp -r assets _site/
+          cp release.json _site/
+      - name: Stamp public build SHA
+        run: |
+          node -e 'const fs=require("fs");const m=JSON.parse(fs.readFileSync("release.json","utf8"));fs.writeFileSync("_site/build-info.json",JSON.stringify({project:m.project,version:m.version,commit:process.env.GITHUB_SHA,created_at:new Date().toISOString(),levels:m.runtime.levels,worlds:m.runtime.worlds,identities:m.runtime.identities},null,2)+"\\n")'
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
