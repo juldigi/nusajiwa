@@ -26,7 +26,7 @@ test('Every script and stylesheet loads exactly once and in correct lifecycle or
  assert.ok(refs.every(path=>existsSync(new URL('../'+path,import.meta.url))),'Every HTML asset must exist');
  const pos=p=>refs.indexOf(p);
  assert.ok(pos('script_32.js')>=0);
- assert.ok(pos('script_33.js')>pos('script_32.js'));
+ assert.ok(pos('script_33.js')<pos('script_32.js'),'Source-linked Kodex data must load before 3D engine');
  assert.ok(pos('tamagotchi-3d.js')>pos('script_32.js'));
  assert.ok(pos('nusajiwa-adventure.js')>pos('tamagotchi-3d.js'));
  assert.doesNotMatch(html,/position:fixed;right:12px;bottom:78px/,'Floating Atlas must not obstruct the pet');
