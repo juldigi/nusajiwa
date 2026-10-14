@@ -90,7 +90,7 @@ function announce(text){const el=$('#njaMessage');el.textContent=text;el.classLi
 /* Fixed-size visual feedback: lightweight particles remain in the existing render
    loop; no DOM nodes or geometry are created on individual pickups. */
 function emitFx(x,y,type,count=6){
- if(!run||run.ended)return;
+ if(!run)return;
  for(let i=0;i<count;i++){
   const a=Math.PI*2*i/count+Math.random()*.2,force=1.05+Math.random()*1.8;
   run.fx.push({x,y,vx:Math.cos(a)*force,vy:Math.sin(a)*force+1.1,
@@ -466,5 +466,6 @@ document.addEventListener('keyup',e=>{if(!opened||!keyNames[e.code])return;e.pre
 window.addEventListener('blur',()=>{if(opened&&playing)pause()});
 document.addEventListener('visibilitychange',()=>{if(opened&&playing&&document.hidden)pause()});
 window.addEventListener('resize',resize,{passive:true});
-window.NUSAJIWA_ADVENTURE={version:'8.2',open,close:exit,levels:LEVELS.map(l=>l.name),getSave:()=>JSON.parse(JSON.stringify(progress)),isOpen:()=>opened};
+window.NUSAJIWA_ADVENTURE={version:'8.2',open,close:exit,levels:LEVELS.map(l=>l.name),getSave:()=>JSON.parse(JSON.stringify(progress)),isOpen:()=>opened,
+ getRunStatus:()=>run?{level:levelIndex,x:run.x,y:run.y,vx:run.vx,vy:run.vy,grounded:run.grounded,score:run.score,health:run.health,skillCool:run.skillCool,particles:run.fx.length,playing}:null};
 })();
