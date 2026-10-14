@@ -61,7 +61,8 @@ test('Jeruk Purut has headless adult source sculpt distinct from Si Manis',()=>{
 });
 test('The real production model bridge inspects 8 stages from 4 angles without changing saved XP',()=>{
  assert.ok(engine.includes('function makeAvatar(r, portraitMode=false, auditPhase=null)'));
- assert.ok(engine.includes('renderPhase=auditPhase===null?'));
+ assert.ok(engine.includes('renderPhase=auditPhase===null?(portraitMode?5:gamePet()?.phase??5):'));
+ assert.ok(!engine.includes('const renderPhase=auditPhase===null?(renderPhase)'));
  assert.ok(engine.includes('const living=auditPhase===null?'));
  assert.ok(engine.includes('decorateStage(group,body,living,M,r)'));
  assert.ok(engine.includes('window.NUSAJIWA_FOLKLORE_VISUAL_QA='));
