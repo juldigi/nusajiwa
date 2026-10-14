@@ -1,6 +1,6 @@
 {
   "project": "NUSAJIWA",
-  "version": "8.3",
+  "version": "8.3.96",
   "branch": "main",
   "updated_on": "2026-10-14",
   "purpose": "Single release ledger; do not count unmerged local work as published.",
@@ -29,6 +29,11 @@
       "version": "8.3",
       "status": "merged",
       "scope": "Adventure Kalimantan / five levels, gusts, themed scenery, guardian finale, release integrity gate"
+    },
+    {
+      "version": "8.3.96",
+      "status": "merged",
+      "scope": "NJ96: 10 indigenous fauna × eight morphology stages; conservation-based landmarks, native adult preservation"
     }
   ],
   "runtime": {
@@ -269,6 +274,41 @@
       "legend_note": "Fantasy anatomy belongs to gameplay, not zoology; egg emblems are fictional for mammals",
       "visual_Safari_iPhone": "NOT_VERIFIED",
       "catalogue_size_still_300": true
+    },
+    {
+      "batch": "nj96",
+      "status": "MERGED",
+      "identity_ids": [
+        "elang_jawa",
+        "rusa_bawean",
+        "tarsius",
+        "babirusa",
+        "rangkong_badak",
+        "kasuari",
+        "penyu_hijau",
+        "duyung",
+        "arwana",
+        "kakatua_raja"
+      ],
+      "stage_count": 8,
+      "staged_constructions": 80,
+      "module": "nj96-fauna.js",
+      "test_file": "tests/nusajiwa-morphology-96.mjs",
+      "juvenile_replacement_stages": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "native_adult_preserved_stages": [
+        5,
+        6,
+        7
+      ],
+      "species_fieldmarks": "Javan hawk-eagle crest, Bawean deer bib/fawn spots, Tarsier fixed huge eyes, Sulawesi Babirusa tusks, Rhino hornbill casque, double-wattled cassowary, green sea turtle flippers, dugong flukes, Asian arowana lower-jaw barbels, palm cockatoo red cheeks/crest",
+      "catalog_identity_delta": 0,
+      "visual_device_verification": "NOT_DONE",
+      "fantasy_lifecycle_notice": "Artificial egg for mammals and legendary transformations are game-only; do not describe as actual zoology."
     }
   ],
   "merged_gameplay_improvements": [
