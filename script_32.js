@@ -4283,6 +4283,87 @@ function nj77Morph(group,body,M,id,phase){
  root.userData={identity:id,phase:s,geometryBranch:'replaced',evidenceLevel:'folklore-identity-plus-artistic-stage'};
 }
 
+/* NUSAJIWA 8.8 folklore forms: game fantasy evolution, NOT traditional lifecycles.
+   Keep signature silhouettes recognizable: tied kafan (Pocong), black hair and
+   white gown (Kuntilanak), bald childlike coin spirit (Tuyul). */
+function nj88Morph(group,body,M,id,phase){
+ if(!['pocong','kuntilanak','tuyul'].includes(id))return;
+ const s=Math.max(0,Math.min(7,Math.floor(Number(phase)||0)));
+ const root=new THREE.Group();root.name='nj88-'+id+'-'+s;
+ const E=(n,x,y,z,a,b,c,m)=>{const o=ell(root,x,y,z,a,b,c,m);o.name=n;return o;};
+ const L=(n,points,r,m)=>{const o=tube(root,points,r,m);o.name=n;return o;};
+ const C=(n,x,y,z,r,h,m)=>{const o=new THREE.Mesh(new THREE.ConeGeometry(r,h,7),m);o.name=n;o.position.set(x,y,z);root.add(o);return o;};
+ const pair=fn=>{fn(-1);fn(1)};
+ if(s===0){
+  // Add the identity seal over the canonical egg without hiding it.
+  const b=new THREE.Mesh(new THREE.TorusGeometry(.19,.04,8,24),id==='pocong'?M.white:id==='kuntilanak'?M.dark:M.gold);
+  b.name=id+'-egg-crest';b.position.set(0,1.22,.62);
+  b.rotation.z=id==='kuntilanak'?.4:0;root.add(b);group.add(root);
+ }else{
+  body.children.forEach(o=>o.visible=false);body.add(root);
+  if(id==='pocong'){
+   const widths=[0,.20,.27,.30,.36,.40,.43,.47],heights=[0,.34,.54,.70,.85,1.00,1.08,1.19];
+   const w=widths[s],h=heights[s],y=s<4?1.04:1.23;
+   E('closed-tied-shroud',0,y,0,w,h,w*.86,M.white);
+   C('head-kafan-knot',0,y+h+.17,0,s<3?.13:.19,s<4?.31:.40,M.white);
+   if(s>=2){
+    E('hood-in-shadow',0,y+h*.74,.14,w*.77,.25,.19,M.dark);
+    E('face-inside-shroud',0,y+h*.75,.29,w*.57,.17,.055,M.light);
+    E('ankle-binding',0,y-h+.08,0,w*.85,.085,w*.84,M.gold);
+   }
+   if(s===1)L('first-fold',[[0,.79,.16],[.11,1.02,.20],[-.10,1.32,.16]],.032,M.dark);
+   if(s===2)E('short-wrapped-feet',0,.43,.0,.18,.14,.20,M.white);
+   if(s===3)L('crossing-kafan-binding',[[-.29,.81,.22],[.27,1.21,.27],[-.23,1.62,.19]],.043,M.gold);
+   if(s===4)pair(d=>E('bell-shaped-lower-cloth-'+d,d*.23,.58,-.12,.16,.34,.24,M.white));
+   if(s===5)pair(d=>L('long-wrapped-pleat-'+d,[[d*.24,1.81,.26],[d*.38,1.02,.29],[d*.24,.38,.17]],.047,M.gold));
+   if(s===6)pair(d=>E('weathered-side-cape-'+d,d*.44,1.08,-.16,.18,.74,.21,M.white));
+   if(s===7)pair(d=>{
+    E('floating-outer-cloth-'+d,d*.68,1.22,-.21,.21,.82,.21,M.white);
+    L('legend-ceremonial-windstream-'+d,[[d*.27,2.43,.06],[d*.93,1.88,-.14],[d*1.22,.67,-.23]],.088,M.gold);
+   });
+  }else if(id==='kuntilanak'){
+   // Don't confuse with Sundel Bolong; no open-back anatomy.
+   const sizes=[null,[.23,.35,.93],[.30,.55,.84],[.37,.72,.85],[.46,.89,.91],[.54,1.04,1.0],[.63,1.15,1.04],[.70,1.23,1.13]];
+   const [w,h,y]=sizes[s];
+   E('white-cloth-phantom',0,y,0,w,h,w*.74,M.white);
+   if(s===1)E('first-black-hair-wisp',0,1.17,.12,.13,.26,.16,M.dark);
+   else{
+    E('pale-woman-face',0,y+h*.86,.16,.23+(s-2)*.022,.28,.21,M.light);
+    E('black-hair-crown',0,y+h+.08,-.07,.29+(s-2)*.025,.19,.27,M.dark);
+    pair(d=>E('long-black-side-hair-'+d,d*(.30+s*.022),y+h*.43,-.09,.14,(s*.15+.12),.14,M.dark));
+   }
+   if(s===2)E('short-cloth-fold',0,.33,.13,.34,.15,.25,M.white);
+   if(s===3)pair(d=>E('young-white-sleeve-'+d,d*.39,1.11,.06,.13,.26,.13,M.white));
+   if(s===4)pair(d=>L('long-arm-'+d,[[d*.34,1.51,.15],[d*.53,.92,.21],[d*.48,.62,.28]],.074,M.light));
+   if(s===5)pair(d=>L('adult-dress-train-'+d,[[d*.41,.85,-.10],[d*.70,.23,-.21],[d*.76,.06,-.38]],.072,M.white));
+   if(s===6)pair(d=>E('cascading-hair-curtain-'+d,d*.63,1.01,-.16,.21,.92,.18,M.dark));
+   if(s===7){
+    pair(d=>L('spectral-hair-arc-'+d,[[d*.29,2.61,-.09],[d*1.13,2.02,-.19],[d*1.34,.52,-.32]],.11,M.dark));
+    C('frangipani-inspired-legend-ornament',0,2.95,-.12,.19,.36,M.gold);
+   }
+  }else{
+   // Tuyul keeps the big bald head, prominent ears and child proportions.
+   const profile=[null,[.34,.22,1.20,.76],[.42,.31,1.28,.60],[.45,.36,1.43,.78],[.48,.42,1.39,.81],[.52,.45,1.61,.89],[.59,.47,1.68,.87],[.67,.54,1.82,.89]];
+   const [head,belly,hy,by]=profile[s];
+   E('large-bald-head',s===4?.11:0,hy,.08,head,head*.96,head*.86,M.light);
+   E('round-tuyul-belly',0,by,-.10,belly,belly*.95,belly*.84,M.light);
+   pair(d=>E('prominent-ear-'+d,(s===4?.11:0)+d*head*.95,hy,.04,head*.30,head*.42,.13,M.light));
+   if(s===1)pair(d=>E('tiny-infant-hand-'+d,d*.28,.64,.17,.11,.12,.11,M.light));
+   if(s===2)pair(d=>E('crawling-palm-'+d,d*.41,.34,.25,.17,.10,.16,M.light));
+   if(s>=3)pair(d=>E('toddler-foot-'+d,d*(s===4?.32:.23),.24,.18,.20,.14,.22,M.light));
+   if(s===3)E('first-found-coin',.45,.84,.20,.12,.13,.035,M.gold);
+   if(s===4)E('crouched-coin-satchel',-.44,.53,-.25,.22,.26,.18,M.dark);
+   if(s>=5){
+    pair(d=>L('searching-arm-'+d,[[d*.32,1.10,.12],[d*.62,.78,.28],[d*(s===7?.91:.72),.52,.35]],s===7?.14:.09,M.light));
+    E(s===7?'legend-money-satchel':'coin-satchel',-.57,.52,-.24,s===7?.36:.26,s===7?.48:.30,.23,M.dark);
+   }
+   if(s===6)E('elder-tuyul-coin-cache',0,.30,.29,.41,.075,.17,M.gold);
+   if(s===7)pair(d=>C('fantasy-luminous-ear-fan-'+d,d*.74,2.17,.03,.18,.49,M.gold));
+  }
+ }
+ root.userData={identity:id,stage:s,geometryBranch:s?'replaced-silhouette':'original-egg-with-crest',culturalStatus:'invented-game-evolution'};
+}
+
 function makeAvatar(r, portraitMode=false){const type=r[4],M=mats(r),group=new THREE.Group();group.name='NJ35_MODEL_'+r[0];let body=new THREE.Group();body.name='anatomy';group.add(body);
  if(r[0]==='kura_ambon')nj70Cuora(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='sembrani')nj630Sembrani(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='ebu_gogo')nj630Ebu(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='kuda_lumping')nj630Lumping(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='warak_ngendog')nj629Warak(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='boraspati_tano')nj629Boraspati(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='bujang_ganong')nj629Ganong(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='hanoman')nj628Hanoman(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='jatayu')nj628Jatayu(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='makara_candi')nj628Makara(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='dewi_sri')nj627Sri(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='batara_kala')nj627Kala(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='putri_mandalika')nj627Mandalika(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='nyi_roro_kidul')nj626SeaQueen(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='jaka_tarub')nj626JakaTarub(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='kebo_iwa')nj626KeboIwa(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='singa_barong_reog')nj625Reog(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='rangda')nj625Rangda(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='wewe')nj625Wewe(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='garuda')nj624Garuda(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='barong')nj624Barong(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='kuyang')nj624Kuyang(body,M,portraitMode?5:gamePet()?.phase??5);else if(r[0]==='lembuswana')nj619Lembuswana(body,M);else if(r[0]==='naga_basuki')nj619Basuki(body,M);else if(r[0]==='bunian')nj614Bunian(body,M);else if(r[0]==='siluman_harimau')nj614SilumanHarimau(body,M);else if(r[0]==='macan_putih')nj614MacanPutih(body,M);else if(r[0]==='babi_ngepet')nj613BabiNgepet(body,M);else if(r[0]==='ahool')nj613Ahool(body,M);else if(r[0]==='pocong')nj612Pocong(body,M);else if(r[0]==='kuntilanak')nj612Kuntilanak(body,M);else if(r[0]==='tuyul')nj612Tuyul(body,M);else if(r[0]==='buto_ijo')nj611ButoIjo(body,M);else if(r[0]==='sundel_bolong')nj611SundelBolong(body,M);else if(r[0]==='naga_antaboga')nj611Antaboga(body,M);else if(r[0]==='leak')nj610Leak(body,M);else if(r[0]==='genderuwo')nj610Genderuwo(body,M);else if(r[0]==='jenglot')nj610Jenglot(body,M);else if(r[0]==='begu_ganjang')nj610Begu(body,M);else if(r[0]==='barong')nj69Barong(body,M);else if(r[0]==='banaspati')nj69Banaspati(body,M);else if(r[0]==='palasik')nj69Palasik(body,M);else if(r[0]==='kuyang')nj68Kuyang(body,M);else if(r[0]==='wewe')nj68Wewe(body,M);else if(r[0]==='rangda')nj68Rangda(body,M);else if(NJ67_BIRD_DESIGNS[r[0]])nj67Bird(body,M,r);else if(r[0]==='hiu_martil_bergerigi')nj67Hammerhead(body,M);else if(r[0]==='kancil_jawa')nj67Kancil(body,M);else if(NJ56_SCULPTORS[r[0]])NJ56_SCULPTORS[r[0]](body,M);else if(nj54Sculptors[r[0]])nj54Sculptors[r[0]](body,M);else if(nj53Sculptors[r[0]])nj53Sculptors[r[0]](body,M);else if(nj52Sculptors[r[0]])nj52Sculptors[r[0]](body,M);else if(nj51Sculptors[r[0]])nj51Sculptors[r[0]](body,M);else if(nj50Sculptors[r[0]])nj50Sculptors[r[0]](body,M);else if(nj47Sculptors[r[0]])nj47Sculptors[r[0]](body,M);else if(nj46Sculptors[r[0]])nj46Sculptors[r[0]](body,M);else if(nj42Sculptors[r[0]])nj42Sculptors[r[0]](body,M);else if(nj41Sculptors[r[0]])nj41Sculptors[r[0]](body,M);else if(nj40Sculptors[r[0]])nj40Sculptors[r[0]](body,M);else if(nj39Sculptors[r[0]])nj39Sculptors[r[0]](body,M);else if(nj38Sculptors[r[0]])nj38Sculptors[r[0]](body,M);else if(type==='elephant')nj37Elephant(body,M);else if(type==='rhino')nj37Rhino(body,M);else if(type==='deer')nj37Deer(body,M);else if(type==='tarsier')nj37Tarsier(body,M);else if(['turtle','pignose','snakeneck','loggerhead','ridley','flatback'].includes(type))nj37Turtle(body,M);else if(type==='dugong')nj37Dugong(body,M);else if(type==='arowana')nj37Fish(body,M);else if(['starling','eagle','hornbill','cassowary','cockatoo','peafowl'].includes(type))nj37Bird(body,M,type);else if(type==='orangutan'||type==='gibbon')nj37Gibbon(body,M,type==='orangutan');else if(type==='babirusa')nj37Babirusa(body,M);else if(type==='tiger')cat(body,M,r);else if(['reptile','monitor'].includes(type))lizard(body,M);else if(type==='bird'||type==='kingfisher')bird(body,M,type);else if(type==='paradise'||type==='maleo'||type==='garuda')bird(body,M,type);else if(type==='anoa'||type==='lembuswana')bovine(body,M,type);else if(type==='bekantan')monkey(body,M);
  else if(type==='kuyang'||type==='palasik'||type==='banaspati')floating(body,M,type);
@@ -4301,6 +4382,7 @@ function makeAvatar(r, portraitMode=false){const type=r[4],M=mats(r),group=new T
  if(living)decorateStage(group,body,living,M);
  if(['warak_ngendog','boraspati_tano','bujang_ganong'].includes(r[0]))nj633Metamorph(body,M,r[0],portraitMode?5:gamePet()?.phase??5);
  nj77Morph(group,body,M,r[0],portraitMode?5:gamePet()?.phase??5);
+ nj88Morph(group,body,M,r[0],portraitMode?5:gamePet()?.phase??5);
  group.userData={...group.userData,body,type,base:body.position.y,phase:(living?.phase??null),legend:(living?.legend??null)};
  return group;
 }
