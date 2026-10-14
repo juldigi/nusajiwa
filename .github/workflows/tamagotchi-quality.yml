@@ -12,6 +12,7 @@ on:
       - 'nj94-fauna.js'
       - 'nj96-fauna.js'
       - 'nj98-mistis-batch1.js'
+      - 'nj99-folklore-batch2.js'
       - 'nj97-render-guard.js'
       - 'nj95-visual-audit.js'
       - 'nj642-living.js'
@@ -53,6 +54,7 @@ jobs:
           node --check nj94-fauna.js
           node --check nj96-fauna.js
           node --check nj98-mistis-batch1.js
+          node --check nj99-folklore-batch2.js
           node --check nj97-render-guard.js
           node --check nj95-visual-audit.js
           node --check nj642-living.js

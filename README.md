@@ -141,3 +141,8 @@ Menggabungkan `css_35.css` dan `script_34.js` dari arsip edit `NUSAJIWA_6_42_Rev
 ### NJ98 — Batch 01 pemahatan ulang mistis (15 Oktober 2026)
 
 Delapan identitas **kuyang, leak, kuntilanak, pocong, genderuwo, tuyul, wewe, dan jenglot** kini dibangun kembali lewat rig mesh prosedural 3D yang berbeda per makhluk dan fase (8 × 8 = 64 kasus). Untuk tiap identitas, layer sculpt lama disembunyikan agar tidak bertabrakan dengan anatomi baru; tidak dilakukan penghapusan file/model historis, migrasi progres, ataupun perubahan katalog 300 ID. Fase telur dan fase evolusi adalah **mekanisme fiksi game**, bukan deskripsi budaya. Model ritual dan makhluk dari kepercayaan masyarakat adalah interpretasi artistik yang mungkin memiliki representasi berbeda menurut daerah. Modul terpisah `nj98-mistis-batch1.js` dimuat sebelum engine `script_32.js`. Audit visual empat arah tersedia melalui `?audit=folklore`, namun kecocokan artistik dan Safari iPhone nyata belum terverifikasi. Pemeriksaan Node memvalidasi 64 konstruksi berbeda serta kontrak deployment, bukan menyatakan 64 patung studio sudah disahkan secara visual.
+
+
+### NJ99 — Batch 02 folklor spesifik (15 Oktober 2026)
+
+Pahat ulang geometri procedural 3D untuk 8 ID × 8 fase: Banaspati (api tidak humanoid), Buto Ijo (raksasa tanpa tanduk fantasi Barat), Palasik (kepala melayang berbeda dari Kuyang), Sundel Bolong (**jaring kain punggung berlubang nyata** bukan bola hitam tempelan), Babi Ngepet (babi berkaki empat), Begu Ganjang (postur menjulang), Orang Bunian (manusia, bukan elf), Hantu Banyu (arus air, bukan putri duyung). Modul terpisah `nj99-folklore-batch2.js`. Data pemain dan 300 ID tetap sama. Pengujian struktur otomatis belum setara verifikasi akurasi seni dari empat sudut pada Safari.

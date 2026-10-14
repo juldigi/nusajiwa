@@ -329,6 +329,28 @@
       "qa_scope": "node geometry/topology regression and release checks; not professional human four-angle aesthetic signoff",
       "other_batches": "unchanged",
       "asset_footprint": "procedural WebGL, no remote GLB"
+    },
+    {
+      "batch": "nj99",
+      "status": "MERGED",
+      "identity_ids": [
+        "banaspati",
+        "buto_ijo",
+        "palasik",
+        "sundel_bolong",
+        "babi_ngepet",
+        "begu_ganjang",
+        "bunian",
+        "hantu_banyu"
+      ],
+      "stage_count": 8,
+      "constructions": 64,
+      "module": "nj99-folklore-batch2.js",
+      "test_file": "tests/nusajiwa-sculpt-99.mjs",
+      "reconstruction": "replace old visible geometry with per-identity stage rigs",
+      "save_schema": "unchanged",
+      "mobile_WebGL_and_four_angle_visual": "NOT_VERIFIED",
+      "folklore_notice": "regional descriptions vary; these phase lifecycles and Legend are game fiction"
     }
   ],
   "merged_gameplay_improvements": [
@@ -376,7 +398,7 @@
     "save_changes": "none",
     "catalog_size": 300
   },
-  "last_character_patch": "NJ98-B01",
+  "last_character_patch": "NJ99-B02",
   "visual_ui": {
     "patch": "NJ642",
     "status": "MERGED",
