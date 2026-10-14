@@ -302,6 +302,74 @@ window.NUSAJIWA_MORPH89=function(group,body,M,id,phase,T,ell,tube){
    break;
   }
   }
+
+  // Phase-specific structural silhouette features: not size-only progression.
+  // These are deliberately different bones, folds, membranes, coils or
+  // posture silhouettes. No franchise-style shared generic mutation table.
+  if(s>=1&&s<=4){
+   switch(id){
+   case 'leak':
+    if(s===1)e(prefix('split-immature-leak-mask'),0,1.29,.34,.12,.18,.055,M.light);
+    if(s===2)pairs(d=>l(prefix('growing-ear-ribbon-'+d),[[d*.25,1.78,.16],[d*.40,1.53,-.11],[d*.55,1.12,-.31]],.042,M.dark));
+    if(s===3)e(prefix('hovering-lower-jaw'),0,1.08,.32,.22,.13,.15,M.main);
+    if(s===4)pairs(d=>e(prefix('full-face-side-tendril-'+d),d*.55,1.44,-.13,.16,.56,.16,M.dark));
+    break;
+   case 'genderuwo':
+    if(s===1)e(prefix('rounded-infant-neck-fur'),0,1.39,-.12,.31,.22,.25,M.black);
+    if(s===2)pairs(d=>e(prefix('crawling-heavy-palm-'+d),d*.49,.25,.24,.22,.14,.20,M.main));
+    if(s===3)pairs(d=>e(prefix('hunched-shoulder-fur-'+d),d*.58,1.71,-.19,.27,.40,.26,M.black));
+    if(s===4)e(prefix('wide-adolescent-back-mane'),0,1.81,-.40,.82,.50,.23,M.dark);
+    break;
+   case 'jenglot':
+    if(s===1)e(prefix('short-folded-specimen-cloth'),0,.57,-.03,.23,.16,.21,M.dark);
+    if(s===2)e(prefix('early-tangled-hair-topknot'),0,2.11,-.10,.24,.19,.21,M.black);
+    if(s===3)pairs(d=>l(prefix('dry-long-claw-'+d),[[d*.24,.76,.28],[d*.30,.41,.36],[d*.39,.22,.43]],.017,M.white));
+    if(s===4)e(prefix('full-specimen-hair-fan'),0,1.25,-.28,.56,.89,.15,M.black);
+    break;
+   case 'begu_ganjang':
+    if(s===1)e(prefix('compressed-first-shadow-cocoon'),0,1.18,-.18,.26,.22,.14,M.dark);
+    if(s===2)l(prefix('first-curved-shadow-spine'),[[0,2.12,-.21],[.16,1.71,-.30],[0,.84,-.14]],.079,M.dark);
+    if(s===3)pairs(d=>e(prefix('forked-long-veil-'+d),d*.24,1.44,-.26,.15,.75,.12,M.main));
+    if(s===4)e(prefix('great-elongated-shadow-cap'),0,2.99,-.18,.43,.26,.19,M.black);
+    break;
+   case 'buto_ijo':
+    if(s===1)e(prefix('infant-round-lower-jaw'),0,1.22,.56,.24,.22,.23,M.light);
+    if(s===2)pairs(d=>e(prefix('crouched-massive-front-palm-'+d),d*.55,.22,.46,.24,.17,.27,M.main));
+    if(s===3)e(prefix('broad-giant-brow-ridge'),0,2.14,.49,.55,.14,.23,M.dark);
+    if(s===4)pairs(d=>e(prefix('heavy-green-back-shoulder-'+d),d*.77,1.66,-.29,.31,.39,.27,M.main));
+    break;
+   case 'babi_ngepet':
+    if(s===1)e(prefix('piglet-round-jowl'),0,.60,.80,.30,.20,.19,M.main);
+    if(s===2)pairs(d=>e(prefix('first-short-trotter-'+d),d*.27,.23,.48,.16,.21,.19,M.light));
+    if(s===3)e(prefix('pig-hanging-cheek'),0,.62,.95,.40,.26,.18,M.light);
+    if(s===4)e(prefix('arched-heavy-pig-haunch'),0,1.13,-.56,.47,.31,.39,M.main);
+    break;
+   case 'ahool':
+    if(s===1)pairs(d=>e(prefix('folded-pup-wing-crest-'+d),d*.31,1.48,-.16,.19,.41,.12,M.dark));
+    if(s===2)pairs(d=>l(prefix('first-independent-wing-joint-'+d),[[d*.19,1.45,-.08],[d*.50,1.70,-.14],[d*.83,1.55,-.19]],.048,M.dark));
+    if(s===3)pairs(d=>cone(prefix('prehensile-wing-thumb-claw-'+d),d*1.04,1.76,-.12,.075,.24,M.dark));
+    if(s===4)pairs(d=>wing(prefix('second-scalloped-membrane-'+d),[[d*.42,1.29],[d*1.31,1.13],[d*1.62,1.51],[d*.91,1.62]],M.dark));
+    break;
+   case 'bunian':
+    if(s===1)e(prefix('short-human-child-hood'),0,1.37,-.18,.25,.29,.24,M.main);
+    if(s===2)pairs(d=>e(prefix('human-shoulder-shawl-'+d),d*.33,1.35,-.16,.15,.39,.15,M.gold));
+    if(s===3)l(prefix('long-human-garment-fold'),[[0,1.31,.34],[.12,.83,.41],[0,.21,.34]],.052,M.gold);
+    if(s===4)pairs(d=>e(prefix('forest-concealment-cloak-panel-'+d),d*.41,.83,-.25,.17,.69,.14,M.main));
+    break;
+   case 'siluman_harimau':
+    if(s===1)pairs(d=>e(prefix('cub-padded-tiger-front-paw-'+d),d*.23,.36,.44,.17,.16,.19,M.light));
+    if(s===2)pairs(d=>e(prefix('human-like-hybrid-upper-arm-'+d),d*.43,1.33,-.08,.14,.37,.14,M.light));
+    if(s===3)pairs(d=>l(prefix('hybrid-long-reaching-claw-'+d),[[d*.41,1.28,0],[d*.65,.93,.14],[d*.67,.61,.30]],.090,M.main));
+    if(s===4)e(prefix('developed-tiger-chest'),0,1.17,.40,.49,.37,.37,M.light);
+    break;
+   case 'naga_antaboga':
+    if(s===1)e(prefix('newborn-serpent-belly-plate'),0,1.37,.69,.16,.16,.04,M.light);
+    if(s===2)for(let i=0;i<4;i++)e(prefix('first-belly-scale-'+i),0,1.03+i*.16,.56,.15,.10,.04,M.light);
+    if(s===3)pairs(d=>e(prefix('early-royal-neck-frill-'+d),d*.29,1.68,.39,.15,.36,.13,M.gold));
+    if(s===4)pairs(d=>l(prefix('serpent-royal-crown-fillet-'+d),[[d*.31,2.50,.49],[d*.56,2.71,.46],[d*.59,2.91,.42]],.053,M.gold));
+    break;
+   }
+  }
  }
  root.userData={identity:id,stage:s,geometryBranch:s===0?'egg-signature':s<=4?'anatomy-replacement':'preserved-native-plus-custom-anatomy',interpretation:'fictional-evolution'};
  body.userData.nj89={identity:id,stage:s,nativePreserved:s>=5};
