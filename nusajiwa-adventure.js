@@ -31,6 +31,7 @@ root.innerHTML='<div class="nja-stage">'+
  '<canvas id="njaCanvas" aria-label="Arena platformer: bergerak, melompat, dan kumpulkan Jiwa"></canvas>'+
  '<header class="nja-hud"><div class="nja-title"><b>NUSAJIWA</b><small id="njaRegion">JELAJAH EVOLUSI · RIMBA SUMATRA</small></div>'+
  '<div class="nja-stats"><span id="njaStage">1—1</span><span id="njaCoins">✦ 0</span><span id="njaLives">♥ ♥ ♥</span></div>'+
+ '<button type="button" data-nja="audio" id="njaAudio" class="nja-hud-btn nja-audio-btn" aria-label="Nyalakan atau matikan suara permainan">♫</button>'+ 
  '<button type="button" data-nja="pause" class="nja-hud-btn" aria-label="Jeda petualangan">Ⅱ</button></header>'+
  '<div class="nja-message" id="njaMessage" aria-live="polite"></div>'+
  '<div class="nja-progress"><i id="njaFill"></i></div>'+
@@ -46,6 +47,7 @@ const $=q=>root.querySelector(q),overlay=$('#njaOverlay'),menu=$('#njaMenu');
 let canvas=$('#njaCanvas');
 let opened=false,playing=false,mode='menu',pet=null,levelIndex=0,run=null,THREE=null,render3d=null,ctx=null,raf=0,last=0,accumulator=0,lastUi=0,returnHidden=false,importToken=0,fxAudio=null,soundEnabled=true,lastSound=0;
 let input={left:false,right:false,jump:false,special:false,jumpRequest:false,specialRequest:false};
+soundEnabled=progress.sound!==false;
 const ACTIVE_KEYS=new Set(['ArrowLeft','ArrowRight','ArrowUp','Space',' ','KeyA','KeyD','KeyW','KeyX','KeyJ','KeyK','Escape']);
 function setInput(k,on){if(k==='left'||k==='right'){input[k]=on;return}
  if(k==='jump'){if(on&&!input.jump)input.jumpRequest=true;input.jump=on}
@@ -77,6 +79,7 @@ function begin(n){
  run={level,coins,gem:{x:level.gem,y:2.1,got:false},patrols:(level.patrols||[]).map(([start,end,y,speed])=>({start,end,y,speed})),
   sigils:(level.sigils||[]).map(([x,y])=>({x,y,got:false})),gateHintAt:-20,x:2,y:0,vx:0,vy:0,grounded:true,coyote:.12,jumpBuffer:0,double:false,heroFacing:1,health:3,score:0,checkpoint:2,usedCp:[],hurtUntil:0,skillUntil:0,skillCool:0,seconds:0,accum:0,fx:[],cameraX:2.5,ended:false};
  mode='play';playing=true;overlay.hidden=true;clearInput();
+ $('#njaAudio').textContent=soundEnabled?'♫':'♪̸';
  $('#njaRegion').textContent='JELAJAH EVOLUSI · '+(level.world==='jawa'?'TANAH JAWA':'RIMBA SUMATRA');
  try{setupVisual()}catch(e){console.warn('Adventure 3D fallback:',e);set2D()}
  announce('✦ '+level.name+' · Sampai ke gerbang!');
@@ -94,6 +97,12 @@ function emitFx(x,y,type,count=6){
    type,ttl:.42+Math.random()*.32,max:.75});
  }
  if(run.fx.length>48)run.fx.splice(0,run.fx.length-48);
+}
+function unlockAudio(){
+ if(!soundEnabled||!opened)return;
+ const Audio=window.AudioContext||window.webkitAudioContext;
+ if(!Audio)return;
+ try{if(!fxAudio)fxAudio=new Audio();if(fxAudio.state==='suspended')fxAudio.resume()}catch(_){}
 }
 function playFx(name){
  if(!soundEnabled||!opened)return;
@@ -144,6 +153,7 @@ function hurt(){
 }
 function finish(){
  if(!run||run.ended)return;run.ended=true;playing=false;clearInput();
+ playFx('win');emitFx(run.x,run.y+.8,'magic',15);
  const r=record(pet.id);const gems=run.gem.got;const stars=clamp(1+(run.health===3?1:0)+(gems?1:0),1,3);
  const previous=Number(r.completed[levelIndex])||0,first=!previous;
  r.completed[levelIndex]=Math.max(previous,stars);r.best[levelIndex]=Math.max(Number(r.best[levelIndex])||0,run.score);
@@ -394,6 +404,7 @@ function open(){
  return true;
 }
 root.addEventListener('click',e=>{const b=e.target.closest('button[data-nja]');if(!b)return;const a=b.dataset.nja,n=Number(b.dataset.value);
+ if(a==='audio'){soundEnabled=!soundEnabled;progress.sound=soundEnabled;save();$('#njaAudio').textContent=soundEnabled?'♫':'♪̸';if(soundEnabled)unlockAudio();announce(soundEnabled?'♫ Suara aktif':'Suara dimatikan');return;}
  if(a==='exit')exit();
  else if(a==='pause')pause();
  else if(a==='levels')levelMenu();
@@ -404,12 +415,13 @@ root.addEventListener('click',e=>{const b=e.target.closest('button[data-nja]');i
 });
 for(const btn of root.querySelectorAll('[data-hold]')){
  const key=btn.dataset.hold;
- btn.addEventListener('pointerdown',e=>{e.preventDefault();btn.setPointerCapture?.(e.pointerId);setInput(key,true)});
+ btn.addEventListener('pointerdown',e=>{e.preventDefault();unlockAudio();btn.setPointerCapture?.(e.pointerId);setInput(key,true)});
  for(const type of ['pointerup','pointercancel','lostpointercapture'])btn.addEventListener(type,e=>{setInput(key,false);e.preventDefault()});
 }
 const keyNames={ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',ArrowUp:'jump',Space:'jump',KeyW:'jump',KeyX:'special',KeyJ:'special',KeyK:'jump'};
 document.addEventListener('keydown',e=>{if(!opened||!ACTIVE_KEYS.has(e.code)&&!ACTIVE_KEYS.has(e.key))return;e.preventDefault();e.stopImmediatePropagation();
  if(e.key==='Escape'){if(playing)pause();else exit();return}
+ unlockAudio();
  if(e.repeat&&['jump','special'].includes(keyNames[e.code]))return;
  if(keyNames[e.code])setInput(keyNames[e.code],true);
 },true);
@@ -417,5 +429,5 @@ document.addEventListener('keyup',e=>{if(!opened||!keyNames[e.code])return;e.pre
 window.addEventListener('blur',()=>{if(opened&&playing)pause()});
 document.addEventListener('visibilitychange',()=>{if(opened&&playing&&document.hidden)pause()});
 window.addEventListener('resize',resize,{passive:true});
-window.NUSAJIWA_ADVENTURE={version:'8.1',open,close:exit,levels:LEVELS.map(l=>l.name),getSave:()=>JSON.parse(JSON.stringify(progress)),isOpen:()=>opened};
+window.NUSAJIWA_ADVENTURE={version:'8.2',open,close:exit,levels:LEVELS.map(l=>l.name),getSave:()=>JSON.parse(JSON.stringify(progress)),isOpen:()=>opened};
 })();
