@@ -1,6 +1,6 @@
 {
   "project": "NUSAJIWA",
-  "version": "8.3.96",
+  "version": "8.3",
   "branch": "main",
   "updated_on": "2026-10-14",
   "purpose": "Single release ledger; do not count unmerged local work as published.",
@@ -29,11 +29,6 @@
       "version": "8.3",
       "status": "merged",
       "scope": "Adventure Kalimantan / five levels, gusts, themed scenery, guardian finale, release integrity gate"
-    },
-    {
-      "version": "8.3.96",
-      "status": "merged",
-      "scope": "NJ96: 10 indigenous fauna × eight morphology stages; conservation-based landmarks, native adult preservation"
     }
   ],
   "runtime": {
@@ -355,5 +350,6 @@
     "field_visual_verification": "PENDING: needs real browser/Safari inspection",
     "save_changes": "none",
     "catalog_size": 300
-  }
+  },
+  "last_character_patch": "NJ96"
 }
