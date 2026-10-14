@@ -2,7 +2,8 @@
  * No animal adoptions, XP changes, or localStorage mutation. */
 (function(){
 'use strict';
-if(new URLSearchParams(location.search).get('audit')!=='folklore')return;
+const auditMode=new URLSearchParams(location.search).get('audit');
+if(!['folklore','all'].includes(auditMode))return;
 const style=document.createElement('style');
 style.textContent=`
 #nj95audit{position:fixed;z-index:2147483600;right:12px;top:12px;width:min(355px,calc(100vw - 24px));
@@ -20,7 +21,7 @@ overflow:auto;background:#101a21;padding:8px;border-radius:7px}
 #nj95audit button{padding:5px 6px}#nj95audit .row{margin:4px 0}}`;
 document.head.appendChild(style);
 const root=document.createElement('aside');root.id='nj95audit';root.setAttribute('aria-label','Audit visual 3D makhluk Nusantara');
-root.innerHTML=`<h2>Audit Visual · Mistis & Folklore</h2><small>61 identitas · 8 fase · 4 sudut. Render produksi, bukan gambar rekaan.</small>
+root.innerHTML=`<h2>Audit Visual · ${auditMode==='all'?'300 Makhluk Nusantara':'Mistis & Folklore'}</h2><small>${auditMode==='all'?'300 identitas':'61 identitas'} · 8 fase · 4 sudut. Render produksi, bukan gambar rekaan.</small>
 <div class="row"><select id="nj95id" aria-label="Pilih identitas makhluk"></select></div>
 <label>Fase 0–7</label><div class="row" id="nj95stages"></div>
 <label>Sudut</label><div class="row" id="nj95angles"></div>
@@ -30,7 +31,7 @@ root.innerHTML=`<h2>Audit Visual · Mistis & Folklore</h2><small>61 identitas ·
 document.body.appendChild(root);
 const by=id=>root.querySelector('#'+id);
 let selected='',phase=5,angle=0;
-const api=()=>window.NUSAJIWA_FOLKLORE_VISUAL_QA;
+const api=()=>auditMode==='all'?window.NUSAJIWA_ALL_MODEL_QA:window.NUSAJIWA_FOLKLORE_VISUAL_QA;
 const showInfo=v=>by('nj95report').textContent=typeof v==='string'?v:JSON.stringify(v,null,2);
 function highlight(container,value){for(const b of by(container).querySelectorAll('button'))b.classList.toggle('on',b.dataset.value===String(value));}
 function redraw(){if(!api()?.ready())return showInfo('3D belum aktif, tunggu koneksi engine.');
@@ -64,7 +65,7 @@ by('nj95exit').addEventListener('click',()=>{api()?.reset();root.remove();style.
 function init(){if(!api()?.ready()){setTimeout(init,600);return;}
  const roster=api().catalog();for(const x of roster){const op=document.createElement('option');op.value=x.id;
  op.textContent=x.name+' · '+x.category;by('nj95id').appendChild(op);}
- if(roster.length!==61)showInfo('Audit katalog menemukan '+roster.length+' non-fauna; cek daftar versi.');
+ if(roster.length!==(auditMode==='all'?300:61))showInfo('Audit katalog menemukan '+roster.length+' makhluk; cek versi dan ID.');
  selected=roster[0]?.id;redraw();
 }
 init();
