@@ -13,6 +13,10 @@ on:
       - 'nj96-fauna.js'
       - 'nj95-visual-audit.js'
       - 'nj642-living.js'
+      - 'script_34.js'
+      - 'css_35.css'
+      - 'nj42-bridge.js'
+      - 'nj42-bridge.css'
       - 'nj642-living.css'
       - 'tamagotchi-3d.js'
       - 'tamagotchi-3d.css'
@@ -48,5 +52,7 @@ jobs:
           node --check nj96-fauna.js
           node --check nj95-visual-audit.js
           node --check nj642-living.js
+          node --check script_34.js
+          node --check nj42-bridge.js
       - name: Verify game and collection invariants
         run: node --test tests/*.mjs

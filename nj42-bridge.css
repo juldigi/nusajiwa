@@ -1,0 +1,41 @@
+/* NJ42 bridge: restore the edited NUSAJIWA 6.42 Living Sanctuary layer
+   while retaining the optional classic Tamagotchi controller and all save states. */
+body.nj42-sanctuary #njt{display:none!important;pointer-events:none!important}
+body.nj42-sanctuary #nj35.njx .nj-top{display:flex!important}
+body.nj42-sanctuary #nj35.njx .nj-creature-info{display:block!important}
+body.nj42-sanctuary #nj35.njx .nj-controls{display:flex!important}
+body.nj42-sanctuary #nj35.njx .nj-bottom{display:flex!important}
+body.nj42-sanctuary #nj35.njx .nj-ribbon{display:contents!important}
+body.nj42-sanctuary #nj35.njx .nj-photo-tip{display:flex!important}
+body.nj42-sanctuary #nj35.njx .nj-label3d,
+body.nj42-sanctuary #nj35.njx .nj-guide,
+body.nj42-sanctuary #nj35.njx .nj-care-caption,
+body.nj42-sanctuary #nj35.njx .nj-growth{display:none!important}
+body.nj42-sanctuary #nj35.njx .nj-side.open{pointer-events:auto!important}
+body.nj42-sanctuary #nj35.njx .njx-title{
+ background:radial-gradient(ellipse at 55% 40%,rgba(51,72,58,.38),transparent 58%),
+ linear-gradient(180deg,rgba(4,8,7,.68),rgba(4,8,7,.97)),#070b0a;
+}
+body.nj42-tamagotchi #nj35.njx .nj-top,
+body.nj42-tamagotchi #nj35.njx .nj-creature-info,
+body.nj42-tamagotchi #nj35.njx .nj-controls,
+body.nj42-tamagotchi #nj35.njx .nj-bottom,
+body.nj42-tamagotchi #nj35.njx .nj-ribbon,
+body.nj42-tamagotchi #nj35.njx .nj-photo-tip,
+body.nj42-tamagotchi #nj35.njx .njx-title,
+body.nj42-tamagotchi #nj35.njx .njx-cel,
+body.nj42-tamagotchi #nj35.njx .nj-side{display:none!important}
+#njt .njt-top-tools #nj42SwitchBack{
+ display:inline-flex;align-items:center;justify-content:center;gap:5px;
+ height:36px;width:auto;min-width:78px;padding:0 9px;
+ border-radius:12px;font:700 11px/1.1 system-ui,sans-serif;
+ color:#fff0d2;background:#16464b;border:1px solid #c2a771;
+ box-shadow:none;touch-action:manipulation;
+}
+#njt .njt-top-tools #nj42SwitchBack:focus-visible{outline:2px solid #ffdf9d;outline-offset:2px}
+@media(max-width:390px){
+ #njt .njt-top-tools #nj42SwitchBack{min-width:66px;padding:0 6px;font-size:10px}
+}
+@media(prefers-reduced-motion:reduce){
+ #nj35.njx .njx-title,#nj35.njx .njx-cel,#nj35.njx .nj-item{animation:none!important;transition:none!important}
+}

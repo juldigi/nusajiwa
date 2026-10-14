@@ -364,6 +364,32 @@
       "nj642-living.js"
     ],
     "checks": "tests/nusajiwa-visual-642.mjs",
-    "device_visual_verification": "PENDING"
+    "device_visual_verification": "PENDING",
+    "version": "6.42.2",
+    "source": "NUSAJIWA_6_42_Rev9_Selective_Morph_Merge.zip",
+    "source_files": [
+      "css_35.css",
+      "script_34.js"
+    ],
+    "bridge_files": [
+      "nj42-bridge.css",
+      "nj42-bridge.js"
+    ],
+    "original_edit_integrated": true,
+    "prior_approximation_files": [
+      "nj642-living.css",
+      "nj642-living.js"
+    ],
+    "prior_approximation_loaded": false,
+    "mode_switch": "Native v6.42 menu -> Tamagotchi 90an -> Suaka; no game save migration",
+    "validation": "Node syntax and full regression CI; real Safari iPhone visual verification pending"
+  },
+  "ui_release": {
+    "source": "NUSAJIWA_6_42_Rev9_Selective_Morph_Merge.zip",
+    "status": "MERGED",
+    "default_mode": "sanctuary",
+    "authored_source": "original css_35.css and script_34.js with audit guard",
+    "native_webgl": "script_32.js",
+    "mode_bridge": "nj42-bridge.js"
   }
 }

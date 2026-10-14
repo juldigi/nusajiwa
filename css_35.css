@@ -1,0 +1,294 @@
+/* NUSAJIWA 6.37 — Bahasa visual "tenang & mewah".
+   Prinsip: satu aksen redup (kuningan), permukaan matte, garis rambut 1px, tanpa gradasi mengilap / glow / bevel,
+   ikon monokrom, radius konsisten (14 / 20 / 24), jarak lega (kelipatan 4), tipografi ringan.
+   Hanya #nj35.njx yang disentuh. Logika game tidak berubah. Rollback: hapus kelas "njx". */
+
+#nj35.njx{
+  --ink:#090e0d; --sheet:#0d1312; --surface:rgba(10,15,14,.80);
+  --ivory:#ece7da; --ivory2:rgba(236,231,218,.64); --ivory3:rgba(236,231,218,.40);
+  --hair:rgba(236,231,218,.10); --hair2:rgba(236,231,218,.20); --brass:#c8b186;
+  --g-font-d:'Marcellus','Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;
+  --g-font-u:'DM Sans',ui-sans-serif,-apple-system,'Segoe UI',system-ui,sans-serif;
+  --g-safe-t:env(safe-area-inset-top,0px); --g-safe-b:env(safe-area-inset-bottom,0px);
+  --g-dock-h:60px; --care-h:56px; --edge:20px;
+  --g-care-bottom:calc(var(--g-dock-h) + var(--g-safe-b) + 14px);
+  --g-cta-bottom:calc(var(--g-care-bottom) + var(--care-h) + 12px);
+  --g-ease:cubic-bezier(.22,.8,.24,1);
+  font-family:var(--g-font-u); color:var(--ivory); -webkit-font-smoothing:antialiased;
+}
+#nj35.njx button{font-family:inherit}
+#nj35.njx .nj-grain{background:
+  linear-gradient(180deg,rgba(4,8,7,.55) 0,transparent 22%,transparent 55%,rgba(4,8,7,.82) 100%),
+  radial-gradient(ellipse at 50% 45%,transparent 45%,rgba(3,7,6,.5) 100%);box-shadow:none}
+/* ikon monokrom: satu warna, bukan campuran teal/emas */
+#nj35.njx .nj-chip-icon,#nj35.njx .nj-action-icon,#nj35.njx .nj-nav-icon{filter:grayscale(1) brightness(1.9) contrast(.9)}
+
+/* ---------- 1. Buang kerangka web ---------- */
+#nj35.njx .nj-brand,#nj35.njx .nj-guide,#nj35.njx .nj-label3d,#nj35.njx .nj-care-caption,#nj35.njx .nj-growth,
+#nj35.njx .nj-creature-info .kind,#nj35.njx .nj-creature-info .nj-bio,#nj35.njx #nj35Quality,#nj35.njx #nj35Legacy{display:none!important}
+
+/* ---------- 2. HUD atas ---------- */
+#nj35.njx .nj-top{position:absolute;inset:calc(var(--g-safe-t) + 16px) var(--edge) auto var(--edge);padding:0!important;display:flex;align-items:center;gap:10px;z-index:11;filter:none}
+#nj35.njx .nj-topright{display:contents}
+#nj35.njx .nj-chip{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;min-width:40px;padding:0!important;border-radius:50%;font-size:13px!important;font-weight:500;color:var(--ivory);background:rgba(10,15,14,.55)!important;border:1px solid var(--hair)!important;box-shadow:none!important;backdrop-filter:none}
+#nj35.njx #nj35Pearls{margin-right:auto;width:auto;height:40px;padding:0 4px!important;background:none!important;border:0!important;border-radius:0}
+#nj35.njx #nj35Pearls b{font:400 20px/1 var(--g-font-d)!important;letter-spacing:.02em;font-variant-numeric:tabular-nums;color:var(--ivory);text-shadow:0 1px 12px rgba(0,0,0,.7)}
+#nj35.njx .nj-chip-icon{width:22px;height:22px;flex:0 0 22px}
+#nj35.njx #nj36Photo span:not(.nj-chip-icon){display:none}
+#nj35.njx .nj-chip:active{background:rgba(236,231,218,.12)!important}
+
+/* ---------- 3. Papan nama ---------- */
+#nj35.njx .nj-creature-info{position:absolute;z-index:7;left:var(--edge);right:auto;top:calc(var(--g-safe-t) + 80px);bottom:auto!important;width:min(300px,62vw)!important;max-width:none;max-height:none;overflow:visible;padding:0!important;border:0;border-radius:0;background:none;box-shadow:none;backdrop-filter:none;pointer-events:none}
+#nj35.njx .nj-creature-info::before{display:none}
+#nj35.njx .nj-creature-info h2{font:400 clamp(26px,7.4vw,34px)/1.08 var(--g-font-d)!important;letter-spacing:.005em;margin:0 0 6px;color:var(--ivory);text-shadow:0 1px 18px rgba(0,0,0,.75)}
+#nj35.njx .nj-creature-info .origin{display:block;font-size:12.5px;line-height:1.4;color:var(--ivory2);text-shadow:0 1px 10px rgba(0,0,0,.8)}
+#nj35.njx .nj-creature-info .stats{display:flex!important;gap:14px;margin-top:18px;max-width:260px}
+#nj35.njx .nj-stat{flex:1;min-width:0}
+#nj35.njx .nj-stat label{display:block;font-size:10.5px;font-weight:500;color:var(--ivory3);margin-bottom:6px;text-shadow:0 1px 8px rgba(0,0,0,.8)}
+#nj35.njx .nj-stat label span:last-child{display:none}
+#nj35.njx .nj-stat i{height:3px;border-radius:3px;background:rgba(236,231,218,.16);box-shadow:none}
+#nj35.njx .nj-stat i b{border-radius:3px;background:var(--ivory)!important;transition:width .7s var(--g-ease)}
+#nj35.njx .nj-progress-line{display:grid;grid-template-columns:1fr auto;gap:6px 10px;margin:16px 0 0;max-width:260px;font:500 11px/1.2 var(--g-font-u);letter-spacing:0;color:var(--ivory3);text-shadow:0 1px 8px rgba(0,0,0,.8)}
+#nj35.njx .nj-progress-line::after{content:'';grid-column:1/-1;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--brass) var(--xp,0%),rgba(236,231,218,.16) var(--xp,0%))}
+#nj35.njx .nj-note{margin-top:14px;max-width:240px;font-size:11.5px;line-height:1.5;letter-spacing:0;color:var(--ivory2);text-shadow:0 1px 8px rgba(0,0,0,.8)}
+
+/* Tombol utama: solid, datar, ringkas, di kanan zona jempol */
+#nj35.njx .nj-adopt{position:fixed;left:auto;right:var(--edge);margin:0;bottom:var(--g-cta-bottom);width:auto;min-width:148px;max-width:calc(100vw - 2*var(--edge));height:46px;padding:0 22px;pointer-events:auto;z-index:7;
+  display:flex;align-items:center;justify-content:center;border-radius:14px;border:0;background:var(--ivory);color:#0c1110;font:600 12.5px/1 var(--g-font-u);letter-spacing:.06em;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+#nj35.njx .nj-adopt:active{transform:scale(.97);background:#fff}
+
+/* ---------- 4. Bilah perawatan ---------- */
+#nj35.njx .nj-controls{position:absolute;left:var(--edge);right:var(--edge);top:auto!important;bottom:var(--g-care-bottom);transform:none;height:var(--care-h);flex-direction:row;justify-content:space-between;align-items:center;gap:0;padding:0 6px;z-index:6;pointer-events:auto;background:var(--surface);border:1px solid var(--hair);border-radius:20px}
+#nj35.njx .nj-action{position:relative;flex:1;width:auto!important;min-width:0;height:44px!important;min-height:0!important;padding:0!important;display:flex;align-items:center;justify-content:center;border:0!important;border-radius:14px!important;background:none!important;box-shadow:none!important;color:var(--ivory)}
+#nj35.njx .nj-action::before{display:none}
+#nj35.njx .nj-action .nj-action-icon{position:static;margin:0;width:26px;height:26px;opacity:.88;background-color:transparent;transition:transform .16s var(--g-ease),opacity .2s}
+#nj35.njx .nj-action small{display:none}
+#nj35.njx .nj-action:active{transform:none;background:rgba(236,231,218,.10)!important}
+#nj35.njx .nj-action:active .nj-action-icon{transform:scale(.88);opacity:1}
+#nj35.njx .nj-action::after{content:'';position:absolute;inset:0;border-radius:14px;border:1px solid var(--brass);opacity:0;pointer-events:none}
+
+/* ---------- 5. Kamera ---------- */
+#nj35.njx .nj-ribbon{display:contents}
+#nj35.njx .nj-mini-btn,#nj35.njx .nj-ribbon button{position:absolute;z-index:6;width:40px;height:40px;min-width:0;padding:0;display:grid;place-items:center;border-radius:50%;font-size:14px;color:var(--ivory2);background:rgba(10,15,14,.55);border:1px solid var(--hair);box-shadow:none;backdrop-filter:none}
+#nj35.njx #nj35Prev{left:12px;top:46%}
+#nj35.njx #nj35Next{right:12px;top:46%}
+#nj35.njx #nj35ZoomIn{right:var(--edge);top:calc(var(--g-safe-t) + 80px)}
+#nj35.njx #nj35ZoomOut{right:var(--edge);top:calc(var(--g-safe-t) + 128px)}
+#nj35.njx #nj36Center{right:var(--edge);top:calc(var(--g-safe-t) + 176px)}
+
+/* ---------- 6. Dock ---------- */
+#nj35.njx .nj-bottom{position:absolute;left:0;right:0;bottom:0!important;transform:none;margin:0;width:100%;max-width:none;height:calc(var(--g-dock-h) + var(--g-safe-b));padding:0 max(8px,calc((100% - 520px)/2)) var(--g-safe-b);gap:0;justify-content:space-around;align-items:stretch;border-radius:0;z-index:12!important;
+  background:linear-gradient(180deg,rgba(9,14,13,.84),rgba(9,14,13,.97));border:0;border-top:1px solid var(--hair);box-shadow:none;backdrop-filter:none}
+#nj35.njx .nj-bottom button{position:relative;flex:1;min-width:0;height:100%;padding:10px 2px 8px;border-radius:0;background:none!important;box-shadow:none;color:var(--ivory3);display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:0}
+#nj35.njx .nj-bottom button::before{display:none}
+#nj35.njx .nj-bottom .nj-nav-icon{width:24px;height:24px;margin:0;opacity:.5;transition:opacity .2s,transform .25s var(--g-ease)}
+#nj35.njx .nj-bottom button small{font:500 10.5px/1 var(--g-font-u);letter-spacing:.01em}
+#nj35.njx .nj-bottom button.active{color:var(--ivory);font-weight:500;box-shadow:none}
+#nj35.njx .nj-bottom button.active .nj-nav-icon{opacity:1;transform:none;filter:grayscale(1) brightness(2.2)}
+#nj35.njx .nj-bottom button.active::after{content:'';position:absolute;top:-1px;left:50%;width:28px;height:2px;margin-left:-14px;background:var(--brass)}
+
+/* ---------- 7. Notifikasi ---------- */
+#nj35.njx .nj-toast{left:0;right:0;margin:0 auto;width:max-content;max-width:calc(100vw - 2*var(--edge));top:auto;bottom:calc(var(--g-cta-bottom) + 58px);z-index:13;transform:translateY(8px);padding:11px 18px;border-radius:14px;text-align:center;font:500 13px/1.4 var(--g-font-u);color:var(--ivory);
+  background:rgba(10,15,14,.94);border:1px solid var(--hair);box-shadow:0 10px 30px rgba(0,0,0,.45);backdrop-filter:none;transition:opacity .2s,transform .3s var(--g-ease)}
+#nj35.njx .nj-toast.show{transform:none}
+#nj35.njx .nj-toast.loc{top:calc(var(--g-safe-t) + 26%);bottom:auto;padding:0;border:0;background:none;box-shadow:none;border-radius:0;font:400 clamp(24px,7.4vw,34px)/1.1 var(--g-font-d);letter-spacing:.16em;color:var(--ivory);text-shadow:0 2px 28px rgba(0,0,0,.9);display:flex;align-items:center;gap:18px;transform:none}
+#nj35.njx .nj-toast.loc::before,#nj35.njx .nj-toast.loc::after{content:'';width:clamp(24px,10vw,56px);height:1px;background:linear-gradient(90deg,transparent,var(--ivory3))}
+#nj35.njx .nj-toast.loc::after{transform:scaleX(-1)}
+
+/* ---------- 8. Lembar menu ---------- */
+#nj35.njx .nj-side{position:absolute;inset:calc(var(--g-safe-t) + 68px) 12px calc(var(--g-dock-h) + var(--g-safe-b) + 12px) 12px;width:auto!important;z-index:8;display:flex;flex-direction:column;overflow:hidden;
+  padding:56px 0 0!important;border:1px solid var(--hair);border-radius:24px;background:var(--sheet);box-shadow:0 30px 80px rgba(0,0,0,.6);backdrop-filter:none;
+  transform:translateY(16px);opacity:0;visibility:hidden;pointer-events:none;transition:transform .34s var(--g-ease),opacity .22s,visibility 0s .34s}
+#nj35.njx .nj-side.open{transform:none;opacity:1;visibility:visible;pointer-events:auto;transition:transform .34s var(--g-ease),opacity .22s,visibility 0s}
+#nj35.njx .nj-side::before{content:attr(data-title);position:absolute;left:24px;top:0;height:56px;display:flex;align-items:center;font:400 21px/1 var(--g-font-d);letter-spacing:.02em;color:var(--ivory)}
+#nj35.njx .nj-side::after{content:'';position:absolute;left:0;right:0;top:55px;height:1px;background:var(--hair)}
+#nj35.njx .nj-side .nj-close{position:absolute;top:10px;right:14px;width:36px;height:36px;padding:0;display:grid;place-items:center;border-radius:50%;font-size:13px;color:var(--ivory2);background:rgba(236,231,218,.07);border:0;box-shadow:none;z-index:4}
+#nj35.njx #nj35SideBody{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:20px 20px 28px;scrollbar-width:none}
+#nj35.njx #nj35SideBody::-webkit-scrollbar{display:none}
+#nj35.njx .nj-side p{font-size:13px;line-height:1.65;color:var(--ivory2)}
+#nj35.njx .nj-side h3{font:400 17px/1.2 var(--g-font-d);color:var(--ivory);margin:26px 0 10px}
+#nj35.njx .nj-side .nj-eyebrow{display:none}
+#nj35.njx .nj-side .nj38-quest .nj-eyebrow{display:block;font:400 17px/1.2 var(--g-font-d);letter-spacing:.01em;color:var(--ivory)}
+#nj35.njx [data-panel="roster"] #nj35SideBody>h2,#nj35.njx [data-panel="explore"] #nj35SideBody>h2,#nj35.njx [data-panel="ritual"] #nj35SideBody>h2{display:none}
+#nj35.njx [data-panel="archive"] #nj35SideBody>h2{font:400 30px/1.1 var(--g-font-d);margin:0 0 6px;color:var(--ivory)}
+#nj35.njx [data-panel="archive"] #nj35SideBody>h2+p{margin:0 0 8px}
+
+#nj35.njx details.njx-note,#nj35.njx details.njx-fold{margin:0 0 16px}
+#nj35.njx details>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;font:500 12.5px/1.2 var(--g-font-u);color:var(--ivory2);min-height:36px}
+#nj35.njx details>summary::-webkit-details-marker{display:none}
+#nj35.njx details.njx-note>summary::before{content:'i';display:grid;place-items:center;width:18px;height:18px;border-radius:50%;border:1px solid var(--hair2);font:italic 500 11px/1 Georgia,serif;color:var(--ivory3)}
+#nj35.njx details.njx-fold{border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);padding:0}
+#nj35.njx details.njx-fold>summary{min-height:48px;justify-content:space-between;color:var(--ivory)}
+#nj35.njx details.njx-fold>summary::after{content:'';width:7px;height:7px;border-right:1.5px solid var(--ivory3);border-bottom:1.5px solid var(--ivory3);transform:rotate(45deg);transition:transform .2s;margin-right:4px}
+#nj35.njx details.njx-fold[open]>summary::after{transform:rotate(-135deg)}
+#nj35.njx details.njx-fold .nj61-field{margin:0 0 16px;padding:0;border:0;background:none;box-shadow:none}
+#nj35.njx details.njx-fold .nj61-field-head{display:none}
+#nj35.njx .nj61-field-actions button,#nj35.njx .nj61-back{border-radius:12px;background:rgba(236,231,218,.07);border:1px solid var(--hair);color:var(--ivory)}
+
+/* ---------- 9. Koleksi ---------- */
+#nj35.njx .nj-roster-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 14px}
+#nj35.njx .nj-summary-card{padding:0;text-align:left;border:0;border-radius:0;background:none;box-shadow:none}
+#nj35.njx .nj-summary-card strong{display:block;margin:2px 0 0;font:400 28px/1.1 var(--g-font-d);color:var(--ivory)}
+#nj35.njx .nj-summary-card small{font-size:11px;letter-spacing:0;text-transform:none;color:var(--ivory3)}
+#nj35.njx .nj-summary-card span{display:none}
+#nj35.njx .njx-meter{height:2px;margin:0 0 20px;border-radius:2px;background:rgba(236,231,218,.14);overflow:hidden}
+#nj35.njx .njx-meter i{display:block;height:100%;min-width:3px;background:var(--brass)}
+#nj35.njx .nj60-discovery{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 14px}
+#nj35.njx .nj60-discovery button{min-height:44px;padding:6px 12px;border-radius:12px;font:500 12px/1.3 var(--g-font-u);background:none;border:1px solid var(--hair2);color:var(--ivory2)}
+#nj35.njx .nj-search{position:static;height:44px;min-height:44px!important;margin:0;padding:0 16px;border-radius:14px;background:rgba(236,231,218,.06);border:0;box-shadow:none;color:var(--ivory);font-size:16px!important}
+#nj35.njx .nj-search::placeholder{color:var(--ivory3)}
+#nj35.njx .nj-filters{position:sticky;top:-20px;z-index:3;display:flex;flex-wrap:nowrap!important;gap:22px;margin:0 -20px 4px!important;padding:26px 20px 8px!important;background:linear-gradient(180deg,var(--sheet) 82%,rgba(13,19,18,0));overflow-x:auto;scrollbar-width:none;scroll-snap-type:none!important;scroll-padding:0 20px}
+#nj35.njx .nj-filters::-webkit-scrollbar{display:none}
+#nj35.njx .nj-filters button{scroll-snap-align:none!important;flex:0 0 auto;min-height:36px;padding:0 0 6px;border:0;border-bottom:2px solid transparent;border-radius:0;background:none;font:500 13px/1 var(--g-font-u);color:var(--ivory3)}
+#nj35.njx .nj-filters button.sel{background:none;color:var(--ivory);border-bottom-color:var(--brass)}
+#nj35.njx .nj-filters [data-njfilter^="baru"],#nj35.njx .nj-filters [data-njfilter="v39"],#nj35.njx .nj-filters [data-njfilter="v40"],#nj35.njx .nj-filters [data-njfilter="kemarin"]{display:none}
+#nj35.njx .nj-filters [data-njfilter="all"]{order:-3}
+#nj35.njx .nj-filters [data-njfilter="fauna"]{order:-2}
+#nj35.njx .nj-filters [data-njfilter="folklor"]{order:-1}
+#nj35.njx .nj-result-count{margin:4px 0 14px;font-size:11px;color:var(--ivory3)}
+
+#nj35.njx [data-panel="roster"] .nj-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:18px 12px!important;margin-top:2px;padding-bottom:12px}
+#nj35.njx [data-panel="roster"] .nj-item{position:relative;display:flex;flex-direction:column;align-items:stretch;gap:0;min-height:0;padding:0;text-align:left;overflow:visible;background:none;border:0;box-shadow:none;border-radius:0}
+#nj35.njx [data-panel="roster"] .nj-item::before{display:none}
+#nj35.njx [data-panel="roster"] .nj-item .nj45-portrait{position:relative;display:block;width:100%;aspect-ratio:1/1;border-radius:16px;overflow:hidden;background-color:#141b19;background-color:color-mix(in srgb,var(--c,#141b19) 16%,#111817);background-size:cover;background-position:center;background-repeat:no-repeat;box-shadow:inset 0 0 0 1px var(--hair);transition:box-shadow .2s}
+#nj35.njx .nj45-fallback-symbol{position:absolute;inset:0;display:grid;place-items:center;font-size:18px;color:var(--ivory3)}
+#nj35.njx .nj45-portrait.rendered .nj45-fallback-symbol{display:none}
+#nj35.njx [data-panel="roster"] .nj-item .nj-stage-badge{position:absolute;top:8px;left:8px;z-index:2;margin:0;padding:3px 7px;border-radius:6px;font:500 9px/1.2 var(--g-font-u);letter-spacing:.02em;text-transform:none;color:var(--ivory);background:rgba(8,12,11,.72);border:0}
+#nj35.njx [data-panel="roster"] .nj-item .nj-stage-badge.locked{display:none}
+#nj35.njx [data-panel="roster"] .nj-item b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-top:9px;min-height:2.5em;font:500 12px/1.25 var(--g-font-u);color:var(--ivory)}
+#nj35.njx [data-panel="roster"] .nj-item small,#nj35.njx [data-panel="roster"] .nj-item em,#nj35.njx .nj39-new{display:none!important}
+#nj35.njx [data-panel="roster"] .nj-item.active .nj45-portrait{box-shadow:inset 0 0 0 1px var(--brass),0 0 0 1px var(--brass)}
+#nj35.njx [data-panel="roster"] .nj-item.njx-locked .nj45-portrait{filter:grayscale(1) brightness(.42)}
+#nj35.njx [data-panel="roster"] .nj-item.njx-locked .nj45-portrait::after{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ece7da' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='5' y='11' width='14' height='9' rx='2'/%3E%3Cpath d='M8 11V8a4 4 0 0 1 8 0v3'/%3E%3C/svg%3E") center/22px no-repeat;opacity:.7}
+#nj35.njx [data-panel="roster"] .nj-item.njx-locked b{color:var(--ivory3);font-weight:400}
+
+/* ---------- 10. Jelajah ---------- */
+#nj35.njx [data-panel="explore"] #nj35SideBody>p{font-size:13px;margin:0 0 20px}
+#nj35.njx [data-panel="explore"] .nj-grid{grid-template-columns:1fr!important;gap:10px!important;margin-top:0}
+#nj35.njx .nj-item[data-njregion]{--rg:#3f6b55;position:relative;display:block;min-height:88px;padding:18px 18px 16px 22px;border-radius:20px;text-align:left;overflow:hidden;background:linear-gradient(100deg,color-mix(in srgb,var(--rg) 30%,#101716),#0f1514 75%);border:1px solid var(--hair);box-shadow:none}
+#nj35.njx .nj-item[data-njregion]::before{content:'';position:absolute;left:0;top:18px;bottom:18px;width:3px;height:auto;margin:0;border-radius:0 3px 3px 0;background:var(--rg);box-shadow:none}
+#nj35.njx .nj-item[data-njregion="sumatra"]{--rg:#4c8466}
+#nj35.njx .nj-item[data-njregion="java"]{--rg:#a2683f}
+#nj35.njx .nj-item[data-njregion="kalimantan"]{--rg:#3f857a}
+#nj35.njx .nj-item[data-njregion="sulawesi"]{--rg:#8a8d4c}
+#nj35.njx .nj-item[data-njregion="nusa"]{--rg:#b08e48}
+#nj35.njx .nj-item[data-njregion="papua"]{--rg:#4a8d68}
+#nj35.njx .nj-item[data-njregion="laut"]{--rg:#4a8aa6}
+#nj35.njx .nj-item[data-njregion] b{display:block;font:400 21px/1.1 var(--g-font-d);color:var(--ivory)}
+#nj35.njx .nj-item[data-njregion] small{display:block;margin-top:6px;font-size:12.5px;color:var(--ivory2)}
+#nj35.njx .nj-item[data-njregion] em{position:static;display:inline-block;margin:10px 0 0;padding:0;border:0;background:none;font:500 11.5px/1.4 var(--g-font-u);font-style:normal;letter-spacing:0;color:var(--brass)}
+#nj35.njx .nj-item[data-njregion] em::before{display:none}
+#nj35.njx .nj-item[data-njregion].active{border-color:var(--brass);box-shadow:none}
+#nj35.njx .nj38-quest{margin-top:26px;padding:22px 0 0;border:0;border-top:1px solid var(--hair);border-radius:0;background:none;box-shadow:none}
+#nj35.njx .nj38-runes button{border-radius:50%;aspect-ratio:1;min-height:0;background:rgba(236,231,218,.06);border:1px solid var(--hair2)}
+#nj35.njx .nj-ritual-primary{position:sticky;bottom:0;display:flex;align-items:center;justify-content:center;width:100%;height:48px;margin:20px 0 0;padding:0 16px;border:0;border-radius:14px;font:600 12.5px/1 var(--g-font-u);letter-spacing:.06em;color:#0c1110;background:var(--ivory);box-shadow:0 -10px 24px rgba(13,19,18,.9)}
+#nj35.njx .nj-ritual-primary:active{transform:scale(.98)}
+
+/* ---------- 11. Evolusi ---------- */
+#nj35.njx [data-panel="ritual"] #nj35SideBody>p{font-size:13px;margin:0 0 22px}
+#nj35.njx .nj-stage-track{display:grid;grid-template-columns:repeat(4,1fr);gap:16px 8px;margin:0 0 8px}
+#nj35.njx .nj-stage-track span{padding:0 0 8px;text-align:left;font:500 12px/1.2 var(--g-font-u);color:var(--ivory3);border:0;border-bottom:2px solid rgba(236,231,218,.10);border-radius:0;background:none}
+#nj35.njx .nj-stage-track span.done{color:var(--ivory2);border-bottom-color:rgba(200,177,134,.5)}
+#nj35.njx .nj-stage-track span.cur{color:var(--ivory);border-bottom-color:var(--brass)}
+#nj35.njx .nj-element-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 8px}
+#nj35.njx .nj-element-grid button{--el:#e0cf91;position:relative;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:6px;height:68px;padding:0 14px;border-radius:16px;font:500 12.5px/1 var(--g-font-u);color:var(--ivory2);background:rgba(236,231,218,.04);border:1px solid var(--hair)}
+#nj35.njx .nj-element-grid button::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--el);position:absolute;top:12px;right:12px}
+#nj35.njx .nj-element-grid button b{float:none;font:400 18px/1 var(--g-font-d);color:var(--ivory)}
+#nj35.njx .nj-element-grid button.selected{color:var(--ivory);background:rgba(236,231,218,.09);border-color:var(--hair2);box-shadow:inset 0 0 0 1px var(--hair2)}
+#nj35.njx .nj-element-grid [data-njstone="api"]{--el:#d98a6c}
+#nj35.njx .nj-element-grid [data-njstone="air"]{--el:#7fb2d6}
+#nj35.njx .nj-element-grid [data-njstone="angin"]{--el:#98c9a8}
+#nj35.njx .nj-element-grid [data-njstone="tanah"]{--el:#c4a574}
+#nj35.njx .nj-element-grid [data-njstone="cahaya"]{--el:#e0cf91}
+#nj35.njx .nj-element-grid [data-njstone="bayangan"]{--el:#a899d6}
+#nj35.njx .nj-context{margin:18px 0 4px;font-size:12px;line-height:1.6;color:var(--ivory3)}
+#nj35.njx .nj-side .nj-chip,#nj35.njx .njx-atlas{display:inline-flex;align-items:center;height:38px;margin:10px 8px 0 0;padding:0 16px!important;border-radius:12px;font:500 12px/1 var(--g-font-u)!important;letter-spacing:.01em;text-transform:none;color:var(--ivory2);text-decoration:none;background:none!important;border:1px solid var(--hair2)!important;box-shadow:none}
+
+/* ---------- 12. Kodex ---------- */
+#nj35.njx .nj-codex-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin:18px 0;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)}
+#nj35.njx .nj-fact{padding:14px 10px 14px 0;border:0;border-radius:0;background:none}
+#nj35.njx .nj-fact+.nj-fact{padding-left:12px;border-left:1px solid var(--hair)}
+#nj35.njx .nj-fact span{font-size:10.5px;letter-spacing:0;text-transform:none;color:var(--ivory3)}
+#nj35.njx .nj-fact b{display:block;margin-top:5px;font:500 13px/1.3 var(--g-font-u);color:var(--ivory)}
+#nj35.njx .nj-lore-card{margin:0 0 22px;padding:0;border:0;border-radius:0;background:none;box-shadow:none}
+#nj35.njx .nj-lore-card strong{display:block;margin-bottom:8px;font:400 18px/1.2 var(--g-font-d);color:var(--ivory)}
+#nj35.njx .nj-options button{border-radius:12px;background:none;border:1px solid var(--hair2);color:var(--ivory2)}
+
+/* ---------- 13. Judul, menu, perayaan ---------- */
+#nj35.njx .njx-title{position:absolute;inset:0;z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow:hidden;
+  background:linear-gradient(180deg,rgba(4,8,7,.62),rgba(4,8,7,.92)),url('./atmosphere.webp') center/cover #070b0a;transition:opacity .6s ease,visibility 0s .6s}
+#nj35.njx .njx-title.out{opacity:0;visibility:hidden;pointer-events:none}
+#nj35.njx .njx-title-seal{width:56px;height:56px;margin-bottom:28px;border-radius:50%;background:url('./assets/icons/compass.png') center/58% no-repeat;border:1px solid var(--hair2);filter:grayscale(1) brightness(1.9)}
+#nj35.njx .njx-title h1{margin:0;font:400 clamp(34px,10.5vw,56px)/1 var(--g-font-d);letter-spacing:.3em;padding-left:.3em;color:var(--ivory)}
+#nj35.njx .njx-title p{margin:18px 0 0;font:400 14px/1.6 var(--g-font-u);color:var(--ivory2);max-width:28ch}
+#nj35.njx .njx-title button{margin-top:56px;height:48px;padding:0 36px;border-radius:14px;border:1px solid var(--hair2);background:rgba(236,231,218,.04);font:500 13px/1 var(--g-font-u);letter-spacing:.1em;color:var(--ivory)}
+#nj35.njx .njx-title button:active{background:rgba(236,231,218,.14)}
+
+#nj35.njx .njx-menu{position:absolute;z-index:14;top:calc(var(--g-safe-t) + 64px);right:var(--edge);width:min(264px,calc(100vw - 40px));padding:6px;border-radius:18px;background:var(--sheet);border:1px solid var(--hair);box-shadow:0 20px 50px rgba(0,0,0,.6)}
+#nj35.njx .njx-menu[hidden]{display:none}
+#nj35.njx .njx-menu>*{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:48px;padding:0 14px;border:0;border-radius:12px;background:none;font:500 13.5px/1 var(--g-font-u);color:var(--ivory);text-decoration:none;text-align:left}
+#nj35.njx .njx-menu>*:active{background:rgba(236,231,218,.08)}
+#nj35.njx .njx-menu b{font:500 12px/1 var(--g-font-u);color:var(--brass)}
+
+#nj35.njx .njx-cel{position:absolute;inset:0;z-index:15;display:grid;place-items:center;text-align:center;pointer-events:none;visibility:hidden;opacity:0;background:rgba(5,8,7,.74)}
+#nj35.njx .njx-cel.show{visibility:visible;opacity:1;pointer-events:auto}
+#nj35.njx .njx-cel-box{padding:0 28px}
+#nj35.njx .njx-cel-title{font:400 clamp(28px,8.4vw,42px)/1.1 var(--g-font-d);letter-spacing:.1em;color:var(--ivory)}
+#nj35.njx .njx-cel-name{margin-top:22px;padding-top:22px;position:relative;font:500 16px/1.3 var(--g-font-u);color:var(--ivory)}
+#nj35.njx .njx-cel-name::before{content:'';position:absolute;top:0;left:50%;width:36px;height:1px;margin-left:-18px;background:var(--brass)}
+#nj35.njx .njx-cel-stage{margin-top:6px;font-size:12.5px;color:var(--ivory3)}
+#nj35.njx .njx-float{position:absolute;z-index:14;pointer-events:none;font:400 18px/1 var(--g-font-d);color:var(--ivory);text-shadow:0 1px 10px rgba(0,0,0,.9);opacity:0}
+
+#nj35.njx .nj-fallback{width:min(320px,80%);font:400 21px/1.25 var(--g-font-d);color:var(--ivory)}
+#nj35.njx .nj-fallback small{font:400 12.5px/1.6 var(--g-font-u);color:var(--ivory2)}
+#nj35.njx .nj-photo-tip{bottom:calc(var(--g-safe-b) + 24px);border-radius:14px;padding:8px 8px 8px 18px;font:500 12px/1 var(--g-font-u);background:rgba(10,15,14,.94);border:1px solid var(--hair);backdrop-filter:none}
+#nj35.njx .nj-photo-tip button{height:34px;border-radius:10px;padding:0 14px}
+
+/* ---------- 14. Tablet, desktop, lanskap ---------- */
+@media (min-width:820px) and (min-height:560px){
+  #nj35.njx{--edge:32px;--g-dock-h:64px}
+  #nj35.njx .nj-creature-info{top:calc(var(--g-safe-t) + 92px)}
+  #nj35.njx .nj-controls{left:50%;right:auto;width:400px;margin-left:-200px}
+  #nj35.njx .nj-adopt{left:50%;right:auto;margin-left:-110px;width:220px}
+  #nj35.njx .nj-side{left:auto;right:var(--edge);width:min(460px,40vw)!important;top:calc(var(--g-safe-t) + 76px)}
+  #nj35.njx [data-panel="roster"] .nj-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+}
+@media (max-height:520px) and (orientation:landscape){
+  #nj35.njx{--g-dock-h:52px}
+  #nj35.njx .nj-controls{left:auto;right:var(--edge);top:58%!important;bottom:auto;transform:translateY(-50%);width:52px;height:auto;flex-direction:column;padding:6px 0}
+  #nj35.njx .nj-action{flex:0 0 auto;width:44px!important;height:44px!important}
+  #nj35.njx #nj35Next{right:84px}
+  #nj35.njx .nj-adopt{right:auto;left:var(--edge);bottom:calc(var(--g-dock-h) + var(--g-safe-b) + 12px)}
+  #nj35.njx #nj35ZoomIn,#nj35.njx #nj35ZoomOut,#nj35.njx #nj36Center{display:none}
+  #nj35.njx .nj-side{left:auto;right:12px;width:min(440px,52vw)!important;top:calc(var(--g-safe-t) + 60px)}
+  #nj35.njx .nj-creature-info .stats,#nj35.njx .nj-progress-line{display:none!important}
+}
+
+/* ---------- 15. Gerak (hanya bila tidak dibatasi pengguna) ---------- */
+@media (prefers-reduced-motion:no-preference){
+  #nj35.njx .nj-action.njx-pulse::after{animation:njxRing .55s var(--g-ease)!important}
+  #nj35.njx .njx-title{animation:njxFadeIn 1.2s ease both!important}
+  #nj35.njx .njx-title>*{animation:njxRise 1s var(--g-ease) both!important}
+  #nj35.njx .njx-title>*:nth-child(2){animation-delay:.12s!important}
+  #nj35.njx .njx-title>*:nth-child(3){animation-delay:.24s!important}
+  #nj35.njx .njx-title>*:nth-child(4){animation-delay:.42s!important}
+  #nj35.njx .njx-cel.show{animation:njxFadeIn .4s ease both!important}
+  #nj35.njx .njx-cel.show .njx-cel-box{animation:njxRise .8s var(--g-ease) both!important}
+  #nj35.njx .njx-float.go{animation:njxFloatUp 1.1s ease-out forwards!important}
+  #nj35.njx .nj-toast.loc.show{animation:njxLoc 2.6s ease both!important}
+  #nj35.njx #nj35Pearls.pop{animation:njxCoin .4s var(--g-ease)!important}
+  #nj35.njx #nj35SideBody>*{animation:njxRise .45s var(--g-ease) both!important}
+  #nj35.njx #nj35SideBody>*:nth-child(2){animation-delay:.04s!important}
+  #nj35.njx #nj35SideBody>*:nth-child(3){animation-delay:.08s!important}
+  #nj35.njx #nj35SideBody>*:nth-child(n+4){animation-delay:.12s!important}
+  #nj35.njx .nj-item,#nj35.njx .nj-element-grid button,#nj35.njx .nj-ritual-primary,#nj35.njx .nj-filters button{transition:transform .15s var(--g-ease),background .2s,border-color .2s,color .2s!important}
+  #nj35.njx .nj-item:active,#nj35.njx .nj-element-grid button:active{transform:scale(.97)}
+}
+@keyframes njxRing{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(1.25)}}
+@keyframes njxFadeIn{from{opacity:0}to{opacity:1}}
+@keyframes njxRise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes njxFloatUp{0%{opacity:0;transform:translateY(4px)}20%{opacity:1}100%{opacity:0;transform:translateY(-28px)}}
+@keyframes njxLoc{0%{opacity:0}20%,78%{opacity:1}100%{opacity:0}}
+@keyframes njxCoin{0%{transform:scale(1)}40%{transform:scale(1.1)}100%{transform:scale(1)}}
+
+#nj35.njx button:focus-visible,#nj35.njx a:focus-visible,#nj35.njx summary:focus-visible{outline:2px solid var(--brass);outline-offset:2px}

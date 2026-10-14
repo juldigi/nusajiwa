@@ -29,6 +29,8 @@ jobs:
           node --check nj96-fauna.js
           node --check nj95-visual-audit.js
           node --check nj642-living.js
+          node --check script_34.js
+          node --check nj42-bridge.js
       - name: Use Node.js 22
         uses: actions/setup-node@v4
         with:
@@ -57,7 +59,7 @@ jobs:
       - name: Prepare public files
         run: |
           mkdir -p _site
-          cp index.html atlas-evolusi.html script_*.js nj89-ten.js nj90-forty.js nj94-fauna.js nj96-fauna.js nj95-visual-audit.js nj642-living.js pages-fixes.js css_*.css nj642-living.css .nojekyll _site/
+          cp index.html atlas-evolusi.html script_*.js nj89-ten.js nj90-forty.js nj94-fauna.js nj96-fauna.js nj95-visual-audit.js nj642-living.js pages-fixes.js css_*.css nj642-living.css .nojekyll css_35.css script_34.js nj42-bridge.css nj42-bridge.js _site/
           cp tamagotchi-3d.js tamagotchi-3d.css nusajiwa-adventure.js nusajiwa-adventure.css _site/
           cp -r assets _site/
           cp release.json _site/
