@@ -1,0 +1,66 @@
+{
+  "project": "NUSAJIWA",
+  "version": "8.3",
+  "branch": "main",
+  "updated_on": "2026-10-14",
+  "purpose": "Single release ledger; do not count unmerged local work as published.",
+  "release_history": [
+    {
+      "version": "7.6",
+      "status": "merged",
+      "scope": "Compact handheld Tamagotchi UI and brighter 3D viewport"
+    },
+    {
+      "version": "8.0",
+      "status": "merged",
+      "scope": "Adventure Sumatra / five levels"
+    },
+    {
+      "version": "8.1",
+      "status": "merged",
+      "scope": "Adventure Java / five more levels and three-seal gate"
+    },
+    {
+      "version": "8.2",
+      "status": "merged",
+      "scope": "Movement, animation, particles, optional audio, mobile GPU pause"
+    },
+    {
+      "version": "8.3",
+      "status": "merged",
+      "scope": "Adventure Kalimantan / five levels, gusts, themed scenery, guardian finale, release integrity gate"
+    }
+  ],
+  "runtime": {
+    "engine": "script_32.js",
+    "codex": "script_33.js",
+    "tamagotchi": "tamagotchi-3d.js",
+    "adventure": "nusajiwa-adventure.js",
+    "levels": 15,
+    "worlds": 3,
+    "identities": 300
+  },
+  "persistent_keys": [
+    "nusajiwa-tama-v70",
+    "nusajiwa-adventure-v1",
+    "nusajiwa-3d-signature-pets-v36"
+  ],
+  "unmerged_work": [
+    {
+      "name": "local-morphology-8.6",
+      "status": "NOT_MERGED",
+      "detail": "Earlier standalone bundle described 21 identities / 168 construction-stage fixtures; its bytes are not present in the checked-out main and must not be reported as deployed."
+    }
+  ],
+  "deployment_rules": [
+    "Check main HEAD before writing and never force-push.",
+    "GitHub Pages runs syntax + full Node tests before publishing.",
+    "Only final successful Pages run at canonical HEAD may be called deployed.",
+    "A successful workflow does not verify Safari iPhone appearance or actual public HTTP rendering."
+  ],
+  "known_unverified": [
+    "Safari iPhone real-device visual/performance checks",
+    "All 2400 identity-by-stage shapes specific",
+    "Pending 8.6 morphology bundle integration"
+  ]
+}
