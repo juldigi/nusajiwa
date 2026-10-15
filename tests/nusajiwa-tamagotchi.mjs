@@ -106,7 +106,10 @@ test('iPhone layout regression: action buttons never consume the 3D pet screen',
 test('iPhone 7.6: 3D lighting is brighter and the shell no longer darkens the scene',()=>{
  const fix=css.slice(css.indexOf('/* 7.6 — brighter glass'));
  assert.ok(fix.length>3000,'Bright glass and compact controls must be at the end of CSS');
- assert.match(html,/script_32\.js\?v=8\.2\.0/,'Updated WebGL engine must bypass stale mobile cache');
+ const cacheTag=html.match(/script_32\\.js\\?v=(\\d+)\\.(\\d+)\\.(\\d+)/);
+ assert.ok(cacheTag,'WebGL engine must carry a cache-busting semver tag');
+ assert.ok(Number(cacheTag[1])>8||(Number(cacheTag[1])===8&&Number(cacheTag[2])>=2),
+  'Updated WebGL engine version must never regress below 8.2.0');
  assert.match(fix,/#njt \.njt-shell\{\s*background:linear-gradient/,'Overlay shell must become near-transparent');
  assert.match(fix,/rgba\(8,40,45,\.015\)/,'Viewport must not be shaded by solid teal');
  assert.match(fix,/#njt \.njt-window\{[\s\S]*?background:radial-gradient/,'Viewport tint is light, not dark');
