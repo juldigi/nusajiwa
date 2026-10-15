@@ -181,3 +181,10 @@ Sumber utama: [Prof Nurhayati dan Poppo](https://www.detik.com/sulsel/budaya/d-7
 
 Interpretasi bentuk, telur, bayi hingga Legenda adalah *fiksi game*, bukan fakta biologi atau bentuk tradisi tunggal yang pasti. Katalog tetap 300 ID, tanpa migrasi save, tanpa perubahan Living Sanctuary, ensiklopedia atau 15 stage platformer. Automated topology/geometry tests ≠ final four-angle approval on a real iPhone browser.
 
+
+
+### NJ105 — Batch 08 lima figur mistis Jawa–Betawi–Bugis (15 Oktober 2026)
+
+Rekonstruksi rig 3D prosedural **40 fase** untuk **5 identitas yang sudah ada**: Nenek Pakande (nenek Bugis bertongkat, rambut putih berkonde, sarung kotak-kotak—[RRI](https://rri.co.id/makassar/wawancara/1358077/pesan-moral-dibalik-cerita-rakyat-nene-pakande)); Si Manis Jembatan Ancol (perempuan muda rambut panjang dan gaun merah versi reinterpretasi modern, **bukan** Kuntilanak berkafan putih—[Liputan6](https://www.liputan6.com/showbiz/read/4100566/si-manis-jembatan-ancol-tak-lagi-seksi-dan-bergaun-putih-ini-alasannya)); Hantu Jeruk Purut (figur pastor tak berkepala membawa kepala sendiri dengan **anjing hitam terpisah** sebagai diorama legenda urban—[iNews](https://www.youtube.com/watch?v=f3hBxmqQn0M)); Nyi Roro Kidul (figur ratu berbusana hijau-emas **Pantai Selatan**, bukan putri duyung—[Jantra](https://jantra.kemdikbud.go.id/index.php/jantra/article/download/69/46/98)); Dewi Lanjar (legenda ratu **Pantai Utara** Slamaran Pekalongan dengan motif batik Jlamprang, bukan salinan Roro Kidul—[Culturalistics](https://download.garuda.kemdikbud.go.id/article.php?article=814715&title=Netlore+Tourism+in+Pekalongan&val=12747)).
+
+Gaya red dress adalah interpretasi tertentu: variasi cerita Si Manis juga menampilkan busana putih. Semua fenomena gaib dikategorikan sebagai tradisi lisan, **bukan fakta sejarah supernatural**. Telur dan pertumbuhan legenda adalah mekanik fiksi game. Batch ini tidak mengubah 300 identitas, mekanik Tamagotchi, minigame 15 level, penyimpanan, atau UI Living Sanctuary. Pemeriksaan otomatis tidak setara audit artistik empat sisi dan Safari iPhone.

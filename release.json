@@ -523,6 +523,46 @@
       "stages": "fictional game concepts only (never traditional biological life cycles)",
       "save_schema": "unchanged",
       "iphone_4_angle_review": "NOT_YET_PERFORMED"
+    },
+    {
+      "batch": "nj105",
+      "status": "MERGED",
+      "identity_ids": [
+        "nenek_pakande",
+        "si_manis_jembatan_ancol",
+        "hantu_jeruk_purut",
+        "nyi_roro_kidul",
+        "dewi_lanjar"
+      ],
+      "identity_delta": 0,
+      "stage_count": 8,
+      "constructions": 40,
+      "module": "nj105-urban-batch8.js",
+      "test_file": "tests/nusajiwa-sculpt-105.mjs",
+      "prior_legacy_geometry_superseded": [
+        {
+          "batch": "nj90",
+          "ids": [
+            "hantu_jeruk_purut"
+          ]
+        },
+        {
+          "batch": "nj92",
+          "ids": [
+            "nyi_roro_kidul"
+          ]
+        },
+        {
+          "batch": "nj93",
+          "ids": [
+            "nenek_pakande"
+          ]
+        }
+      ],
+      "visual_distinctions": "Bugis elderly woman white bun cane plaid sarong; Ancol young woman urban red dress and bridge; Jeruk Purut headless robed pastor holding own head and black dog; Kidul emerald south sea queen; Lanjar north coast blue batik Jlamprang",
+      "cultural_caveat": "Folklore retellings vary; subject matter includes sacred royal figures. Fantasy infant, egg and Legend stage NOT a cultural fact.",
+      "preserve": "No catalogue, UI, save or minigame changes.",
+      "visual_render_4_view_iphone": "NOT_YET_VERIFIED"
     }
   ],
   "merged_gameplay_improvements": [
@@ -570,7 +610,7 @@
     "save_changes": "none",
     "catalog_size": 300
   },
-  "last_character_patch": "NJ104-B07",
+  "last_character_patch": "NJ105-B08",
   "visual_ui": {
     "patch": "NJ642",
     "status": "MERGED",
