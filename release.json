@@ -29,6 +29,11 @@
       "version": "8.3",
       "status": "merged",
       "scope": "Adventure Kalimantan / five levels, gusts, themed scenery, guardian finale, release integrity gate"
+    },
+    {
+      "version": "9.4",
+      "status": "merged",
+      "scope": "NJ124-Worlds: 32 unique regional levels, checkpoint, weather/terrain effects and one-off collectibles integrated with existing NJ123 and ROM reference"
     }
   ],
   "runtime": {
@@ -897,5 +902,19 @@
     "native_webgl": "script_32.js",
     "mode_bridge": "nj42-bridge.js"
   },
-  "last_gameplay_patch": "NJ121"
+  "last_gameplay_patch": "NJ121",
+  "classic_worlds_nj124": {
+    "status": "merged",
+    "name": "NJ124 Worlds",
+    "worlds": 8,
+    "levels": 32,
+    "distinctLevelLocations": true,
+    "checkpoints": true,
+    "uniqueRelics": true,
+    "biomePhysics": true,
+    "existing_rom_reference_module": "nj124-rom-reference.js unchanged",
+    "stored_game_progress": "unchanged",
+    "original_artwork": true,
+    "ROM_uploaded_to_public_site": false
+  }
 }

@@ -86,11 +86,12 @@ function plan(index){
    gaps.push([x,x+1.75]);
   }
  }
- return {index,world,section,region:v.name,name:THEMES[type],type,place:v.env,
+ const stage={index,world,section,region:v.name,name:THEMES[type],type,place:v.env,
   length,clock:world>=6?330:400,gaps,pipes,blocks,coins,enemies,platforms,secret,
   boss:gauntlet?{x:length-10,hp:2+Math.floor(world/2),name:v.boss,phase:0}:null,
   reward:['tanah','air','angin','bayangan','api','cahaya','air','cahaya'][world],
   colors:v,signature:type+'-'+index};
+ return window.NUSAJIWA_CLASSIC124?.decorateLevel?.(stage)||stage;
 }
 const LEVELS=Array.from({length:MAX},(_,i)=>plan(i));
 function load(){try{const a=JSON.parse(localStorage.getItem(KEY)||'null');if(a?.version===1&&a.pets)return a;}catch(_){}return {version:1,pets:{}}}
@@ -199,6 +200,7 @@ function start(n){
   lastFeet:0,pendingJump:false,bonus:false,bonusTimer:0,bonusReturn:0,hiddenCount:0,
   fire:[],released:false,secretFlag:false,boss:level.boss,world:level.world,
   completed:false,stop:false,gravityScale:1,worldTime:0};
+ window.NUSAJIWA_CLASSIC124?.start?.(status,level);
  key.pressed=false;playing=true;hideMenu();hint((level.world+1)+'—'+(level.section+1)+' · '+level.region+' / '+level.name,2.4);
  updateHud();last=0;buffer=0;return true;
 }
@@ -214,7 +216,8 @@ function die(reason){
    [['retry','↻ Coba Lagi'],['levels','Pilih Stage'],['close','Kembali']]);
   return;
  }
- status.x=2.1;status.y=0;status.cameraX=0;status.power=0;status.shield=0;status.invincible=1.2;
+ const checkpoint=window.NUSAJIWA_CLASSIC124?.respawn?.(status,level);
+ status.x=checkpoint??2.1;status.y=0;status.cameraX=checkpoint?Math.max(0,checkpoint-6):0;status.power=0;status.shield=0;status.invincible=1.2;
  status.remaining=level.clock;status.bonus=false;status.bonusTimer=0;
  hint(reason+' · ♥ '+status.lives,1.9);
 }
@@ -234,6 +237,7 @@ function finish(){
  r.best[index]=Math.max(r.best[index]||0,status.score);
  r.totalCoins=(r.totalCoins||0)+status.coins;
  if(status.secretFlag)r.hidden[index]=true;
+ window.NUSAJIWA_CLASSIC124?.finish?.(status,r,index);
  save();
  // Existing Tamagotchi rewards deliberately accept levels 0..14 ONLY.
  // Do not fabricate XP/element reward by mapping unrelated levels onto that key.
@@ -284,6 +288,7 @@ function update(dt){
  const max=water?3.8:(key.run?8.2:5.4),accel=s.grounded?27:17;
  if(dir){s.vx+=dir*accel*dt;s.vx=clamp(s.vx,-max,max);s.facing=dir;}
  else{s.vx*=(s.grounded?.76:.93);if(Math.abs(s.vx)<.08)s.vx=0}
+ window.NUSAJIWA_CLASSIC124?.motion?.(s,l,key,dt);
  const oldX=s.x,oldY=s.y,oldTop=s.y+(s.power?1.55:1.16);
  s.x=clamp(s.x+s.vx*dt,.34,l.length+.1);
  // Strong velocity-dependent jump and early button release dampening.
@@ -375,6 +380,7 @@ function update(dt){
    else if(s.invincible===0)damage();
   }
  }
+ window.NUSAJIWA_CLASSIC124?.update?.(s,l,dt,hint,addCoin);
  if(s.bonus&&Math.floor(s.elapsed*2.5)!==Math.floor((s.elapsed-dt)*2.5)){addCoin(2);s.score+=30;}
  if(s.x>=l.length-3.2&&(!l.boss||l.boss.hp<=0))finish();
  s.cameraX=clamp(s.x-6,0,Math.max(0,l.length-viewWidth));
@@ -386,7 +392,7 @@ function updateHud(){
  root.querySelector('#njcCoin').textContent='✧ '+String(status.coins).padStart(2,'0');
  root.querySelector('#njcLife').textContent='♥ '+status.lives;
  root.querySelector('#njcTime').textContent=String(Math.max(0,Math.ceil(status.remaining)));
- root.querySelector('#njcWorld').textContent=level.region.toUpperCase()+' · '+level.name.toUpperCase();
+ root.querySelector('#njcWorld').textContent=(level.nj124?.locale||level.region).toUpperCase()+' · '+level.name.toUpperCase();
 }
 function resize(){
  if(!canvas)return;
@@ -411,6 +417,7 @@ function render(){
   ctx.lineTo(wx+50,h-190-(k%3)*32);ctx.lineTo(wx+150,h-116);
   ctx.closePath();ctx.fill();ctx.globalAlpha=1;
  }
+ window.NUSAJIWA_CLASSIC124?.drawBackdrop?.(ctx,l,s,X,Y,p,w,h);
  if(type==='water'){
   fill('#7ad2df30',0,h*.12,w,h*.84);
   for(let i=0;i<10;i++){const x=(i*131-camera*p*.25)%w;
@@ -451,6 +458,7 @@ function render(){
   ctx.font='bold '+Math.floor(p*.43)+'px system-ui';ctx.fillStyle='#213d42';
   if(b.kind!=='stone')ctx.fillText(b.kind==='power'?'✧':'◇',X(b.x-.18),Y(b.y-.18));
  }
+ window.NUSAJIWA_CLASSIC124?.drawForeground?.(ctx,l,s,X,Y,p);
  for(const c of l.coins){if(c.got)continue;ctx.fillStyle='#ffe3a1';ctx.beginPath();
   ctx.ellipse(X(c.x),Y(c.y),p*.15,p*.23,0,0,6.283);ctx.fill();}
  for(const e of l.enemies){if(!e.alive)continue;const yy=Y(e.y+.2),xx=X(e.x);
@@ -534,7 +542,7 @@ document.addEventListener('keyup',e=>keyboard(e,false),true);
 window.addEventListener('resize',resize,{passive:true});
 document.addEventListener('visibilitychange',()=>{if(active&&playing&&document.hidden)pause()});
 window.addEventListener('blur',()=>{if(active&&playing)pause()});
-window.NUSAJIWA_CLASSIC=Object.freeze({version:'9.2.NJ123',open,close,levels:LEVELS.map(l=>({
+window.NUSAJIWA_CLASSIC=Object.freeze({version:'9.2.NJ123',worldDesign:'NJ124-Worlds',open,close,levels:LEVELS.map(l=>({
  index:l.index,world:l.world+1,stage:l.section+1,region:l.region,type:l.type,
  location:l.place,challenge:l.name,length:l.length,secretEntrances:l.secret.length,
  shortcuts:l.pipes.filter(p=>p.warp).length})),
