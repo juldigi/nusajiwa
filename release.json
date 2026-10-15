@@ -734,6 +734,32 @@
       "award": "Happiness +2 for >=2 correct rounds, otherwise +1; one play per finished session",
       "persistence": "uses existing Tamagotchi save; ephemeral round sequences are not saved",
       "validation": "tests/nusajiwa-play-smoke.mjs"
+    },
+    {
+      "patch": "NJ121",
+      "status": "MERGED",
+      "module": "nj121-adventure-worlds.js",
+      "engine": "nusajiwa-adventure.js",
+      "test": "tests/nusajiwa-adventure-121.mjs",
+      "levels": 15,
+      "worlds": 3,
+      "uniqueBiomeCount": 15,
+      "features": [
+        "15 named distinct destinations",
+        "moving platforms",
+        "spring roots",
+        "swimming/current/breath",
+        "cave/volcano falling rocks",
+        "discoverable secret blocks",
+        "SKILL-triggered hidden shortcuts and bonus score",
+        "stompable patrol foes",
+        "guardian triple-sigil gates",
+        "biome-specific 2D and 3D art motifs"
+      ],
+      "copyright": "Original NUSAJIWA levels, no copied Nintendo ROM, maps, graphics or audio",
+      "save_key": "nusajiwa-adventure-v1",
+      "save_migration": "none",
+      "note": "Node regression and geometry state tests only; manual Safari iPhone playthrough still pending"
     }
   ],
   "visual_audit": {
@@ -804,5 +830,6 @@
     "authored_source": "original css_35.css and script_34.js with audit guard",
     "native_webgl": "script_32.js",
     "mode_bridge": "nj42-bridge.js"
-  }
+  },
+  "last_gameplay_patch": "NJ121"
 }

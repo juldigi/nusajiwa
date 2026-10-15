@@ -23,6 +23,9 @@ const LEVELS=[
  {name:'Sungai Hitam',tag:'Arus dan jalur rahasia di tepian',world:'kalimantan',theme:'river',length:99,ground:[[0,19],[22,41],[44,63],[66,82],[85,101]],ledges:[[10,1.9,4],[30,2,5],[52,2.2,4],[73,2,5],[91,1.8,4]],hazards:[15,35,57,77,94],patrols:[[26,38,.55,1.6],[69,79,.55,1.9]],checkpoints:[26,70],gem:72,element:'bayangan',sky:0x91b9ad,gusts:[[25,32,-2.4],[70,76,3.0]]},
  {name:'Gerbang Hutan Hujan',tag:'Tiga segel penjaga alam',world:'kalimantan',theme:'guardian',length:104,ground:[[0,20],[23,42],[45,64],[67,83],[86,106]],ledges:[[11,2,4],[31,2.1,4],[52,2.1,5],[72,1.9,5],[95,2,4]],hazards:[17,36,56,77,93],patrols:[[26,38,.55,1.6],[48,60,.55,1.8],[71,80,.55,1.7],[89,99,.55,1.9]],checkpoints:[27,70],gem:74,element:'cahaya',sky:0xbad6b9,gusts:[[27,33,2.2],[70,76,-2.5]],sigils:[[12,1.15],[51,1.15],[99,1.15]]}
 ];
+// NJ121: world identity, bonus paths, dynamic hazards. Original 15 core maps remain
+// statically parseable so legacy save/level regression contracts stay intact.
+window.NUSAJIWA_ADVENTURE121?.configure(LEVELS);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const getPet=()=>{try{const s=window.NUSAJIWA_TAMAGOTCHI?.getSave();const p=s?.pets?.[s.active];return p&&!p.retired?p:null;}catch(_){return null}};
 function readSave(){try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s&&s.version===1&&s.pets&&typeof s.pets==='object')return s;}catch(_){}return {version:1,pets:{}}}
@@ -84,11 +87,12 @@ function begin(n){
  levelIndex=n;const level=LEVELS[n];const coins=buildCoins(level);
  run={level,coins,gem:{x:level.gem,y:2.1,got:false},patrols:(level.patrols||[]).map(([start,end,y,speed])=>({start,end,y,speed})),
   sigils:(level.sigils||[]).map(([x,y])=>({x,y,got:false})),gateHintAt:-20,x:2,y:0,vx:0,vy:0,grounded:true,coyote:.12,jumpBuffer:0,double:false,heroFacing:1,health:3,score:0,checkpoint:2,usedCp:[],hurtUntil:0,skillUntil:0,skillCool:0,seconds:0,accum:0,fx:[],cameraX:2.5,ended:false};
+ window.NUSAJIWA_ADVENTURE121?.init(run,levelIndex);
  mode='play';playing=true;overlay.hidden=true;clearInput();
  $('#njaAudio').textContent=soundEnabled?'♫':'♪̸';
  $('#njaRegion').textContent='JELAJAH EVOLUSI · '+WORLD_INFO[level.world||'sumatra'].name;
  try{setupVisual()}catch(e){console.warn('Adventure 3D fallback:',e);set2D()}
- announce('✦ '+level.name+' · Sampai ke gerbang!');
+ announce('✦ '+(level.nj121?.place||level.name)+' · '+(level.nj121?.challenge||'Sampai ke gerbang!'));
  last=0;accumulator=0;
  cancelAnimationFrame(raf);raf=requestAnimationFrame(loop);
 }
@@ -140,6 +144,7 @@ function jump(){
 }
 function special(){
  if(run.skillCool>0)return;
+ if(window.NUSAJIWA_ADVENTURE121?.special?.(run,announce,emitFx,playFx))return;
  if(getAbility()==='bird'){
   if(!run.grounded&&!run.double){run.vy=7.5;run.double=true;run.skillCool=.65;emitFx(run.x,run.y+.4,'magic',7);playFx('skill');announce('↟ Kepakan sayap!')}
   else announce('Lompat dulu untuk mengepak sayap.');
@@ -160,7 +165,7 @@ function hurt(){
 function finish(){
  if(!run||run.ended)return;run.ended=true;playing=false;clearInput();
  playFx('win');emitFx(run.x,run.y+.8,'magic',15);
- const r=record(pet.id);const gems=run.gem.got;const stars=clamp(1+(run.health===3?1:0)+(gems?1:0),1,3);
+ const r=record(pet.id);window.NUSAJIWA_ADVENTURE121?.finish?.(run,r,levelIndex);const gems=run.gem.got;const stars=clamp(1+(run.health===3?1:0)+(gems?1:0),1,3);
  const previous=Number(r.completed[levelIndex])||0,first=!previous;
  r.completed[levelIndex]=Math.max(previous,stars);r.best[levelIndex]=Math.max(Number(r.best[levelIndex])||0,run.score);
  if(gems)r.gems[levelIndex]=true;
@@ -188,9 +193,9 @@ function physics(dt){
  const prevY=s.y;s.x=clamp(s.x+s.vx*dt,.2,s.level.length+.5);
  const float=getAbility()==='spirit'&&s.skillUntil>0&&s.vy<0;
  const shortJump=!input.jump&&s.vy>0;
- s.vy+=-22*(float?.19:shortJump?1.52:1)*dt;
+ s.vy+=-(window.NUSAJIWA_ADVENTURE121?.gravity?.(s)??22)*(float?.19:shortJump?1.52:1)*dt;
  s.y+=s.vy*dt;s.grounded=false;
- if(s.vy<=0){const surfaces=s.level.ground.map(g=>[(g[0]+g[1])/2,0,g[1]-g[0]]).concat(s.level.ledges);
+ if(s.vy<=0){const surfaces=s.level.ground.map(g=>[(g[0]+g[1])/2,0,g[1]-g[0]]).concat(s.level.ledges).concat(window.NUSAJIWA_ADVENTURE121?.mobilePlatforms?.(s)||[]);
    for(const g of surfaces){if(s.x+.23<g[0]-g[2]/2||s.x-.23>g[0]+g[2]/2)continue;
     if(prevY>=g[1]-.07&&s.y<=g[1]&&s.y>=g[1]-1.4){s.y=g[1];s.vy=0;s.grounded=true;s.double=false;break;}}
  }
@@ -201,11 +206,17 @@ function physics(dt){
  }else s.coyote=Math.max(0,s.coyote-dt);
  for(const f of s.fx){f.ttl-=dt;f.x+=f.vx*dt;f.y+=f.vy*dt;f.vy-=4*dt}
  s.fx=s.fx.filter(f=>f.ttl>0);
+ window.NUSAJIWA_ADVENTURE121?.tick?.(s,dt,input,hurt,announce,emitFx,playFx);
+ if(s.ended)return;
  if(s.y< -3.5){hurt();return}
  for(const h of s.level.hazards){if(Math.abs(s.x-h)<.54&&s.y<.68&&s.y>-.45){hurt();return}}
  for(const enemy of s.patrols){
+  if(enemy.defeated)continue;
   const x=patrolX(enemy,s.seconds);
-  if(Math.abs(s.x-x)<.58&&Math.abs(s.y+.45-enemy.y)<.69){hurt();return}
+  if(Math.abs(s.x-x)<.58&&Math.abs(s.y+.45-enemy.y)<.69){
+   const hit=window.NUSAJIWA_ADVENTURE121?.enemyCollision?.(s,enemy,announce,emitFx,playFx);
+   if(hit!=='stomp'&&hit!=='skip'){hurt();return}
+  }
  }
  for(const seal of s.sigils){
   if(!seal.got&&Math.hypot(s.x-seal.x,s.y+.55-seal.y)<.95){
@@ -294,6 +305,41 @@ function setupVisual(){
  }
  }
  const gustVisuals=(l.gusts||[]).map(([a,b,push])=>{const mark=mesh(new T.TorusGeometry(.35,.08,6,12),white,(a+b)/2,1.25,1.4);mark.rotation.z=push>0?-.42:.42;return mark;});
+ // Stage design: independent landscapes instead of one repeated terrain skin.
+ const specialTheme=run.nj121?.zone;
+ const stageParts=[];
+ if(specialTheme){
+  const palettes={
+   kanopi:leaf,rawa:leaf2,kabut:white,gua:rock,ruins:rock,vulkanik:danger,
+   sawah:grass,banyu:leaf2,candi:rock,benteng:dark,danau:leaf2,banir:wood,
+   tebing:rock,hitam:dark,balairung:gold
+  };
+  const accent=palettes[specialTheme.biome]||rock;
+  for(let x=5;x<l.length-4;x+=8){
+   const z=-4.7-(x%3);
+   switch(specialTheme.biome){
+   case 'kanopi':case 'banir':
+    mesh(new T.CylinderGeometry(.22,.51,2.9,7),wood,x,1.17,z);
+    mesh(new T.IcosahedronGeometry(1.28,0),accent,x,2.98,z,[1.18,1.14,1.0]);break;
+   case 'rawa':case 'danau':case 'banyu':case 'hitam':
+    box(accent,x,.10,z,5,.09,3);
+    for(const d of [-1,1])mesh(new T.ConeGeometry(.10,.94,6),leaf,x+d*.70,.65,z+1);break;
+   case 'gua':case 'vulkanik':
+    mesh(new T.ConeGeometry(.43,1.9,5),accent,x,2.52,z).rotation.x=Math.PI;
+    mesh(new T.IcosahedronGeometry(.48,0),rock,x,.13,z+1.0);break;
+   case 'sawah':
+    for(let j=0;j<3;j++)box(j%2?soil:grass,x+j*.35,.19+j*.22,z+j*.36,4.2,.15,1.7);break;
+   case 'kabut':case 'tebing':
+    mesh(new T.IcosahedronGeometry(.85,0),accent,x,1.11,z,[1.2,1.6,.7]);break;
+   default:
+    for(let j=0;j<3;j++)box(accent,x+j*.62,1.05+j*.18,z,.31,2.1+j*.3,.44);
+   }
+  }
+ }
+ const mobileVisuals=(run.nj121?.moving||[]).map(p=>box(gold,p.x,p.y-.17,-.45,p.width,.34,1.3));
+ const secretVisuals=(run.nj121?.blocks||[]).map(b=>box(gold,b.x,b.y,-.1,.75,.70,.75));
+ const springVisuals=(run.nj121?.springs||[]).map(b=>mesh(new T.TorusGeometry(.34,.095,6,16),leaf2,b.x,.18,.7));
+ const fallingVisuals=(run.nj121?.falling||[]).map(f=>mesh(new T.ConeGeometry(.26,.68,6),danger,f.x,3.8,.62));
  const patrolVisuals=run.patrols.map(e=>mesh(new T.DodecahedronGeometry(.39,0),danger,patrolX(e,0),e.y,.8));
  const sealVisuals=run.sigils.map(s=>mesh(new T.TorusGeometry(.43,.12,8,12),gold,s.x,s.y,.55));
  const collect=[];
@@ -376,7 +422,11 @@ function setupVisual(){
   });
   portal.rotation.z=run.seconds*.3;
   portal.visible=run.sigils.every(s=>s.got);
-  patrolVisuals.forEach((o,i)=>{o.position.x=patrolX(run.patrols[i],run.seconds);o.rotation.y=run.seconds*2});
+  mobileVisuals.forEach((o,i)=>{const p=run.nj121.moving[i];o.position.y=p.y+Math.sin(run.seconds*p.speed+p.offset)*p.amplitude-.17;});
+  secretVisuals.forEach((o,i)=>{o.visible=!!run.nj121.blocks[i].revealed&&!run.nj121.secretFound;o.rotation.y=run.seconds*.9;});
+  springVisuals.forEach((o,i)=>{o.rotation.x=run.seconds*2;});
+  fallingVisuals.forEach((o,i)=>{const f=run.nj121.falling[i],t=(run.seconds+f.phase)%3.2;o.position.y=t>1.75&&t<2.60?3.8-(t-1.75)*4.3:3.8;});
+  patrolVisuals.forEach((o,i)=>{o.visible=!run.patrols[i].defeated;o.position.x=patrolX(run.patrols[i],run.seconds);o.rotation.y=run.seconds*2});
   sealVisuals.forEach((o,i)=>{o.visible=!run.sigils[i].got;o.rotation.z=run.seconds*.9});
   collect.forEach(({o,c})=>{o.visible=!c.got;o.rotation.y=run.seconds*1.75});
   gemObj.visible=!run.gem.got;gemObj.rotation.y=run.seconds*1.5;
@@ -396,9 +446,42 @@ function draw2d(){
  if(run.level.world==='kalimantan'){ctx.fillStyle='#497f69';for(let x=0;x<run.level.length+10;x+=6){ctx.beginPath();ctx.ellipse(sx(x),sy(-.9),unit*3.5,unit*2.7,0,Math.PI,2*Math.PI);ctx.fill();}}
  ctx.fillStyle='#3d8366';for(const g of run.level.ground){ctx.fillRect(sx(g[0]),sy(0),Math.max(0,(g[1]-g[0])*unit),h-sy(0));ctx.fillStyle='#7cbd72';ctx.fillRect(sx(g[0]),sy(.08),Math.max(0,(g[1]-g[0])*unit),unit*.25);ctx.fillStyle='#3d8366'}
  ctx.fillStyle='#896b4d';for(const p of run.level.ledges){ctx.fillRect(sx(p[0]-p[2]/2),sy(p[1]),p[2]*unit,.3*unit)}
+ // NJ121 identity backdrop: landscape silhouettes, dynamic platforms and secrets.
+ if(run.nj121){
+  const z=run.nj121.zone;
+  const shades={kanopi:'#296a50',rawa:'#47857d',kabut:'#819b9e',gua:'#37455a',
+   ruins:'#8f7e69',vulkanik:'#b05d43',sawah:'#82a866',banyu:'#538ca1',
+   candi:'#91866f',benteng:'#856755',danau:'#6baba5',banir:'#407456',
+   tebing:'#758c9d',hitam:'#395e62',balairung:'#a9a07a'};
+  ctx.fillStyle=shades[z.biome]||'#587866';
+  for(let x=6;x<run.level.length;x+=8){
+   const px=sx(x),h=unit*(1.4+(x%4)*.31);
+   if(['rawa','danau','banyu','hitam'].includes(z.biome)){
+    ctx.fillRect(px-unit,sy(.14),unit*5,unit*.12);
+    ctx.fillRect(px,sy(1.15),unit*.12,unit*.95);
+   }else if(['gua','vulkanik','tebing'].includes(z.biome)){
+    ctx.beginPath();ctx.moveTo(px-unit*.5,sy(2.6));
+    ctx.lineTo(px+unit*.48,sy(1.25));ctx.lineTo(px+unit*1.05,sy(2.6));ctx.fill();
+   }else{
+    ctx.fillRect(px,sy(1.20),unit*.26,h);
+    ctx.beginPath();ctx.arc(px+unit*.15,sy(1.65),unit*.68,0,Math.PI*2);ctx.fill();
+   }
+  }
+  ctx.fillStyle='#f2d88d';
+  for(const p of run.nj121.moving){const y=p.y+Math.sin(run.seconds*p.speed+p.offset)*p.amplitude;
+   ctx.fillRect(sx(p.x-p.width/2),sy(y),p.width*unit,unit*.20);}
+  ctx.strokeStyle='#f8edc8';ctx.lineWidth=Math.max(2,unit*.085);
+  for(const p of run.nj121.springs){ctx.beginPath();ctx.ellipse(sx(p.x),sy(.16),unit*.33,unit*.16,0,0,Math.PI*2);ctx.stroke();}
+  for(const b of run.nj121.blocks){if(b.revealed&&!run.nj121.secretFound){
+   ctx.strokeRect(sx(b.x-.37),sy(b.y+.35),unit*.74,unit*.70);}}
+  ctx.fillStyle='#e37d64';
+  for(const f of run.nj121.falling){const t=(run.seconds+f.phase)%3.2;
+   const y=t>1.75&&t<2.60?3.8-(t-1.75)*4.3:3.8;
+   ctx.beginPath();ctx.arc(sx(f.x),sy(y),unit*.27,0,Math.PI*2);ctx.fill();}
+ }
  ctx.fillStyle='#e9876b';for(const x of run.level.hazards){ctx.beginPath();ctx.moveTo(sx(x-.45),sy(0));ctx.lineTo(sx(x),sy(.82));ctx.lineTo(sx(x+.45),sy(0));ctx.fill()}
  if(run.level.gusts){ctx.strokeStyle='#e3fff2';ctx.lineWidth=Math.max(2,unit*.08);for(const [a,b,push] of run.level.gusts){const x=sx((a+b)/2),y=sy(1.5),dx=(push>0?1:-1)*unit*.4;ctx.beginPath();ctx.moveTo(x-dx,y);ctx.lineTo(x+dx,y);ctx.lineTo(x+dx-Math.sign(dx)*unit*.17,y-unit*.12);ctx.moveTo(x+dx,y);ctx.lineTo(x+dx-Math.sign(dx)*unit*.17,y+unit*.12);ctx.stroke();}}
- ctx.fillStyle='#d76b5e';for(const enemy of run.patrols){const x=patrolX(enemy,run.seconds);ctx.beginPath();ctx.arc(sx(x),sy(enemy.y),unit*.36,0,Math.PI*2);ctx.fill()}
+ ctx.fillStyle='#d76b5e';for(const enemy of run.patrols){if(enemy.defeated)continue;const x=patrolX(enemy,run.seconds);ctx.beginPath();ctx.arc(sx(x),sy(enemy.y),unit*.36,0,Math.PI*2);ctx.fill()}
  ctx.strokeStyle='#ffea9b';ctx.lineWidth=Math.max(2,unit*.1);for(const seal of run.sigils){if(seal.got)continue;ctx.beginPath();ctx.arc(sx(seal.x),sy(seal.y),unit*.35,0,Math.PI*2);ctx.stroke()}
  ctx.fillStyle='#f6d27d';for(const c of run.coins){if(c.got)continue;ctx.beginPath();ctx.arc(sx(c.x),sy(c.y),unit*.20,0,Math.PI*2);ctx.fill()}
  if(!run.gem.got){ctx.save();ctx.translate(sx(run.gem.x),sy(run.gem.y));ctx.rotate(Math.PI/4);ctx.fillRect(-unit*.25,-unit*.25,unit*.5,unit*.5);ctx.restore()}
@@ -424,7 +507,7 @@ function draw2d(){
 }
 function hud(){
  $('#njaStage').textContent=(Math.floor(levelIndex/LEVELS_PER_WORLD)+1)+'—'+(levelIndex%LEVELS_PER_WORLD+1)+' · '+Math.round(run.x/run.level.length*100)+'%';
- $('#njaCoins').textContent='✦ '+run.score+(run.sigils.length?' · ◇ '+run.sigils.filter(v=>v.got).length+'/'+run.sigils.length:'');
+ $('#njaCoins').textContent='✦ '+run.score+(run.sigils.length?' · ◇ '+run.sigils.filter(v=>v.got).length+'/'+run.sigils.length:'')+(run.nj121?.secretFound?' · ❖ Rahasia':'');
  $('#njaLives').textContent='♥ '.repeat(run.health).trim();
  $('#njaFill').style.width=clamp(run.x/run.level.length*100,0,100)+'%';
 }
@@ -485,6 +568,7 @@ document.addEventListener('keyup',e=>{if(!opened||!keyNames[e.code])return;e.pre
 window.addEventListener('blur',()=>{if(opened&&playing)pause()});
 document.addEventListener('visibilitychange',()=>{if(opened&&playing&&document.hidden)pause()});
 window.addEventListener('resize',resize,{passive:true});
-window.NUSAJIWA_ADVENTURE={version:'8.3',open,close:exit,levels:LEVELS.map(l=>l.name),getSave:()=>JSON.parse(JSON.stringify(progress)),isOpen:()=>opened,
- getRunStatus:()=>run?{level:levelIndex,x:run.x,y:run.y,vx:run.vx,vy:run.vy,grounded:run.grounded,score:run.score,health:run.health,skillCool:run.skillCool,particles:run.fx.length,gust:run.currentGust||0,playing}:null};
+window.NUSAJIWA_ADVENTURE={version:'8.3',designVersion:'NJ121',open,close:exit,levels:LEVELS.map(l=>l.name),getSave:()=>JSON.parse(JSON.stringify(progress)),isOpen:()=>opened,
+ getStageInfo:()=>LEVELS.map((l,i)=>({index:i,name:l.name,world:l.world||'sumatra',location:l.nj121?.place||l.name,biome:l.nj121?.biome,challenge:l.nj121?.challenge,mechanic:l.nj121?.mechanic})),
+ getRunStatus:()=>run?{level:levelIndex,biome:run.nj121?.zone.biome,hiddenBlock:!!run.nj121?.blocks[0]?.revealed,hiddenFound:!!run.nj121?.secretFound,movingPlatforms:run.nj121?.moving.length||0,waterBreath:run.nj121?.waterBreath,x:run.x,y:run.y,vx:run.vx,vy:run.vy,grounded:run.grounded,score:run.score,health:run.health,skillCool:run.skillCool,particles:run.fx.length,gust:run.currentGust||0,playing}:null};
 })();
