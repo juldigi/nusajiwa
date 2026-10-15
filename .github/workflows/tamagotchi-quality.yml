@@ -23,6 +23,7 @@ on:
       - 'nj107-mythic-batch10.js'
       - 'nj108-wayang-batch11.js'
       - 'nj109-fauna-batch12.js'
+      - 'nj120-aquatic-batch13.js'
       - 'nj97-render-guard.js'
       - 'nj95-visual-audit.js'
       - 'nj642-living.js'
@@ -75,6 +76,7 @@ jobs:
           node --check nj107-mythic-batch10.js
           node --check nj108-wayang-batch11.js
           node --check nj109-fauna-batch12.js
+          node --check nj120-aquatic-batch13.js
           node --check nj97-render-guard.js
           node --check nj95-visual-audit.js
           node --check nj642-living.js

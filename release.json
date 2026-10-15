@@ -696,6 +696,27 @@
       "reference_quality": "IUCN Hornbill SG, Birds of the World, Marwell Zoo, IUCN CatSG, NParks",
       "biological_legend": "phase 7 is fictional; stage 0 mammals are fictional game tokens",
       "visual_four_angle_iphone": "NOT_VERIFIED"
+    },
+    {
+      "batch": "nj120",
+      "status": "MERGED",
+      "identity_ids": [
+        "labi_moncong_babi_papua",
+        "mola_mola",
+        "hiu_paus",
+        "kuda_laut_kerdil",
+        "pari_manta"
+      ],
+      "identity_delta": 0,
+      "stage_count": 8,
+      "constructions": 40,
+      "module": "nj120-aquatic-batch13.js",
+      "test_file": "tests/nusajiwa-sculpt-120.mjs",
+      "scope": "five individually reconstructed aquatic fauna after 61 complete folklore characters; independent from concurrent NJ109",
+      "biology": "pig nose leathery shell and two clawed paddles; mola clavus, high dorsal/anal; whale shark filter mouth and spot rows; Bargibant seahorse tubercles and curled tail; reef manta Y-shoulder and cephalic lobes",
+      "source_research": "Australian museum, DCCEEW, Smithsonian, NOAA, Manta Trust",
+      "save_keys": "unchanged",
+      "iPhone_four_angle_render": "NOT_VERIFIED"
     }
   ],
   "merged_gameplay_improvements": [
@@ -743,7 +764,7 @@
     "save_changes": "none",
     "catalog_size": 300
   },
-  "last_character_patch": "NJ109-B12",
+  "last_character_patch": "NJ120-AQUATIC",
   "visual_ui": {
     "patch": "NJ642",
     "status": "MERGED",

@@ -4429,6 +4429,8 @@ function makeAvatar(r, portraitMode=false, auditPhase=null){
  window.NUSAJIWA_SCULPT108?.(group,body,M,r[0],renderPhase,THREE,ell,tube);
  // NJ109: complete zoological sculpt rigs for five threatened Indonesian fauna.
  window.NUSAJIWA_SCULPT109?.(group,body,M,r[0],renderPhase,THREE,ell,tube);
+ // NJ120 independently restored aquatic animal anatomy, avoiding concurrent fauna batches.
+ window.NUSAJIWA_SCULPT120?.(group,body,M,r[0],renderPhase,THREE,ell,tube);
  window.NUSAJIWA_RENDER97?.prepare(group,THREE,r[0],renderPhase);
  group.userData={...group.userData,body,type,base:body.position.y,phase:(living?.phase??null),legend:(living?.legend??null)};
  return group;
