@@ -29,7 +29,7 @@ test('Exactly fifteen distinct ORIGINAL secret sublevels mapped one-to-one to 15
 });
 test('Hidden chamber unlock requires revealed block + nearby SKILL and never copies rewards infinitely',()=>{
  const level=levels[0];level.nj121={zone:{secretDestination:28},blocks:[{x:17,y:2.4,revealed:false}],
- secretFound:false},patrols=[];
+ secretFound:false};
  const run={level,patrols:[],score:0,gem:{got:false,x:39},coins:[{x:7,got:false}],
  sigils:[],usedCp:[],checkpoint:2,x:17,y:0,vx:0,vy:0,cameraX:19,
  grounded:true,coyote:0,ended:false,hurtUntil:0,skillCool:0};

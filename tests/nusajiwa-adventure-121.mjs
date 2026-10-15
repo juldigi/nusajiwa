@@ -75,7 +75,7 @@ test('Both renderers, gameplay physics and Pages workflows integrate design syst
  assert.ok(html.indexOf('./nj121-adventure-worlds.js')<html.indexOf('./nusajiwa-adventure.js'));
  const pages=read('.github/workflows/pages.yml'),quality=read('.github/workflows/tamagotchi-quality.yml');
  assert.ok(pages.includes('node --check nj121-adventure-worlds.js'));
- assert.ok(pages.includes('nusajiwa-adventure.css nj121-adventure-worlds.js _site/'));
+ assert.ok(pages.split('\n').some(line=>line.includes('cp tamagotchi-3d.js')&&line.includes('nj121-adventure-worlds.js')&&line.includes('_site/')));
  assert.ok(quality.includes("      - 'nj121-adventure-worlds.js'"));
  assert.ok(quality.includes('node --check nj121-adventure-worlds.js'));
 });
