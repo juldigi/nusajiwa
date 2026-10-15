@@ -484,6 +484,45 @@
       "save_schema": "unchanged",
       "iphone_visual_review": "NOT_YET_VERIFIED",
       "model_shapes": "Big-bat fingered membrane; human upper serpent; quadruped white tiger; human-to-feline metamorph; small broad-faced hairy runner"
+    },
+    {
+      "batch": "nj104",
+      "status": "MERGED",
+      "identity_ids": [
+        "suanggi",
+        "orang_pendek",
+        "cindaku",
+        "orang_bati",
+        "poppo",
+        "parakang"
+      ],
+      "identity_delta": 0,
+      "stage_count": 8,
+      "constructions": 48,
+      "module": "nj104-regional-batch7.js",
+      "test_file": "tests/nusajiwa-sculpt-104.mjs",
+      "design_sculpt_identity": "Poppo Bugis floating head; Parakang animal/tree shapechange; Suanggi night human-fire apparition; Orang Bati winged human; Orang Pendek biped forest cryptid; Cindaku Kerinci land-bound tiger-human guardian",
+      "legacy_morphology_superseded": [
+        {
+          "batch": "nj90",
+          "ids": [
+            "orang_bati"
+          ]
+        },
+        {
+          "batch": "nj93",
+          "ids": [
+            "suanggi",
+            "orang_pendek",
+            "cindaku",
+            "poppo",
+            "parakang"
+          ]
+        }
+      ],
+      "stages": "fictional game concepts only (never traditional biological life cycles)",
+      "save_schema": "unchanged",
+      "iphone_4_angle_review": "NOT_YET_PERFORMED"
     }
   ],
   "merged_gameplay_improvements": [
@@ -531,7 +570,7 @@
     "save_changes": "none",
     "catalog_size": 300
   },
-  "last_character_patch": "NJ103-B06",
+  "last_character_patch": "NJ104-B07",
   "visual_ui": {
     "patch": "NJ642",
     "status": "MERGED",

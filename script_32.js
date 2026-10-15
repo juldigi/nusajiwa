@@ -4418,6 +4418,8 @@ function makeAvatar(r, portraitMode=false, auditPhase=null){
  window.NUSAJIWA_SCULPT102?.(group,body,M,r[0],renderPhase,THREE,ell,tube);
  // NJ103: authoritative replacement rig for regional cryptids and metamorph folklore.
  window.NUSAJIWA_SCULPT103?.(group,body,M,r[0],renderPhase,THREE,ell,tube);
+ // NJ104: sovereign rebuilt silhouette for Sulawesi, Maluku and Sumatran folklore.
+ window.NUSAJIWA_SCULPT104?.(group,body,M,r[0],renderPhase,THREE,ell,tube);
  window.NUSAJIWA_RENDER97?.prepare(group,THREE,r[0],renderPhase);
  group.userData={...group.userData,body,type,base:body.position.y,phase:(living?.phase??null),legend:(living?.legend??null)};
  return group;

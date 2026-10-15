@@ -24,8 +24,9 @@ test('Target contains five correctly catalogued nonfauna identities, without dup
  assert.equal(rel.runtime.identities,300);assert.equal(rel.runtime.levels,15);
  const previous=new Set(rel.merged_morphology_batches.filter(b=>/^nj(98|99|100|101|102)$/.test(b.batch))
   .flatMap(b=>b.identity_ids));
- assert.equal(rel.merged_morphology_batches.at(-1).batch,'nj103');
- assert.deepEqual(Array.from(rel.merged_morphology_batches.at(-1).identity_ids),ids);
+ const historic=rel.merged_morphology_batches.find(b=>b.batch==='nj103');
+ assert.ok(historic);
+ assert.deepEqual(Array.from(historic.identity_ids),ids);
  for(const id of ids){
   assert.equal(roster.filter(r=>r[0]===id&&r[2]!=='Fauna').length,1,id);
   assert.equal(previous.has(id),false,'duplicate new priority identity '+id);

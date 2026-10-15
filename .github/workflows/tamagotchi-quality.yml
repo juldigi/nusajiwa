@@ -17,6 +17,7 @@ on:
       - 'nj101-ritual-batch4.js'
       - 'nj102-regional-batch5.js'
       - 'nj103-cryptid-batch6.js'
+      - 'nj104-regional-batch7.js'
       - 'nj97-render-guard.js'
       - 'nj95-visual-audit.js'
       - 'nj642-living.js'
@@ -63,6 +64,7 @@ jobs:
           node --check nj101-ritual-batch4.js
           node --check nj102-regional-batch5.js
           node --check nj103-cryptid-batch6.js
+          node --check nj104-regional-batch7.js
           node --check nj97-render-guard.js
           node --check nj95-visual-audit.js
           node --check nj642-living.js

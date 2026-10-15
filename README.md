@@ -172,3 +172,12 @@ Five existing NUSAJIWA IDs are remade with 8 truly different geometry stages (40
 
 All supernatural and cryptid forms are representations of narratives, not zoological evidence. Egg, baby, old and Legend growth morphologies are FICTIONAL game mechanics. Previous meshes are masked for selected IDs. All 300 IDs, progress saves, UI Living Sanctuary and 15 platform levels are unchanged. Node geometry/test regressions are **not** a substitute for Safari/iPhone four-view quality approval.
 
+
+### NJ104 — Batch 07 rekonstruksi regional Sulawesi, Maluku dan Sumatra
+
+Enam ID lama memperoleh rig geometri 3D unik pada delapan fase, total **48** bentuk. Poppo (kepala terbang dengan untaian anatomi bergaya tidak grafis, kain kepala Bugis untuk membedakannya dari Kuyang), Parakang (wujud manusia → hewan tiruan berkaki belakang ganjil → pohon bercabang dua → bentuk fantasi campuran), Suanggi (sosok manusia malam dengan elemen api; **bukan** elemen api murni Banaspati), Orang Bati (manusia tegak bersayap seperti kelelawar; **bukan** kelelawar bertubuh penuh seperti Ahool), Orang Pendek (kriptid pendek berotot dan berkaki dua; **bukan** Ebu Gogo Flores), dan Cindaku Kerinci (sosok manusia penjaga batas wilayah berubah menjadi harimau yang menyentuh tanah; tidak menyamakan dengan Siluman Harimau umum).
+
+Sumber utama: [Prof Nurhayati dan Poppo](https://www.detik.com/sulsel/budaya/d-7047817/mengenal-poppo-mitos-manusia-jadi-jadian-dalam-kepercayaan-bugis-makassar); [Parakang](https://boneterkini.id/legenda-parakang-manusia-jadi-jadian-asal-sulawesi-selatan/); [Orang Bati menurut LIPI/BRIN](https://inet.detik.com/science/d-5995200/legenda-orang-bati-manusia-setengah-kelelawar-yang-misterius); [Orang Pendek wawancara saksi](https://www.theguardian.com/science/blog/2011/sep/09/orang-pendek-quest-sumatra); [Cindaku tutur masyarakat Kerinci](https://tunawisma.com/cindaku-kerinci/); [Suanggi mitos Indonesia Timur](https://amp.kompas.com/hype/read/2025/08/25/091844866/deretan-hantu-nusantara-yang-belum-muncul-di-film-horor-indonesia).
+
+Interpretasi bentuk, telur, bayi hingga Legenda adalah *fiksi game*, bukan fakta biologi atau bentuk tradisi tunggal yang pasti. Katalog tetap 300 ID, tanpa migrasi save, tanpa perubahan Living Sanctuary, ensiklopedia atau 15 stage platformer. Automated topology/geometry tests ≠ final four-angle approval on a real iPhone browser.
+
