@@ -29,7 +29,9 @@ test('5 non-overlapping existing 300 catalog fauna; sources and conservation ana
  }
  const prior=new Set(rel.merged_morphology_batches.filter(b=>b.batch!=='nj109').flatMap(b=>b.identity_ids||[]));
  for(const id of ids)assert.equal(prior.has(id),false,'already in earlier reconstruction '+id);
- assert.deepEqual(Array.from(rel.merged_morphology_batches.at(-1).identity_ids),ids);
+ const batch109=rel.merged_morphology_batches.find(b=>b.batch==='nj109');
+ assert.ok(batch109,'NJ109 must remain in release ledger');
+ assert.deepEqual(Array.from(batch109.identity_ids),ids);
 });
 test('40 distinct morphology builds hide legacy models and have finite geometry coordinates',()=>{
  let total=0;
