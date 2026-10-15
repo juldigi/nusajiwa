@@ -885,6 +885,33 @@
       ],
       "real_iPhone_Safari_qa": "NOT_VERIFIED",
       "test": "tests/nusajiwa-classic-lifecycle-128.mjs"
+    },
+    {
+      "patch": "NJ129",
+      "status": "MERGED",
+      "title": "Classic 32 platform collision, responsive jump and shell geometry pass",
+      "files": [
+        "nj127-rom-physics.js",
+        "nj123-classic.js",
+        "nj125-classic-3d.js",
+        "index.html",
+        "tests/nusajiwa-platformer-129.mjs"
+      ],
+      "gameplay": [
+        "Consistent block tops, sides and undersides across Canvas, Three.js and collision solver",
+        "12-frame? No, 0.12s jump buffering with 0.10s coyote time, life-respawn reset",
+        "Fast bouncing Bara shots collide with scenery and enemies by swept segment tests",
+        "Kicked shells escape original walking patrol, bounce off pipe and boundary, sweep through opponents",
+        "Enemy 3D rig morphs to independently modeled shell with rotation animation"
+      ],
+      "unaffected": [
+        "Tamagotchi save",
+        "Kodex",
+        "300 identity catalog",
+        "15-stage adventure",
+        "32-stage save schema"
+      ],
+      "qa": "Automated regression required; visual iPhone Safari manual testing still not verified"
     }
   ],
   "visual_audit": {

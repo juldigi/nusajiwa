@@ -14,6 +14,34 @@ const stable=(kind,x,y,vx,vy)=>({kind,x,y,vx,vy,rise:0,age:0,alive:true});
 const intersects=(x,g)=>x>g[0]-.24&&x<g[1]+.24;
 const ground=(level,x)=>!level.gaps.some(g=>intersects(x,g));
 const nearPipe=(level,x,y)=>level.pipes.some(p=>Math.abs(p.x-x)<.79&&y<p.h+.32);
+const sweep=(a,b,c,r)=>Math.min(a,b)<=c+r&&Math.max(a,b)>=c-r;
+const solid=b=>!b.used&&(b.kind!=='hidden'||b.reveal!==false);
+/* All 3D/Canvas blocks share one collision box: top y+.40, bottom y-.40. */
+function resolveBlocks(s,l,oldX,oldY){
+ if(!s||!l?.blocks)return false;
+ const half=.72,height=s.power?1.55:1.16;
+ let hit=false;
+ // Landing before wall resolution: when falling onto a block, it is solid.
+ if(s.vy<=0){
+  let top=-Infinity;
+  for(const b of l.blocks){
+   if(!solid(b)||Math.abs(s.x-b.x)>=half)continue;
+   const y=b.y+.4;
+   if(oldY>=y-.07&&s.y<=y&&y>top)top=y;
+  }
+  if(top>-Infinity){s.y=top;s.vy=0;s.grounded=true;hit=true;}
+ }
+ // Horizontal sweep stops walking directly THROUGH a rune/stone block.
+ for(const b of l.blocks){
+  if(!solid(b))continue;
+  const bottom=b.y-.4,top=b.y+.4;
+  if(s.y>=top-.06||s.y+height<=bottom+.06)continue;
+  const left=b.x-half,right=b.x+half;
+  if(oldX<=left+.02&&s.x>left){s.x=left;s.vx=0;hit=true;}
+  else if(oldX>=right-.02&&s.x<right){s.x=right;s.vx=0;hit=true;}
+ }
+ return hit;
+}
 function start(s,l){
  if(!s||!l)return false;
  s.nj127={items:[],shots:[],star:0,starCollected:false,runHeld:false,
@@ -131,16 +159,25 @@ function tickShots(s,l,fx,dt,hint){
  for(const q of fx.shots){
   if(!q.alive)continue;
   q.age+=dt;
+  const fromX=q.x,fromY=q.y;
   q.x+=q.vx*dt;q.vy=Math.max(-9,q.vy-19*dt);q.y+=q.vy*dt;
   if(q.y<.24){
    if(ground(l,q.x)){q.y=.24;q.vy=5.1;}
    else if(q.y<-1)q.alive=false;
   }
-  if(nearPipe(l,q.x,q.y))q.alive=false;
+  // A swept hit test prevents fast shots tunnelling through solid scenery.
+  for(const b of l.blocks){
+   if(solid(b)&&sweep(fromX,q.x,b.x,.56)&&
+     sweep(fromY,q.y,b.y,.53)){q.alive=false;fx.blocked++;break;}
+  }
+  if(!q.alive)continue;
+  if(l.pipes.some(p=>sweep(fromX,q.x,p.x,.72)&&
+      Math.min(fromY,q.y)<p.h+.33&&Math.max(fromY,q.y)>-.2))q.alive=false;
   if(q.x<0||q.x>l.length||q.age>2.1)q.alive=false;
   if(!q.alive)continue;
   for(const e of l.enemies){
-   if(!e.alive||Math.abs(e.x-q.x)>.51||Math.abs(e.y+.27-q.y)>.65)continue;
+   if(!e.alive||!sweep(fromX,q.x,e.x,.51)||
+     !sweep(fromY,q.y,(e.y??0)+.27,.65))continue;
    if(e.type==='guard'){q.alive=false;break;}
    e.alive=false;e.shell=false;q.alive=false;
    s.score+=180;fx.scoreEarned+=180;fx.stompCombo++;
@@ -154,8 +191,8 @@ function tickShellChains(s,l,fx,hint){
  for(const shell of l.enemies){
   if(!shell.alive||shell.type!=='shell'||Math.abs(shell.vx)<2)continue;
   for(const e of l.enemies){
-   if(e===shell||!e.alive||Math.abs(e.x-shell.x)>.51)continue;
-   if(['fish','jelly'].includes(e.type))continue;
+   if(e===shell||!e.alive||!sweep(shell.prevX??shell.x,shell.x,e.x,.51))continue;
+   if(Math.abs((shell.y??0)-(e.y??0))>.85||['fish','jelly'].includes(e.type))continue;
    e.alive=false;e.vx=0;fx.shellKOs++;fx.shellChain++;
    const pts=100*Math.min(8,2**Math.min(3,fx.shellChain-1));
    s.score+=pts;fx.scoreEarned+=pts;
@@ -198,7 +235,7 @@ function draw2D(ctx,s,X,Y,p){
  }
  ctx.restore();
 }
-window.NUSAJIWA_NES127=Object.freeze({version:'NJ128.0',start,isProtected,resetLife,hitBlock,before,
+window.NUSAJIWA_NES127=Object.freeze({version:'NJ129.0',start,isProtected,resetLife,resolveBlocks,hitBlock,before,
  touchEnemy,stomp,kickShell,after,view,draw2D,romInformed:true,
  privacy:'NO original cartridge bytes, level maps, sprites or sounds shipped'});
 })();

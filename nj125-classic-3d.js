@@ -352,15 +352,21 @@ function build(level,pet){
  }
  for(const e of level.enemies){
   const g=new THREE.Group();scene.add(g);
+  const body=new THREE.Group();g.add(body);
   const material=e.type==='fish'?aqua:e.type==='jelly'?violet:
    e.type==='shelled'?shell:enemy;
-  ell(material,0,.38,0,.34,.37,.29,g);
-  if(e.type==='fish'){cone(material,-.39,.40,0,.25,.41,g).rotation.z=Math.PI/2;}
-  if(e.type==='jelly')pair(d=>tube(violet,[[d*.20,.20,0],[d*.19,-.17,0]],.04,g));
-  if(e.type==='shelled')ell(shell,0,.58,-.10,.29,.26,.28,g);
-  pair(d=>{ell(m.white,d*.15,.47,.26,.058,.07,.032,g);
-    ell(ink,d*.15,.48,.29,.031,.044,.016,g)});
-  g.position.set(e.x,0,.04);enemies.push({ref:e,group:g});
+  ell(material,0,.38,0,.34,.37,.29,body);
+  if(e.type==='fish'){cone(material,-.39,.40,0,.25,.41,body).rotation.z=Math.PI/2;}
+  if(e.type==='jelly')pair(d=>tube(violet,[[d*.20,.20,0],[d*.19,-.17,0]],.04,body));
+  if(e.type==='shelled')ell(shell,0,.58,-.10,.29,.26,.28,body);
+  pair(d=>{ell(m.white,d*.15,.47,.26,.058,.07,.032,body);
+    ell(ink,d*.15,.48,.29,.031,.044,.016,body)});
+  // NJ129: geometry actually transforms when the enemy withdraws to its shell.
+  const shellRig=new THREE.Group();g.add(shellRig);
+  ell(shell,0,.22,0,.40,.21,.37,shellRig);
+  cyl(m.gold,0,.09,.03,.39,.41,.085,shellRig,16);
+  shellRig.visible=false;
+  g.position.set(e.x,0,.04);enemies.push({ref:e,group:g,body,shellRig});
  }
  if(level.boss){
   const g=new THREE.Group();scene.add(g);
@@ -446,10 +452,14 @@ function frame(level,status,pet){
   item.group.visible=!!item.ref.alive;
   item.group.position.x=item.ref.x;
   item.group.position.y=item.ref.y;
-  item.group.rotation.z=item.ref.type==='fish'?.09*Math.sin(t*3):.035*Math.sin(t*4);
+  const inShell=item.ref.shell||item.ref.type==='shell';
+  item.body.visible=!inShell;item.shellRig.visible=!!inShell;
+  item.shellRig.rotation.z=item.ref.type==='shell'?t*Math.sign(item.ref.vx||1)*11:0;
+  item.group.rotation.z=inShell?0:
+    item.ref.type==='fish'?.09*Math.sin(t*3):.035*Math.sin(t*4);
  }
  for(const x of blocks)x.group.visible=!(x.ref.kind==='hidden'&&!x.ref.reveal)&&
-  !(x.ref.used&&x.ref.kind!=='stone');
+  !x.ref.used;
  for(const x of secret){
   x.group.visible=!x.ref.got&&x.ref.type!=='life';
   x.out.rotation.y=t*1.5;
