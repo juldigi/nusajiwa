@@ -99,7 +99,7 @@ function load(){try{const a=JSON.parse(localStorage.getItem(KEY)||'null');if(a?.
 let store=null;
 const stateFor=id=>{store=store||load();return store.pets[id]||(store.pets[id]={clears:{},hidden:{},totalCoins:0,highest:0,best:{}})};
 function save(){try{localStorage.setItem(KEY,JSON.stringify(store))}catch(_){}}
-let root=null,canvas=null,ctx=null,menu=null,pet=null,status=null,level=null,active=false,playing=false,
+let root=null,canvas=null,ctx=null,menu=null,pet=null,status=null,level=null,active=false,playing=false,returnTarget='adventure',
  last=0,buffer=0,raf=0,message='',messageUntil=0,pixelScale=32,viewWidth=24;
 let key={left:false,right:false,jump:false,run:false,down:false,pressed:false},touch={};
 const persona=p=>/kuyang|palasik|banaspati|pocong|kuntilanak|wewe|leak/.test(p.id)?'spirit':
@@ -173,11 +173,12 @@ function showLevels(){
  show('Jelajah Klasik · 32 Stage',
  '<p>Delapan wilayah, 32 lokasi dan tantangan berbeda. Pilih level yang terbuka. Kendali mengikuti DNA platformer NES: <b>A</b> lompat (tahan untuk lebih tinggi), <b>B</b> berlari, <b>↓</b> portal. Ada musuh, blok rahasia, batu elemen, jalur bonus, serta pintasan antar dunia.</p>'+
  '<p class="njc-note">Peta dan visual dirancang asli untuk NUSAJIWA. Mode 15 level sebelumnya tetap tersedia.</p>'+grid,
- [['rom','📼 Buka ROM asli (file pribadi)'],['close','Kembali ke Petualangan 15 Level']]);
+ [['rom','📼 Buka ROM asli (file pribadi)'],['close',returnTarget==='habitat'?'Kembali ke Habitat 3D':'Kembali ke Petualangan 15 Level']]);
 }
-function open(p){
+function open(p,source='adventure'){
  const candidate=p||(()=>{try{const a=window.NUSAJIWA_TAMAGOTCHI?.getSave();return a?.pets?.[a.active];}catch(_){return null}})();
  if(!candidate||candidate.stage===0||candidate.sick||candidate.sleep||candidate.retired)return false;
+ returnTarget=source==='habitat'?'habitat':'adventure';
  makeUI();pet={...candidate,type:persona(candidate)};
  store=load();stateFor(pet.id);
  active=true;root.hidden=false;document.body.classList.add('njc-playing');
@@ -189,7 +190,11 @@ function close(){active=false;playing=false;window.NUSAJIWA_CLASSIC3D?.close?.()
  cancelAnimationFrame(raf);raf=0;last=0;buffer=0;
  clearKeys();status=null;pet=null;
  if(root)root.hidden=true;document.body.classList.remove('njc-playing');
- window.NUSAJIWA_ADVENTURE?.open?.();
+ if(returnTarget==='habitat'){
+  const sanctuary=document.getElementById('nj35');
+  if(sanctuary)sanctuary.hidden=false;
+  window.NJ35?.returnTo3D?.();
+ }else window.NUSAJIWA_ADVENTURE?.open?.();
 }
 function hint(text,seconds=1.7){message=text;messageUntil=(status?.elapsed||0)+seconds;
  if(root)root.querySelector('#njcNotice').textContent=text;}

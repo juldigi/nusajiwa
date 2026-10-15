@@ -823,13 +823,58 @@ function openSide(mode){sideOpen=true;$('#nj35Side').classList.add('open');let h
  '<div class="nj-filters"><button data-njfilter="owned" class="'+(rosterFilter==='owned'?'sel':'')+'">♥ Dipelihara</button><button data-njfilter="unowned" class="'+(rosterFilter==='unowned'?'sel':'')+'">◇ Belum dipelihara</button><button data-njfilter="legend" class="'+(rosterFilter==='legend'?'sel':'')+'">✦ Legenda aktif</button><button data-njfilter="baru56" class="'+(rosterFilter==='baru56'?'sel':'')+'">✦ Folklor 5.6</button><button data-njfilter="baru54" class="'+(rosterFilter==='baru54'?'sel':'')+'">Reptil 5.4</button><button data-njfilter="baru53" class="'+(rosterFilter==='baru53'?'sel':'')+'">5.3</button><button data-njfilter="baru52" class="'+(rosterFilter==='baru52'?'sel':'')+'">5.2</button><button data-njfilter="baru51" class="'+(rosterFilter==='baru51'?'sel':'')+'">5.1</button><button data-njfilter="baru47" class="'+(rosterFilter==='baru47'?'sel':'')+'">✦ Baru 4.7</button><button data-njfilter="baru49" class="'+(rosterFilter==='baru49'?'sel':'')+'">✦ Baru 4.9</button><button data-njfilter="all" class="'+(rosterFilter==='all'?'sel':'')+'">Semua</button><button data-njfilter="fauna" class="'+(rosterFilter==='fauna'?'sel':'')+'">Fauna</button><button data-njfilter="folklor" class="'+(rosterFilter==='folklor'?'sel':'')+'">Legenda</button><button data-njfilter="baru46" class="'+(rosterFilter==='baru46'?'sel':'')+'">✦ Baru 4.6</button><button data-njfilter="baru" class="'+(rosterFilter==='baru'?'sel':'')+'">✦ Baru 4.2</button><button data-njfilter="kemarin" class="'+(rosterFilter==='kemarin'?'sel':'')+'">4.1</button><button data-njfilter="v40" class="'+(rosterFilter==='v40'?'sel':'')+'">4.0</button><button data-njfilter="v39" class="'+(rosterFilter==='v39'?'sel':'')+'">3.9</button></div>'+
  '<p class="nj-result-count">'+filtered.length+' dari '+CREATURES.length+' makhluk · status koleksi sinkron dengan progres perangkat ini</p><div class="nj-grid">'+filtered.map(([r,i])=>'<button class="nj-item '+(i===index?'active':'')+'" data-type="'+r[2]+'" data-njpick="'+i+'"><span class="nj45-portrait" data-njportrait="'+r[0]+'" style="--c:'+r[5]+'"><span class="nj45-fallback-symbol">✧</span></span><span class="nj-stage-badge '+creatureStageClass(r[0])+'">'+creatureStageLabel(r[0])+'</span><b>'+r[1]+(NJ49_IDS.has(r[0])?' <span class="nj39-new">BARU 4.9</span>':NJ47_IDS.has(r[0])?' <span class="nj39-new">BARU 4.7</span>':NJ46_IDS.has(r[0])?' <span class="nj39-new">BARU 4.6</span>':NJ42_IDS.has(r[0])?' <span class="nj39-new">BARU 4.2</span>':NJ41_IDS.has(r[0])?' <span class="nj39-new old">4.1</span>':NJ40_IDS.has(r[0])?' <span class="nj39-new old">4.0</span>':NJ39_IDS.has(r[0])?' <span class="nj39-new old">3.9</span>':'')+'</b><small>'+r[2]+' · '+r[3]+'</small><em>Lihat 3D</em></button>').join('')+'</div>';
  }
- else if(mode==='explore')h='<div class="nj-eyebrow">◈ EKSPEDISI NUSANTARA</div><h2>Jelajahi Tujuh Wilayah</h2><p>Pilih habitat, lalu kumpulkan resonansi alam. Satu kristal per habitat per hari lokal. Ekspedisi memberi +24 Jiwa, +32 XP, dan satu batu elemen.</p><div class="nj-grid">'+regions.map(([id,n,t])=>`<button class="nj-item ${id===viewZone?'active':''}" data-njregion="${id}"><b>⌖ ${n}</b><small>${t}</small><em>${nj37.daily[dailyKey()+':'+id]?'✓ Kristal ditemukan':'◇ Kristal tersedia'}</em></button>`).join('')+'</div><div class="nj38-quest"><div class="nj-eyebrow">◈ RITUAL RESONANSI</div><div id="nj38QuestBoard" class="nj38-quest-board"></div><button class="nj-ritual-primary" id="nj37Explore">✶ MULAI RITUAL · '+regions.find(r=>r[0]===viewZone)[1].toUpperCase()+'</button></div>';
+ else if(mode==='explore')h='<section class="nj133-play-choices" aria-label="Mode permainan"><div class="nj-eyebrow">🎮 PETUALANGAN 3D</div><h2>Pilih Mode Bermain</h2><p>Karakter utama menggunakan makhluk yang sedang dipilih. Mainkan kampanye platformer klasik atau petualangan evolusi.</p><button type="button" class="nj133-play-main" id="nj35Classic32">▶ MAIN KLASIK · 32 STAGE <small>8 dunia • gaya platformer NES • karakter 3D</small></button><button type="button" class="nj133-play-alt" id="nj35Adventure15">Jelajah Evolusi · 15 Stage</button><small class="nj133-play-tip">Makhluk harus sudah menetas dan siap bermain.</small></section><div class="nj-eyebrow">◈ EKSPEDISI NUSANTARA</div><h2>Jelajahi Tujuh Wilayah</h2><p>Pilih habitat, lalu kumpulkan resonansi alam. Satu kristal per habitat per hari lokal. Ekspedisi memberi +24 Jiwa, +32 XP, dan satu batu elemen.</p><div class="nj-grid">'+regions.map(([id,n,t])=>`<button class="nj-item ${id===viewZone?'active':''}" data-njregion="${id}"><b>⌖ ${n}</b><small>${t}</small><em>${nj37.daily[dailyKey()+':'+id]?'✓ Kristal ditemukan':'◇ Kristal tersedia'}</em></button>`).join('')+'</div><div class="nj38-quest"><div class="nj-eyebrow">◈ RITUAL RESONANSI</div><div id="nj38QuestBoard" class="nj38-quest-board"></div><button class="nj-ritual-primary" id="nj37Explore">✶ MULAI RITUAL · '+regions.find(r=>r[0]===viewZone)[1].toUpperCase()+'</button></div>';
  else if(mode==='ritual'){const p=gamePet();h='<div class="nj-eyebrow">❖ RITUAL KEHIDUPAN</div><h2>Jejak Delapan Fase</h2><p>Rawat sahabatmu untuk delapan tahap kehidupan. Evolusi Legenda memerlukan batu elemen dari jelajah.</p><div class="nj-stage-track">'+NJ37_STAGES.map((s,i)=>'<span class="'+(i<=(p?.phase??-1)?'done':'')+'">'+(i+1)+' · '+s+'</span>').join('')+'</div><h3>Batu Elemen</h3><div class="nj-element-grid">'+Object.keys(NJ37_LABELS).map(id=>'<button class="'+(nj37.selectedElement===id?'selected':'')+'" data-njstone="'+id+'">'+NJ37_LABELS[id]+' <b>×'+nj37.stones[id]+'</b></button>').join('')+'</div><button class="nj-ritual-primary" id="nj37Evolve">✦ '+(p?.phase===0?'TETASKAN':p?.phase===7?'SUDAH LEGENDA':'EVOLUSI SAHABAT')+'</button><p class="nj-context">Game 3D memakai save versi 3.6 yang sama; arsip 2D tidak ditimpa.</p><button class="nj-chip highlight" data-njarchive="evolve">ALTAR KLASIK ↗</button>'; }
  else {const r=record(),dd=codexDeepDive(r); h='<div class="nj-eyebrow">☷ KODEX HIDUP</div><h2>'+r[1]+'</h2><p>'+dd.habitat+'</p><div class="nj-lore-card"><strong>Ensiklopedia Ringkas</strong><p>'+dd.base+'</p><small>'+r[2].toUpperCase()+' · '+r[3]+'</small></div><div class="nj-codex-facts"><div class="nj-fact"><span>Kategori</span><b>'+r[2]+'</b></div><div class="nj-fact"><span>Asal / konteks</span><b>'+r[3]+'</b></div><div class="nj-fact"><span>Status koleksi</span><b>'+creatureStageLabel(r[0])+'</b></div></div><div class="nj-lore-card"><strong>Deep dive identitas</strong><p>'+dd.kindLine+'</p><p>'+codexTone(r)+'</p><small>'+dd.careLine+'</small></div>'+(NJ39_SOURCES[r[0]]?'<a class="nj39-source" target="_blank" rel="noopener noreferrer" href="'+NJ39_SOURCES[r[0]]+'">Referensi identitas makhluk</a>':'')+codexMarkup(r)+nj612EvidenceMarkup(r)+nj624StageMarkup(r)+'<button class="nj-chip highlight" data-njarchive="codex">Baca Kodex klasik ↗</button><h3>Pengaturan Dunia 3D</h3><div class="nj-options"><button id="nj37Quality">Kualitas · '+quality.toUpperCase()+'</button><button id="nj37Night">Waktu · '+(nightTime?'Malam':'Siang')+'</button></div><h3>Cadangkan Progres</h3><p>Ekspor progres 3D sebagai berkas JSON agar data dapat dipindah ke perangkat lain. Progres klasik tetap terpisah.</p><div class="nj-options"><button id="nj37Export">↓ Ekspor 3D</button><button id="nj37ImportBtn">↑ Impor 3D</button></div>'; }
  if(mode==='explore')h+=questMarkup();
  $('#nj35SideBody').innerHTML=h;if(mode==='explore')showQuestBoard();if(mode==='roster')setTimeout(thumbnailHydrate,90);
 }
 function closeSide(){sideOpen=false;$('#nj35Side').classList.remove('open')}
+function nj133ExitPhoto(){
+ if(!sceneEl.classList.contains('nj-photo-mode'))return;
+ sceneEl.classList.remove('nj-photo-mode');
+ $('#nj36PhotoTip').hidden=true;
+}
+function nj133ChosenTama(){
+ const id=record()[0];
+ let state=null;
+ try{const save=window.NUSAJIWA_TAMAGOTCHI?.getSave?.();state=save?.pets?.[id]||null;}catch(_){}
+ // A companion adopted in the 3D sanctuary is eligible even if the
+ // secondary Tamagotchi save has not yet synchronized the selected ID.
+ const owned=nj37.pets[id];
+ if(!state&&owned&&Number(owned.phase)>0)state={id,stage:owned.phase};
+ return state;
+}
+function nj133Launch(mode){
+ const p=nj133ChosenTama();
+ if(!p){notify('Pilih makhluk yang telah diadopsi dan ditetaskan untuk bermain.');return false;}
+ if(p.stage===0||p.retired||p.sick||p.sleep){
+  notify('Makhluk harus sudah menetas, sehat, dan bangun untuk bermain.');
+  return false;
+ }
+ if(mode==='classic'){
+  const api=window.NUSAJIWA_CLASSIC;
+  if(!api?.open){notify('Mode Klasik belum termuat. Muat ulang halaman.');return false;}
+  nj133ExitPhoto();
+  if(!api.open(p,'habitat')){notify('Mode Klasik belum dapat dibuka.');return false;}
+  closeSide();sceneEl.hidden=true;
+  return true;
+ }
+ if(!window.NUSAJIWA_ADVENTURE?.open){
+  notify('Jelajah Evolusi belum termuat. Muat ulang halaman.');return false;
+ }
+ // The fifteen-stage mode reads the currently selected Tamagotchi pet,
+ // so do not silently switch its character when the active pet differs.
+ const save=window.NUSAJIWA_TAMAGOTCHI?.getSave?.();
+ if(save?.active!==p.id){
+  notify('Untuk 15 stage, pilih makhluk ini di menu Tamagotchi dahulu.');
+  return false;
+ }
+ nj133ExitPhoto();
+ const ok=window.NUSAJIWA_ADVENTURE.open();
+ if(!ok){notify('Jelajah Evolusi belum bisa dibuka.');return false;}
+ closeSide();return true;
+}
 function return3D(){back.hidden=true;sceneEl.hidden=false;document.body.classList.add('nj35-playing');drawInfo();resize();}
 
 /* 7.2 — visual feedback for the classic pet's needs in the actual 3D habitat.
@@ -961,6 +1006,8 @@ sceneEl.addEventListener('click',e=>{
   const chosen=pool[Math.floor(Math.random()*pool.length)];const pos=CREATURES.findIndex(r=>r[0]===chosen[0]);
   setRecord(pos);closeSide();notify('Makhluk ditemukan: '+chosen[1]);return;
  }
+ if(a.id==='nj35Classic32'){nj133Launch('classic');return}
+ if(a.id==='nj35Adventure15'){nj133Launch('adventure');return}
  if(a.dataset.nj45claim){questClaim(a.dataset.nj45claim);return}
  if(a.dataset.njstone){novelState.chosen=a.dataset.njstone;saveNovel();showNovelRitual();return}
  if(a.dataset.njevolve){novelEvolve();drawInfo();showNovelRitual();return}
@@ -968,7 +1015,7 @@ sceneEl.addEventListener('click',e=>{
  if(a.dataset.njpick!=null){setRecord(Number(a.dataset.njpick));closeSide();return}
  if(a.dataset.njregion){nj38Quest=null;viewZone=a.dataset.njregion;changeRegion();persistUI();closeSide();return}
  if(a.dataset.njarchive){toggleArchive(a.dataset.njarchive);return}
- if(a.dataset.njtab){let t=a.dataset.njtab;sceneEl.querySelectorAll('[data-njtab]').forEach(x=>x.classList.toggle('active',x.dataset.njtab===t));if(t==='archive')questTrack('read',record()[0]);if(t==='world')closeSide();else openSide(t);return}
+ if(a.dataset.njtab){nj133ExitPhoto();let t=a.dataset.njtab;sceneEl.querySelectorAll('[data-njtab]').forEach(x=>x.classList.toggle('active',x.dataset.njtab===t));if(t==='archive')questTrack('read',record()[0]);if(t==='world')closeSide();else openSide(t);return}
  if(a.id==='nj35Close'){closeSide();return}
  if(a.id==='nj35Adopt'){adopt3d();return}
  if(a.id==='nj37Evolve'){evolve3d();if(sideOpen)openSide('ritual');return}

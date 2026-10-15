@@ -970,6 +970,31 @@
       "test_file": "tests/nusajiwa-guardian-132.mjs",
       "limit": "Not cycle-accurate NES emulation and not original Nintendo maps/assets; real iPhone playthrough pending",
       "save_compat": "No change to Tamagotchi, Codex or established localStorage keys"
+    },
+    {
+      "patch": "NJ133",
+      "status": "MERGED",
+      "title": "Visible 32-stage Classic play entry from live 3D Jelajah panel and Tamagotchi Main",
+      "fix": "The 3D Jelajah tab previously opened only expedition rituals; Classic32 was nested in the separate 15-stage menu",
+      "entry_points": [
+        "3D Jelajah > MAIN KLASIK · 32 STAGE",
+        "Tamagotchi > Main > Main Klasik · 32 Stage"
+      ],
+      "behavior": [
+        "Uses currently selected adult/hatched 3D pet, not a random default",
+        "Shows a clear reason if pet is unowned, sleeping, sick, or an egg",
+        "Exits photo mode before starting",
+        "Returns directly to 3D habitat when entered from habitat",
+        "Keeps the legacy 15-stage-to-32-stage navigation working"
+      ],
+      "preserved": [
+        "300 species",
+        "classic 32-stage progress",
+        "Tamagotchi saves",
+        "15-stage adventure saves"
+      ],
+      "test_file": "tests/nusajiwa-navigation-133.mjs",
+      "device_qa": "iPhone Safari interaction remains unverified"
     }
   ],
   "visual_audit": {

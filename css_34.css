@@ -8,3 +8,15 @@
 #nj35 .nj612-evidence small{display:block;line-height:1.55;color:#cbd3ca}
 #nj35 .nj612-sources{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 #nj35 .nj612-sources a{display:inline-flex;align-items:center;min-height:44px;padding:8px 12px;border:1px solid #ad9464;border-radius:10px;color:#ffe4aa;text-decoration:none;font-size:12px;background:#1e4446}
+
+/* NJ133 · unambiguous, touch-safe platformer entry inside Jelajah */
+#nj35 .nj133-play-choices{border:1px solid rgba(229,202,141,.45);background:linear-gradient(145deg,#17383c,#0e292f);border-radius:16px;padding:16px;margin:0 0 21px;display:flex;flex-direction:column;gap:9px;color:#f6ecd6}
+#nj35 .nj133-play-choices h2{font-size:21px;line-height:1.15;letter-spacing:-.03em;margin:2px 0 0}
+#nj35 .nj133-play-choices p{font-size:12px;line-height:1.55;margin:0 0 5px;color:#d5e4d8}
+#nj35 .nj133-play-choices button{width:100%;min-height:52px;border-radius:12px;padding:12px 14px;cursor:pointer;text-align:left;font:inherit;font-weight:800;letter-spacing:.01em}
+#nj35 .nj133-play-main{background:#e9d49d;border:1px solid #f5e5bb;color:#193337}
+#nj35 .nj133-play-main small{display:block;font-size:10px;font-weight:600;margin-top:4px;opacity:.82}
+#nj35 .nj133-play-alt{background:#20494a;border:1px solid #90aaa0;color:#f3e4bc}
+#nj35 .nj133-play-tip{font-size:10px;line-height:1.5;color:#c2d6cf}
+#nj35 .nj133-play-choices button:focus-visible{outline:3px solid #fff2bf;outline-offset:2px}
+@media(max-width:430px){#nj35 .nj133-play-choices{padding:14px;margin-bottom:17px}#nj35 .nj133-play-choices h2{font-size:19px}}
