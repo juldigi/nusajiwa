@@ -4422,6 +4422,8 @@ function makeAvatar(r, portraitMode=false, auditPhase=null){
  window.NUSAJIWA_SCULPT104?.(group,body,M,r[0],renderPhase,THREE,ell,tube);
  // NJ105: source-aware full replacement for five Jakarta/Java/Bugis folklore identities.
  window.NUSAJIWA_SCULPT105?.(group,body,M,r[0],renderPhase,THREE,ell,tube);
+ // NJ106: reconstructed Panji / Javanese / Sasak folktale protagonists.
+ window.NUSAJIWA_SCULPT106?.(group,body,M,r[0],renderPhase,THREE,ell,tube);
  window.NUSAJIWA_RENDER97?.prepare(group,THREE,r[0],renderPhase);
  group.userData={...group.userData,body,type,base:body.position.y,phase:(living?.phase??null),legend:(living?.legend??null)};
  return group;

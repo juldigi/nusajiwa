@@ -563,6 +563,43 @@
       "cultural_caveat": "Folklore retellings vary; subject matter includes sacred royal figures. Fantasy infant, egg and Legend stage NOT a cultural fact.",
       "preserve": "No catalogue, UI, save or minigame changes.",
       "visual_render_4_view_iphone": "NOT_YET_VERIFIED"
+    },
+    {
+      "batch": "nj106",
+      "status": "MERGED",
+      "identity_ids": [
+        "jaka_tarub",
+        "nawang_wulan",
+        "timun_mas",
+        "keong_mas",
+        "putri_mandalika"
+      ],
+      "stage_count": 8,
+      "constructions": 40,
+      "identity_delta": 0,
+      "module": "nj106-folktales-batch9.js",
+      "test_file": "tests/nusajiwa-sculpt-106.mjs",
+      "morphology": "Javanese field worker Jaka Tarub and Nawang Wulan flying shawl; magical runner Timun Mas gifts; actual snail-to-human Candra Kirana; Sasak princess with symbolic nyale",
+      "superseded_old_batches": [
+        {
+          "batch": "nj92",
+          "ids": [
+            "putri_mandalika",
+            "jaka_tarub",
+            "timun_mas"
+          ]
+        },
+        {
+          "batch": "nj93",
+          "ids": [
+            "nawang_wulan"
+          ]
+        }
+      ],
+      "save_schema": "unchanged",
+      "ui": "unchanged",
+      "folklore_caveat": "egg and aging phases invented Tamagotchi gameplay, not canonical birth cycles",
+      "visual_safari_4angle": "NOT VERIFIED"
     }
   ],
   "merged_gameplay_improvements": [
@@ -610,7 +647,7 @@
     "save_changes": "none",
     "catalog_size": 300
   },
-  "last_character_patch": "NJ105-B08",
+  "last_character_patch": "NJ106-B09",
   "visual_ui": {
     "patch": "NJ642",
     "status": "MERGED",
