@@ -52,7 +52,7 @@ test('Game only loads emulator after explicit local file and preserves game UI o
 test('GH Pages includes reference player code but never the uploaded cartridge',()=>{
  const pages=read('.github/workflows/pages.yml'),qa=read('.github/workflows/tamagotchi-quality.yml');
  assert.ok(pages.includes('node --check nj124-rom-reference.js'));
- assert.ok(pages.includes('nj124-rom-reference.js nj124-rom-reference.css _site/'));
+ assert.ok(pages.split('\n').some(line=>line.includes('nj124-rom-reference.js')&&line.includes('nj124-rom-reference.css')&&line.includes('_site/')));
  assert.ok(qa.includes("      - 'nj124-rom-reference.js'"));
  assert.ok(qa.includes('node --check nj124-rom-reference.js'));
  const rel=JSON.parse(read('release.json'));

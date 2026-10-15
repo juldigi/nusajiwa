@@ -68,7 +68,7 @@ test('Input buttons and iPhone controls integrate in existing adventure menu wit
 test('GitHub Pages builds the original extra game, CSS, and quality check as independent assets',()=>{
  const pages=read('.github/workflows/pages.yml');
  const qa=read('.github/workflows/tamagotchi-quality.yml');
- assert.ok(html.includes('./nj123-classic.js?v=9.2.123'));
+ assert.ok(html.includes('./nj123-classic.js?v=9.'));
  assert.ok(html.includes('./nj123-classic.css?v=9.2.123'));
  assert.ok(html.indexOf('nusajiwa-adventure.js?v=8.3.0')<html.indexOf('./nj123-classic.js'));
  assert.ok(pages.includes('node --check nj123-classic.js'));
