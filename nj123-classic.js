@@ -542,6 +542,7 @@ window.NUSAJIWA_CLASSIC=Object.freeze({version:'9.2.NJ123',open,close,levels:LEV
  id:idx,world:l.world+1,stage:l.section+1,type:l.type,
  gaps:l.gaps.map(g=>g.slice()),portals:l.pipes.map(p=>({x:p.x,secret:p.secret,warp:p.warp})),
  enemies:l.enemies.length,platforms:l.platforms.length,blocks:l.blocks.length,
+ shortcuts:l.pipes.filter(p=>p.warp).length,
  bonuses:l.secret.length,boss:!!l.boss,clock:l.clock}:null;},
  getStatus:()=>status?{index:status.index,x:status.x,y:status.y,coins:status.coins,
  lives:status.lives,shield:status.power,time:status.remaining,

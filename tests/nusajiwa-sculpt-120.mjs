@@ -83,6 +83,6 @@ test('Unrelated NJ109 not touched; asset included in both Actions build and QA',
  assert.ok(e.includes('window.NUSAJIWA_SCULPT120?.(group,body,M,r[0],renderPhase,THREE,ell,tube);'));
  assert.ok(html.indexOf('nj120-aquatic-batch13.js')>0&&html.indexOf('nj120-aquatic-batch13.js')<html.indexOf('script_32.js'));
  const pg=read('.github/workflows/pages.yml'),qa=read('.github/workflows/tamagotchi-quality.yml');
- assert.ok(pg.includes('node --check nj120-aquatic-batch13.js')&&pg.includes('cp nj120-aquatic-batch13.js _site/'));
+ assert.ok(pg.includes('node --check nj120-aquatic-batch13.js')&&pg.split('\n').some(line=>line.includes('cp nj120-aquatic-batch13.js')&&line.includes('_site/')));
  assert.ok(qa.includes("      - 'nj120-aquatic-batch13.js'")&&qa.includes('node --check nj120-aquatic-batch13.js'));
 });

@@ -19,8 +19,8 @@ test('Classic engine has 32 independent stages, exactly eight world sequences an
  for(let w=0;w<8;w++){
   const four=api.levels.filter(x=>x.world===w+1);
   assert.equal(four.length,4);
-  assert.deepEqual(four.map(x=>x.stage),[1,2,3,4]);
-  assert.deepEqual(four.map(x=>x.index),[4*w,4*w+1,4*w+2,4*w+3]);
+  assert.deepEqual(Array.from(four,x=>x.stage),[1,2,3,4]);
+  assert.deepEqual(Array.from(four,x=>x.index),[4*w,4*w+1,4*w+2,4*w+3]);
  }
  assert.equal(api.levels.filter(x=>x.type==='castle').length,8);
  assert.equal(api.levels.filter(x=>x.type==='water').length,2);
@@ -39,8 +39,8 @@ test('Thirty two stages differ geometrically, have reachable hazards and real se
  }
  const signatures=plans.map(p=>JSON.stringify([p.type,p.gaps,p.portals.map(x=>x.x),p.enemies,p.blocks]));
  assert.equal(new Set(signatures).size,32,'Each stage must have original terrain geometry');
- assert.deepEqual(plans[1].portals.find(x=>x.warp).warp,[4,8,12]);
- assert.deepEqual(plans[13].portals.find(x=>x.warp).warp,[20,24,28]);
+ assert.deepEqual(Array.from(plans[1].portals.find(x=>x.warp).warp),[4,8,12]);
+ assert.deepEqual(Array.from(plans[13].portals.find(x=>x.warp).warp),[20,24,28]);
 });
 test('NES-inspired mechanics implemented without shipping any ROM bytes or Nintendo sprites',()=>{
  for(const needle of ['TICK=1/60','max=water?3.8:(key.run?8.2:5.4)','!key.jump&&s.vy>0',
