@@ -73,6 +73,6 @@ test('NJ131: all 32 stage blueprints survive, old save schema unchanged',()=>{
  assert.equal(release.runtime.identities,300);
  assert.equal(release.merged_gameplay_improvements.filter(x=>x.patch==='NJ131').length,1);
  const html=read('index.html');
- assert.ok(html.includes('nj123-classic.js?v=9.11.131'));
- assert.ok(html.includes('nj125-classic-3d.js?v=9.11.131'));
+ assert.match(html,/nj123-classic\.js\?v=9\.\d+\.\d+/);
+ assert.match(html,/nj125-classic-3d\.js\?v=9\.\d+\.\d+/);
 });

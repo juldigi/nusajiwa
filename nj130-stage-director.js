@@ -114,11 +114,14 @@ function decorate(level){
 function start(run,level){
  if(!run||!level?.nj130)return false;
  run.nj130={cooldown:0,bounces:0,hazardHits:0};
+ if(level.boss)bossStart(run,level);
  return true;
 }
-function resetLife(run){
+function resetLife(run,level){
  if(!run?.nj130)return false;
- run.nj130.cooldown=0;return true;
+ run.nj130.cooldown=0;
+ if(level?.boss){level.boss.hp=level.boss.maxHp||level.boss.hp;bossStart(run,level);}
+ return true;
 }
 function bounce(run,level,hint){
  if(!run?.nj130||!level?.nj130||run.nj130.cooldown>0||
@@ -148,6 +151,81 @@ function carry(run,level,dt){
  const now=platformPosition(p,run.elapsed);
  const previous=platformPosition(p,Math.max(0,run.elapsed-dt));
  run.x+=now.x-previous.x;run.y+=now.y-previous.y;
+ return true;
+}
+// NJ132 · fixed 60Hz momentum, braking and airborne inertia.
+function move(run,level,keys,dt){
+ if(!run||!level||!keys||!Number.isFinite(dt)||dt<=0)return false;
+ const dir=(keys.right?1:0)-(keys.left?1:0),water=level.type==='water';
+ const cap=water?3.8:(keys.run?8.2:5.4);
+ const prev=Number.isFinite(run.vx)?run.vx:0;
+ if(dir){
+  const skid=Math.sign(prev)!==dir&&Math.abs(prev)>.2;
+  const accel=skid?(run.grounded?35:16):(run.grounded?24:13);
+  run.vx=clamp(prev+dir*accel*dt,-cap,cap);
+  run.skid=skid&&!!run.grounded;run.facing=dir;
+ }else{
+  run.vx=Math.sign(prev)*Math.max(0,Math.abs(prev)-(run.grounded?19:4)*dt);
+  run.skid=false;
+ }
+ return true;
+}
+// Eight independently scaled guardian fights, with short attack immunity.
+function bossStart(run,level){
+ const b=level?.boss;if(!b)return false;
+ b.home=Number.isFinite(b.home)?b.home:b.x;
+ b.maxHp=Number.isFinite(b.maxHp)?b.maxHp:b.hp;
+ b.x=b.home;b.vx=-(.8+level.world*.10);
+ b.bob=0;b.facing=-1;b.hurt=0;b.cooldown=1.8;
+ b.orbs=[];b.attacks=0;b.enraged=false;
+ return true;
+}
+function bossHit(run,level,source,hint){
+ const b=level?.boss;if(!b||b.hp<=0||(b.hurt||0)>0)return false;
+ b.hp=Math.max(0,b.hp-1);b.hurt=.52;
+ b.enraged=b.hp<=Math.ceil(b.maxHp/2);
+ run.score=(run.score||0)+(source==='bara'?160:250);
+ if(b.hp===0){
+  b.orbs=[];b.vx=0;b.bob=0;
+  hint?.('✦ '+b.name+' ditaklukkan · gerbang terbuka!');
+ }else hint?.('◆ Segel Penjaga melemah · '+b.hp+' kekuatan tersisa');
+ return true;
+}
+function bossMotion(run,level,dt,damage,hint){
+ const b=level?.boss;if(!b||!run||run.stop)return false;
+ if(!Number.isFinite(b.home))bossStart(run,level);
+ b.hurt=Math.max(0,(b.hurt||0)-dt);
+ if(b.hp<=0){b.orbs=[];return true;}
+ const tempo=.8+level.world*.10+(b.enraged?.48:0);
+ b.x+=b.vx*dt;
+ if(b.x<b.home-2.4){b.x=b.home-2.4;b.vx=Math.abs(tempo);}
+ if(b.x>b.home+1.4){b.x=b.home+1.4;b.vx=-Math.abs(tempo);}
+ b.bob=Math.sin(run.elapsed*(2+level.world*.25))*.13;
+ b.facing=run.x<b.x?-1:1;b.cooldown-=dt;
+ if(b.cooldown<=0&&Math.abs(run.x-b.x)<16&&b.orbs.length<3){
+  const dir=run.x<b.x?-1:1;
+  b.orbs.push({x:b.x+dir*.7,y:1.15+b.bob,
+   vx:dir*(3+level.world*.24),age:0,alive:true});
+  b.attacks++;b.cooldown=Math.max(.88,2.2-level.world*.13-(b.enraged?.22:0));
+ }
+ for(const orb of b.orbs){
+  if(!orb.alive)continue;
+  const prev=orb.x;orb.x+=orb.vx*dt;orb.age+=dt;
+  if(orb.age>3.4||orb.x<0||orb.x>level.length)orb.alive=false;
+  if(orb.alive&&level.pipes.some(p=>Math.min(prev,orb.x)<p.x+.69&&
+    Math.max(prev,orb.x)>p.x-.69&&orb.y<p.h+.31))orb.alive=false;
+  if(orb.alive&&level.blocks.some(q=>!q.destroyed&&
+    (q.kind!=='hidden'||q.reveal)&&Math.abs(orb.x-q.x)<.57&&
+    Math.abs(orb.y-q.y)<.53))orb.alive=false;
+  if(!orb.alive)continue;
+  if(Math.abs(run.x-orb.x)<.55&&Math.abs(run.y+.66-orb.y)<.65){
+   orb.alive=false;
+   if(run.invincible<=0&&!window.NUSAJIWA_NES127?.isProtected?.(run)){
+    damage?.();hint?.('⚠ Serangan penjaga!');
+   }
+  }
+ }
+ b.orbs=b.orbs.filter(o=>o.alive);
  return true;
 }
 function update(run,level,dt,damage,hint){
@@ -183,7 +261,8 @@ function draw2D(ctx,run,level,X,Y,p){
  }
  ctx.restore();
 }
-window.NUSAJIWA_STAGE130=Object.freeze({version:'NJ131.0',
- blueprints:BLUEPRINTS,decorate,start,resetLife,bounce,position,platformPosition,carry,update,draw2D,
+window.NUSAJIWA_STAGE130=Object.freeze({version:'NJ132.0',
+ blueprints:BLUEPRINTS,decorate,start,resetLife,bounce,position,platformPosition,carry,
+ move,bossStart,bossHit,bossMotion,update,draw2D,
  copyright:'Original Nusantara stage choreography; no Nintendo maps, graphics, music or ROM bytes'});
 })();

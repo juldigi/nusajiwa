@@ -227,7 +227,7 @@ function die(reason){
  const checkpoint=window.NUSAJIWA_CLASSIC124?.respawn?.(status,level);
  status.x=checkpoint??2.1;status.y=0;status.cameraX=checkpoint?Math.max(0,checkpoint-6):0;status.power=0;status.shield=0;status.invincible=1.2;
  status.jumpBuffer=0;status.coyote=.10;status.grounded=true;status.support=null;
- window.NUSAJIWA_STAGE130?.resetLife?.(status);
+ window.NUSAJIWA_STAGE130?.resetLife?.(status,level);
  status.remaining=level.clock;status.bonus=false;status.bonusTimer=0;
  hint(reason+' · ♥ '+status.lives,1.9);
 }
@@ -304,8 +304,10 @@ function update(dt){
  }
  const dir=(key.right?1:0)-(key.left?1:0),water=l.type==='water';
  const max=water?3.8:(key.run?8.2:5.4),accel=s.grounded?27:17;
- if(dir){s.vx+=dir*accel*dt;s.vx=clamp(s.vx,-max,max);s.facing=dir;}
- else{s.vx*=(s.grounded?.76:.93);if(Math.abs(s.vx)<.08)s.vx=0}
+ if(!window.NUSAJIWA_STAGE130?.move?.(s,l,key,dt)){
+  if(dir){s.vx+=dir*accel*dt;s.vx=clamp(s.vx,-max,max);s.facing=dir;}
+  else{s.vx*=(s.grounded?.76:.93);if(Math.abs(s.vx)<.08)s.vx=0}
+ }
  window.NUSAJIWA_CLASSIC124?.motion?.(s,l,key,dt);
  const oldX=s.x,oldY=s.y,oldTop=s.y+(s.power?1.55:1.16);
  s.x=clamp(s.x+s.vx*dt,.34,l.length+.1);
@@ -381,6 +383,8 @@ function update(dt){
   }
  }
  if(!playing)return;
+ window.NUSAJIWA_STAGE130?.bossMotion?.(s,l,dt,damage,hint);
+ if(s.stop)return;
  for(const e of l.enemies){
   if(!e.alive)continue;
   if(e.type==='fish'||e.type==='jelly'){
@@ -419,9 +423,12 @@ function update(dt){
  }
  if(l.boss){
   const e=l.boss;e.phase+=dt;
-  if(e.hp>0&&Math.abs(s.x-e.x)<.9&&Math.abs(s.y+.6-1.0)<1.1){
-   if(oldY>1.25&&s.vy<0){e.hp--;s.vy=7;s.score+=250;hint('Segel Penjaga melemah!');}
-   else if(s.invincible===0)damage();
+  if(e.hp>0&&Math.abs(s.x-e.x)<.9&&Math.abs(s.y+.6-(1+(e.bob||0)))<1.1){
+   if(oldY>1.25&&s.vy<0){
+    window.NUSAJIWA_STAGE130?.bossHit?.(s,l,'stomp',hint);s.vy=7;
+   }else if(window.NUSAJIWA_NES127?.isProtected?.(s)){
+    window.NUSAJIWA_STAGE130?.bossHit?.(s,l,'surya',hint);
+   }else if(s.invincible===0)damage();
   }
  }
  window.NUSAJIWA_NES127?.after?.(s,l,dt,hint);
@@ -523,11 +530,18 @@ function render(){
    ctx.fillStyle='#bfe0a0';ctx.font='bold '+Math.round(p*.40)+'px system-ui';
    ctx.fillText('✧',X(z.x),Y(z.y));}
  }
- if(l.boss?.hp>0){const e=l.boss,xx=X(e.x),yy=Y(.98);
+ if(l.boss?.hp>0){const e=l.boss,xx=X(e.x),yy=Y(.98+(e.bob||0));
   ctx.fillStyle='#644953';ctx.beginPath();ctx.ellipse(xx,yy,p*.65,p*.89,0,0,6.283);ctx.fill();
   fill('#f2dfad',xx-.27*p,yy-.20*p,.12*p,.12*p);
   fill('#f2dfad',xx+.16*p,yy-.20*p,.12*p,.12*p);
-  fill('#d8b48a',xx-.38*p,yy-.78*p,.75*p,.17*p);}
+  fill('#d8b48a',xx-.38*p,yy-.78*p,.75*p,.17*p);
+  ctx.fillStyle='#ffeac2';ctx.font='bold '+Math.round(p*.30)+'px system-ui';
+  ctx.fillText('♥ '+e.hp,xx-p*.35,yy-p*1.10);
+ }
+ if(l.boss?.orbs)for(const orb of l.boss.orbs){
+  ctx.fillStyle='#ffac6a';ctx.beginPath();
+  ctx.arc(X(orb.x),Y(orb.y),p*.19,0,Math.PI*2);ctx.fill();
+ }
  const gateX=X(l.length-2);
  fill(l.boss?.hp>0?'#85666d':'#edd3a0',gateX,Y(2.9),.13*p,3*p);
  fill('#2d6a5b',gateX,Y(2.85),.76*p,.51*p);
@@ -593,7 +607,7 @@ document.addEventListener('keyup',e=>keyboard(e,false),true);
 window.addEventListener('resize',resize,{passive:true});
 document.addEventListener('visibilitychange',()=>{if(active&&playing&&document.hidden)pause()});
 window.addEventListener('blur',()=>{if(active&&playing)pause()});
-window.NUSAJIWA_CLASSIC=Object.freeze({version:'9.11.NJ131',worldDesign:'NJ124-Worlds',renderSystem:'NJ125-Three-WebGL',open,close,levels:LEVELS.map(l=>({
+window.NUSAJIWA_CLASSIC=Object.freeze({version:'9.12.NJ132',worldDesign:'NJ124-Worlds',renderSystem:'NJ125-Three-WebGL',open,close,levels:LEVELS.map(l=>({
  index:l.index,world:l.world+1,stage:l.section+1,region:l.region,type:l.type,
  location:l.place,challenge:l.name,length:l.length,secretEntrances:l.secret.length,
  shortcuts:l.pipes.filter(p=>p.warp).length})),

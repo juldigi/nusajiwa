@@ -955,6 +955,21 @@
       "qa": "Static and VM regression; real Safari iPhone visual/gameplay QA not yet verified",
       "compatibility": "Original Tamagotchi, Kodex, 15-stage campaign and all persistence keys unchanged",
       "tests": "tests/nusajiwa-physics-131.mjs"
+    },
+    {
+      "patch": "NJ132",
+      "status": "MERGED",
+      "title": "Classic32 momentum and eight active guardian boss encounters",
+      "features": [
+        "Fixed-step acceleration, skid and air momentum",
+        "Eight boss movement patterns scaled by region, ranged attacks and hit recovery",
+        "Bara projectile and star power affect guardians",
+        "Guardian attacks cleared on defeat, full fight reset after life loss",
+        "Three.js and Canvas mirror projectile positions"
+      ],
+      "test_file": "tests/nusajiwa-guardian-132.mjs",
+      "limit": "Not cycle-accurate NES emulation and not original Nintendo maps/assets; real iPhone playthrough pending",
+      "save_compat": "No change to Tamagotchi, Codex or established localStorage keys"
     }
   ],
   "visual_audit": {

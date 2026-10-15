@@ -19,7 +19,7 @@ let THREE=null,renderer=null,scene=null,camera=null,canvas=null,host=null,oldCan
 let pending=null,active=false,broken=false,stageKey='',geo=[],mats=[],objects=[],decor=[];
 let player=null,coins=[],enemies=[],blocks=[],pipes=[],secret=[],platforms=[],boss=null,gate=null;
 let fxPickup=[],fxShots=[],fxAura=null,fxGold=null,fxEmber=null,fxStone=null;
-let stagePads=[],stageSentries=[];
+let stagePads=[],stageSentries=[],bossOrbs=[];
 let worldLabel='',frameCount=0,quality='standard',lastRun=null,lastCanvasWidth=0,lastCanvasHeight=0;
 const create=async()=>{
  if(THREE)return THREE;
@@ -63,7 +63,7 @@ function clearStage(){
  geo=[];mats=[];objects=[];decor=[];player=null;coins=[];enemies=[];blocks=[];
  pipes=[];secret=[];platforms=[];boss=null;gate=null;stageKey='';
  fxPickup=[];fxShots=[];fxAura=null;fxGold=null;fxEmber=null;fxStone=null;
- stagePads=[];stageSentries=[];
+ stagePads=[];stageSentries=[];bossOrbs=[];
 }
 function setSize(){
  if(!renderer||!host)return;
@@ -502,7 +502,22 @@ function frame(level,status,pet){
     y:x.p.y+(x.p.kind==='sway'?Math.sin(t*1.2+x.p.x)*.45:0)};
   x.group.position.set(at.x,at.y,-.03);
  }
- if(boss){boss.group.visible=boss.ref.hp>0;boss.group.rotation.y=Math.sin(t*.8)*.12;}
+ if(boss){
+  boss.group.visible=boss.ref.hp>0;
+  boss.group.position.set(boss.ref.x,boss.ref.bob||0,0);
+  boss.group.rotation.y=Math.sin(t*.8)*.12;
+  boss.torso.rotation.z=Math.sin(t*2.1)*.035;
+  boss.group.scale.setScalar(boss.ref.hurt>0&&Math.floor(t*16)%2===0?.93:1);
+  const attacks=boss.ref.orbs||[];
+  if(!boss.ember)boss.ember=mat(0xf8a168,.06,.35,{emissive:0xd65f34,emissiveIntensity:.5});
+  while(bossOrbs.length<attacks.length){
+   bossOrbs.push(make(new THREE.IcosahedronGeometry(.19,1),boss.ember));
+  }
+  bossOrbs.forEach((g,i)=>{
+   const shot=attacks[i];g.visible=!!shot;
+   if(shot){g.position.set(shot.x,shot.y,.58);g.rotation.z=t*7;}
+  });
+ }
  const worldWidth=(camera.right-camera.left),posX=clamp(status.cameraX+worldWidth/2,
    worldWidth/2-1,Math.max(worldWidth/2,level.length-worldWidth/2));
  // Stable fixed side camera at slight depth angle gives genuine volumetric scenery.

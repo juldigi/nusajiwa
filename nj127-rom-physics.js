@@ -185,6 +185,12 @@ function tickShots(s,l,fx,dt,hint){
    hint?.('✧ Proyektil Bara mengenai musuh');
    break;
   }
+  const guardian=l.boss;
+  if(q.alive&&guardian?.hp>0&&sweep(fromX,q.x,guardian.x,.8)&&
+     sweep(fromY,q.y,1.03+(guardian.bob||0),.95)){
+   window.NUSAJIWA_STAGE130?.bossHit?.(s,l,'bara',hint);
+   q.alive=false;
+  }
  }
  fx.shots=fx.shots.filter(q=>q.alive);
 }
@@ -236,7 +242,7 @@ function draw2D(ctx,s,X,Y,p){
  }
  ctx.restore();
 }
-window.NUSAJIWA_NES127=Object.freeze({version:'NJ131.0',start,isProtected,resetLife,resolveBlocks,hitBlock,before,
+window.NUSAJIWA_NES127=Object.freeze({version:'NJ132.0',start,isProtected,resetLife,resolveBlocks,hitBlock,before,
  touchEnemy,stomp,kickShell,after,view,draw2D,romInformed:true,
  privacy:'NO original cartridge bytes, level maps, sprites or sounds shipped'});
 })();
