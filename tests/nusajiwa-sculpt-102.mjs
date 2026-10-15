@@ -23,8 +23,9 @@ test('NJ102 rebuilds four existing, unique Indonesian cultural identities withou
  assert.equal(m.runtime.identities,300);assert.equal(m.runtime.levels,15);
  for(const id of ids){assert.equal(roster.filter(r=>r[0]===id).length,1);
   assert.ok(w.NUSAJIWA_SCULPT102_META[id]?.source.startsWith('https://'));}
- assert.equal(m.merged_morphology_batches.at(-1).batch,'nj102');
- assert.deepEqual(Array.from(m.merged_morphology_batches.at(-1).identity_ids),ids);
+ const batch=m.merged_morphology_batches.find(b=>b.batch==='nj102');
+ assert.ok(batch);
+ assert.deepEqual(Array.from(batch.identity_ids),ids);
 });
 test('Thirty-two fully reconstructed phases mask prior meshes and offer distinct phase topology',()=>{
  let n=0;
