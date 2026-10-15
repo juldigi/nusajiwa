@@ -255,7 +255,7 @@ function makeHero(pet,materials){
   });
  }
  const shadow=make(new THREE.CircleGeometry(.40,20),mat(0x213434,0,1,
-  {transparent:true,opacity:.27}));
+  {transparent:true,opacity:.27}),g);
  shadow.rotation.x=-Math.PI/2;shadow.position.set(0,.010,.30);
  shadow.userData.heroShadow=true;g.userData.shadow=shadow;
  g.userData.kind=kind;
@@ -375,8 +375,6 @@ function frame(level,status,pet){
    x.p.y+(x.p.kind==='sway'?Math.sin(t*1.2+x.p.x)*.45:0),-.03);
  }
  if(boss){boss.group.visible=boss.ref.hp>0;boss.group.rotation.y=Math.sin(t*.8)*.12;}
- gate.children[1].material=status.index%4===3&&level.boss?.hp>0?
-  null||gate.children[0].material:gate.children[1].material;
  const worldWidth=(camera.right-camera.left),posX=clamp(status.cameraX+worldWidth/2,
    worldWidth/2-1,Math.max(worldWidth/2,level.length-worldWidth/2));
  // Stable fixed side camera at slight depth angle gives genuine volumetric scenery.

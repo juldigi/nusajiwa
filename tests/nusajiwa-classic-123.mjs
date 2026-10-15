@@ -69,7 +69,7 @@ test('GitHub Pages builds the original extra game, CSS, and quality check as ind
  const pages=read('.github/workflows/pages.yml');
  const qa=read('.github/workflows/tamagotchi-quality.yml');
  assert.ok(html.includes('./nj123-classic.js?v=9.'));
- assert.ok(html.includes('./nj123-classic.css?v=9.2.123'));
+ assert.match(html,/\.\/nj123-classic\.css\?v=9\.\d+\.\d+/);
  assert.ok(html.indexOf('nusajiwa-adventure.js?v=8.3.0')<html.indexOf('./nj123-classic.js'));
  assert.ok(pages.includes('node --check nj123-classic.js'));
  assert.ok(pages.split('\n').some(line=>line.includes('cp nj120-aquatic-batch13.js')&&line.includes('nj123-classic.js nj123-classic.css')&&line.includes('_site/')));

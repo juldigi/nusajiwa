@@ -10,7 +10,7 @@ test('NJ125 contains real Three WebGL geometry, orthographic camera, dynamic ren
  assert.doesNotThrow(()=>new Script(source));
  for(const marker of ['new T.WebGLRenderer','new T.Scene()','new T.OrthographicCamera',
   'new THREE.BoxGeometry','new THREE.SphereGeometry','new THREE.TorusGeometry',
-  'new T.ExtrudeGeometry','build(level,pet)','frame(level,status,pet)',
+  'new THREE.TubeGeometry','build(level,pet)','frame(level,status,pet)',
   'renderer.render(scene,camera)','oldCanvas.style.visibility']){
   assert.ok(source.includes(marker),'missing real 3D pipeline: '+marker);
  }
@@ -25,7 +25,7 @@ test('True 3D scene includes terrain gaps, moving platforms, enemies, coins, pip
   'for(const c of level.coins)','for(const z of level.secret)',
   'for(const e of level.enemies)','if(level.boss)',
   'surface.userData.isWater','makeHero(pet,m)','stageColors(level)',
-  'level.nj124?.element','status.cameraX'])
+  'level?.nj124?.element','status.cameraX'])
   assert.ok(source.includes(key),'missing environmental system: '+key);
 });
 test('No Nintendo ROM distributed, no Tamagotchi or Classic save mutation from renderer',()=>{

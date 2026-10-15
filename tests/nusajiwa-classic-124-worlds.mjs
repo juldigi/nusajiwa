@@ -45,7 +45,7 @@ test('Region-specific physics stay finite and gameplay launch, ROM reference, Pa
  assert.ok(html.includes('./nj124-rom-reference.js'));
  const pg=read('.github/workflows/pages.yml');
  assert.ok(pg.includes('node --check nj124-classic-worlds.js'));
- assert.ok(pg.includes('nj124-rom-reference.css nj124-classic-worlds.js _site/'));
+ assert.ok(pg.split('\n').some(line=>line.includes('nj124-rom-reference.css nj124-classic-worlds.js')&&line.includes('_site/')));
  const qa=read('.github/workflows/tamagotchi-quality.yml');
  assert.ok(qa.includes("      - 'nj124-classic-worlds.js'"));
 });
