@@ -441,6 +441,49 @@
       "editorial": "historically described identities with locally variable depictions; artificial egg/legend evolution only fantasy game",
       "save_keys": "unchanged",
       "iPhone_visualQA": "PENDING"
+    },
+    {
+      "batch": "nj103",
+      "status": "MERGED",
+      "identity_ids": [
+        "ahool",
+        "nyai_blora",
+        "macan_putih",
+        "siluman_harimau",
+        "ebu_gogo"
+      ],
+      "identity_delta": 0,
+      "stage_count": 8,
+      "constructions": 40,
+      "module": "nj103-cryptid-batch6.js",
+      "test_file": "tests/nusajiwa-sculpt-103.mjs",
+      "technique": "Complete replacement of prior visible sculpt per target in every stage; WebGL native geometries; hand-directed anatomy",
+      "cultural_notes": "Ahool is unconfirmed modern cryptid; Nyai Blora snake-woman morphology is a game interpretation, not verified local canon; Ebu Gogo is a Flores Nage oral figure, not proven surviving hominin.",
+      "historical_batches_superseded": [
+        {
+          "batch": "nj89",
+          "ids": [
+            "ahool",
+            "siluman_harimau"
+          ]
+        },
+        {
+          "batch": "nj90",
+          "ids": [
+            "macan_putih"
+          ]
+        },
+        {
+          "batch": "nj92",
+          "ids": [
+            "ebu_gogo",
+            "nyai_blora"
+          ]
+        }
+      ],
+      "save_schema": "unchanged",
+      "iphone_visual_review": "NOT_YET_VERIFIED",
+      "model_shapes": "Big-bat fingered membrane; human upper serpent; quadruped white tiger; human-to-feline metamorph; small broad-faced hairy runner"
     }
   ],
   "merged_gameplay_improvements": [
@@ -488,7 +531,7 @@
     "save_changes": "none",
     "catalog_size": 300
   },
-  "last_character_patch": "NJ102-B05",
+  "last_character_patch": "NJ103-B06",
   "visual_ui": {
     "patch": "NJ642",
     "status": "MERGED",
