@@ -136,6 +136,20 @@ function position(h,t){
  return {x:h.x+Math.sin(t*h.speed*.67+h.phase)*.48,
   y:h.y+Math.cos(t*h.speed+h.phase)*h.amplitude};
 }
+// NJ131: rendering, collision and carrying use exactly the same platform orbit.
+function platformPosition(p,t){
+ if(!p)return null;
+ return {x:p.x+(p.kind==='suspended'?Math.sin(t*1.3+p.x):0),
+  y:p.y+(p.kind==='sway'?Math.sin(t*1.2+p.x)*.45:0)};
+}
+function carry(run,level,dt){
+ if(!run||!level||!run.grounded||!Number.isInteger(run.support)||run.bonus)return false;
+ const p=level.platforms?.[run.support];if(!p)return false;
+ const now=platformPosition(p,run.elapsed);
+ const previous=platformPosition(p,Math.max(0,run.elapsed-dt));
+ run.x+=now.x-previous.x;run.y+=now.y-previous.y;
+ return true;
+}
 function update(run,level,dt,damage,hint){
  if(!run?.nj130||!level?.nj130||run.stop)return false;
  run.nj130.cooldown=Math.max(0,run.nj130.cooldown-dt);
@@ -169,7 +183,7 @@ function draw2D(ctx,run,level,X,Y,p){
  }
  ctx.restore();
 }
-window.NUSAJIWA_STAGE130=Object.freeze({version:'NJ130.0',
- blueprints:BLUEPRINTS,decorate,start,resetLife,bounce,position,update,draw2D,
+window.NUSAJIWA_STAGE130=Object.freeze({version:'NJ131.0',
+ blueprints:BLUEPRINTS,decorate,start,resetLife,bounce,position,platformPosition,carry,update,draw2D,
  copyright:'Original Nusantara stage choreography; no Nintendo maps, graphics, music or ROM bytes'});
 })();

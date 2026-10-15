@@ -201,7 +201,7 @@ function start(n){
  window.NUSAJIWA_CLASSIC3D?.init?.(root);
  status={index:n, x:2.1,y:0,vx:0,vy:0,grounded:true,elapsed:0,remaining:level.clock,
   cameraX:0,facing:1,score:0,coins:0,lives:3,power:0,shield:0,invincible:0,spin:0,
-  lastFeet:0,pendingJump:false,jumpBuffer:0,coyote:.10,bonus:false,bonusTimer:0,bonusReturn:0,hiddenCount:0,
+  lastFeet:0,pendingJump:false,jumpBuffer:0,coyote:.10,support:null,bonus:false,bonusTimer:0,bonusReturn:0,hiddenCount:0,
   fire:[],released:false,secretFlag:false,boss:level.boss,world:level.world,
   completed:false,stop:false,gravityScale:1,worldTime:0};
  window.NUSAJIWA_CLASSIC124?.start?.(status,level);
@@ -226,7 +226,7 @@ function die(reason){
  }
  const checkpoint=window.NUSAJIWA_CLASSIC124?.respawn?.(status,level);
  status.x=checkpoint??2.1;status.y=0;status.cameraX=checkpoint?Math.max(0,checkpoint-6):0;status.power=0;status.shield=0;status.invincible=1.2;
- status.jumpBuffer=0;status.coyote=.10;status.grounded=true;
+ status.jumpBuffer=0;status.coyote=.10;status.grounded=true;status.support=null;
  window.NUSAJIWA_STAGE130?.resetLife?.(status);
  status.remaining=level.clock;status.bonus=false;status.bonusTimer=0;
  hint(reason+' · ♥ '+status.lives,1.9);
@@ -289,6 +289,7 @@ function update(dt){
  s.elapsed+=dt;s.worldTime+=dt;s.remaining-=dt;s.invincible=Math.max(0,s.invincible-dt);
  if(s.remaining<=0){die('Waktu habis');return;}
  window.NUSAJIWA_NES127?.before?.(s,l,key,dt);
+ window.NUSAJIWA_STAGE130?.carry?.(s,l,dt);
  if(key.down){key.down=false;pickPipe();if(!playing)return;}
  // NJ129: short jump input buffering and coyote time make touch controls fair.
  if(key.pressed){key.pressed=false;s.jumpBuffer=.12;}
@@ -314,13 +315,16 @@ function update(dt){
  s.vy-=gravity*dt;s.vy=Math.max(s.vy,water?-5:-15);
  s.y+=s.vy*dt;
  if(s.bonus){s.bonusTimer-=dt;if(s.bonusTimer<=0){s.bonus=false;s.x=s.bonusReturn+5;s.y=0}}
- const foot=s.y,wasGrounded=s.grounded;s.grounded=false;
+ const foot=s.y,wasGrounded=s.grounded;s.grounded=false;s.support=null;
  if(s.vy<=0){
   if(isGround(l,s.x)&&oldY>=-.09&&foot<=0){s.y=0;s.vy=0;s.grounded=true;}
-  for(const p of l.platforms){
-   const px=p.x+(p.kind==='suspended'?Math.sin(s.elapsed*1.3+p.x)*1.0:0);
-   const py=p.y+(p.kind==='sway'?Math.sin(s.elapsed*1.2+p.x)*.45:0);
-   if(Math.abs(s.x-px)<p.w/2+.26&&oldY>=py-.08&&foot<=py){s.y=py;s.vy=0;s.grounded=true;}
+  for(let i=0;i<l.platforms.length;i++){
+   const p=l.platforms[i],at=window.NUSAJIWA_STAGE130?.platformPosition?.(p,s.elapsed)||
+    {x:p.x+(p.kind==='suspended'?Math.sin(s.elapsed*1.3+p.x):0),
+     y:p.y+(p.kind==='sway'?Math.sin(s.elapsed*1.2+p.x)*.45:0)};
+   if(Math.abs(s.x-at.x)<p.w/2+.26&&oldY>=at.y-.08&&foot<=at.y){
+    s.y=at.y;s.vy=0;s.grounded=true;s.support=i;
+   }
   }
   for(const tube of l.pipes){
    const x=tube.x;
@@ -344,10 +348,10 @@ function update(dt){
  if(s.vy>0){
   const top=s.y+(s.power?1.55:1.16);
   for(const b of l.blocks){
-   if(b.used)continue;
+   if(b.destroyed)continue;
    if(Math.abs(s.x-b.x)<.59&&oldTop<=b.y-.35&&top>=b.y-.4){
     s.y=b.y-.4-(s.power?1.55:1.16);s.vy=0;
-    if(b.kind==='stone'&&s.power>0){b.used=true;s.score+=40;hint('Batu pecah!');}
+    if(b.kind==='stone'&&s.power>0){b.used=true;b.destroyed=true;s.score+=40;hint('Batu pecah!');}
     else if(!b.used){
      if(b.kind==='hidden')b.reveal=true;
      b.used=true;
@@ -481,10 +485,11 @@ function render(){
   }
  }
  for(const pform of l.platforms){
-  const xx=pform.x+(pform.kind==='suspended'?Math.sin((s?.elapsed||0)*1.3+pform.x):0),
-   yy=pform.y+(pform.kind==='sway'?Math.sin((s?.elapsed||0)*1.2+pform.x)*.45:0);
-  fill('#aa9265',X(xx-pform.w/2),Y(yy)-.13*p,pform.w*p,.17*p);
-  fill('#e4ce95',X(xx-pform.w/2),Y(yy)-.20*p,pform.w*p,.075*p);
+  const at=window.NUSAJIWA_STAGE130?.platformPosition?.(pform,s?.elapsed||0)||
+   {x:pform.x+(pform.kind==='suspended'?Math.sin((s?.elapsed||0)*1.3+pform.x):0),
+    y:pform.y+(pform.kind==='sway'?Math.sin((s?.elapsed||0)*1.2+pform.x)*.45:0)};
+  fill('#aa9265',X(at.x-pform.w/2),Y(at.y),pform.w*p,.17*p);
+  fill('#e4ce95',X(at.x-pform.w/2),Y(at.y),pform.w*p,.075*p);
  }
  for(const tube of l.pipes){
   const tx=X(tube.x-.6),ty=Y(tube.h);
@@ -496,11 +501,11 @@ function render(){
  }
  for(const b of l.blocks){
   if(b.kind==='hidden'&&!b.reveal)continue;
-  if(b.used)continue;
-  fill(b.kind==='stone'?'#798e97':b.kind==='power'?'#d5a65d':'#a9ac8a',
+  if(b.destroyed)continue;
+  fill(b.used?'#75868a':b.kind==='stone'?'#798e97':b.kind==='power'?'#d5a65d':'#a9ac8a',
    X(b.x-.45),Y(b.y+.4),.9*p,.8*p);
   ctx.font='bold '+Math.floor(p*.43)+'px system-ui';ctx.fillStyle='#213d42';
-  if(b.kind!=='stone')ctx.fillText(b.kind==='power'?'✧':'◇',X(b.x-.18),Y(b.y-.18));
+  if(!b.used&&b.kind!=='stone')ctx.fillText(b.kind==='power'?'✧':'◇',X(b.x-.18),Y(b.y-.18));
  }
  window.NUSAJIWA_CLASSIC124?.drawForeground?.(ctx,l,s,X,Y,p);
  for(const c of l.coins){if(c.got)continue;ctx.fillStyle='#ffe3a1';ctx.beginPath();
@@ -588,7 +593,7 @@ document.addEventListener('keyup',e=>keyboard(e,false),true);
 window.addEventListener('resize',resize,{passive:true});
 document.addEventListener('visibilitychange',()=>{if(active&&playing&&document.hidden)pause()});
 window.addEventListener('blur',()=>{if(active&&playing)pause()});
-window.NUSAJIWA_CLASSIC=Object.freeze({version:'9.10.NJ130',worldDesign:'NJ124-Worlds',renderSystem:'NJ125-Three-WebGL',open,close,levels:LEVELS.map(l=>({
+window.NUSAJIWA_CLASSIC=Object.freeze({version:'9.11.NJ131',worldDesign:'NJ124-Worlds',renderSystem:'NJ125-Three-WebGL',open,close,levels:LEVELS.map(l=>({
  index:l.index,world:l.world+1,stage:l.section+1,region:l.region,type:l.type,
  location:l.place,challenge:l.name,length:l.length,secretEntrances:l.secret.length,
  shortcuts:l.pipes.filter(p=>p.warp).length})),

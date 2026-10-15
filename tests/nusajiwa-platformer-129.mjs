@@ -13,15 +13,15 @@ test('NJ129: jump lands on top of active block without falling through',()=>{
  s.y=2.39;assert.equal(physics.resolveBlocks(s,l,4.8,2.68),true);
  assert.equal(s.y,2.55);assert.equal(s.grounded,true);assert.equal(s.vy,0);
 });
-test('NJ129: run blocked by solid side, hidden or consumed block is intangible',()=>{
+test('NJ129/NJ131: run blocked by solid side, hidden or destroyed stone is intangible',()=>{
  const {s,l}=setup();s.y=2.05;s.vy=0;s.x=5.1;
  const b={x:5,y:2.15,kind:'stone',used:false,reveal:true};l.blocks.push(b);
  assert.equal(physics.resolveBlocks(s,l,4.1,2.05),true);
  assert.equal(s.x,4.28);assert.equal(s.vx,0);
- b.used=true;s.x=5.1;s.vx=3;
+ b.used=true;b.destroyed=true;s.x=5.1;s.vx=3;
  assert.equal(physics.resolveBlocks(s,l,4.1,2.05),false);
  assert.equal(s.x,5.1);
- b.used=false;b.kind='hidden';b.reveal=false;
+ b.used=false;b.destroyed=false;b.kind='hidden';b.reveal=false;
  assert.equal(physics.resolveBlocks(s,l,4.1,2.05),false);
 });
 test('NJ129: projectiles cannot pass through intact solid block',()=>{
@@ -56,7 +56,7 @@ test('NJ129: game uses block solver, touch jump assistance, independent shell me
  assert.match(js,/e\.type==='shell'&&Math\.abs\(e\.vx\)>2/);
  assert.match(three,/const shellRig=new THREE\.Group/);
  assert.match(three,/item\.shellRig\.rotation\.z/);
- assert.match(three,/!x\.ref\.used/);
+ assert.match(three,/!x\.ref\.destroyed/);
  const html=read('index.html');
  assert.match(html,/nj123-classic\.js\?v=9\.\d+\.\d+/,'Browser must version the active Classic32 script');
  const r=JSON.parse(read('release.json'));

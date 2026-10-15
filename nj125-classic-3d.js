@@ -315,11 +315,11 @@ function build(level,pet){
  const m=environment(level);
  const plant=mat(0x467960),enemy=mat(0xa96654),shell=mat(0x5e917c),
   aqua=mat(0xe49c66),violet=mat(0xa98fc0),ink=mat(0x223a42),
-  glass=mat(0xc4e4c4,.10,.32);
+  glass=mat(0xc4e4c4,.10,.32),spentBlock=mat(0x75868a,.06,.88);
  for(const p of level.platforms){
   const group=new THREE.Group();scene.add(group);
-  box(m.rock,0,-.05,0,p.w,.24,2.2,group);
-  box(m.gold,0,.075,0,p.w,.11,2.24,group);
+  box(m.rock,0,-.15,0,p.w,.24,2.2,group);
+  box(m.gold,0,-.045,0,p.w,.09,2.24,group);
   platforms.push({p,group});
  }
  for(const t of level.pipes){
@@ -336,8 +336,9 @@ function build(level,pet){
   const cube=box(b.kind==='stone'?m.rock:b.kind==='power'?m.gold:plant,0,0,0,.91,.82,1.10,g);
   const seal=box(b.kind==='stone'?m.dark:m.white,0,.0,.58,.24,.20,.045,g);
   seal.rotation.z=Math.PI/4;
-  g.position.set(b.x,b.y+.28,0);
-  blocks.push({ref:b,group:g,cube});
+  // Cube center y matches the gameplay collision box [-.4,+.4].
+  g.position.set(b.x,b.y,0);
+  blocks.push({ref:b,group:g,cube,seal,spentBlock,activeMaterial:cube.material});
  }
  for(const c of level.coins){
   const g=new THREE.Group();scene.add(g);
@@ -486,15 +487,20 @@ function frame(level,status,pet){
   item.group.rotation.z=inShell?0:
     item.ref.type==='fish'?.09*Math.sin(t*3):.035*Math.sin(t*4);
  }
- for(const x of blocks)x.group.visible=!(x.ref.kind==='hidden'&&!x.ref.reveal)&&
-  !x.ref.used;
+ for(const x of blocks){
+  x.group.visible=!(x.ref.kind==='hidden'&&!x.ref.reveal)&&!x.ref.destroyed;
+  x.cube.material=x.ref.used?x.spentBlock:x.activeMaterial;
+  x.seal.visible=!x.ref.used;
+ }
  for(const x of secret){
   x.group.visible=!x.ref.got&&x.ref.type!=='life';
   x.out.rotation.y=t*1.5;
  }
  for(const x of platforms){
-  x.group.position.set(x.p.x+(x.p.kind==='suspended'?Math.sin(t*1.3+x.p.x):0),
-   x.p.y+(x.p.kind==='sway'?Math.sin(t*1.2+x.p.x)*.45:0),-.03);
+  const at=window.NUSAJIWA_STAGE130?.platformPosition?.(x.p,t)||
+   {x:x.p.x+(x.p.kind==='suspended'?Math.sin(t*1.3+x.p.x):0),
+    y:x.p.y+(x.p.kind==='sway'?Math.sin(t*1.2+x.p.x)*.45:0)};
+  x.group.position.set(at.x,at.y,-.03);
  }
  if(boss){boss.group.visible=boss.ref.hp>0;boss.group.rotation.y=Math.sin(t*.8)*.12;}
  const worldWidth=(camera.right-camera.left),posX=clamp(status.cameraX+worldWidth/2,

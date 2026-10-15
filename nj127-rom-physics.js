@@ -15,7 +15,8 @@ const intersects=(x,g)=>x>g[0]-.24&&x<g[1]+.24;
 const ground=(level,x)=>!level.gaps.some(g=>intersects(x,g));
 const nearPipe=(level,x,y)=>level.pipes.some(p=>Math.abs(p.x-x)<.79&&y<p.h+.32);
 const sweep=(a,b,c,r)=>Math.min(a,b)<=c+r&&Math.max(a,b)>=c-r;
-const solid=b=>!b.used&&(b.kind!=='hidden'||b.reveal!==false);
+// Consumed reward blocks remain physical; only broken stone disappears.
+const solid=b=>!b.destroyed&&(b.kind!=='hidden'||b.reveal!==false);
 /* All 3D/Canvas blocks share one collision box: top y+.40, bottom y-.40. */
 function resolveBlocks(s,l,oldX,oldY){
  if(!s||!l?.blocks)return false;
@@ -235,7 +236,7 @@ function draw2D(ctx,s,X,Y,p){
  }
  ctx.restore();
 }
-window.NUSAJIWA_NES127=Object.freeze({version:'NJ129.0',start,isProtected,resetLife,resolveBlocks,hitBlock,before,
+window.NUSAJIWA_NES127=Object.freeze({version:'NJ131.0',start,isProtected,resetLife,resolveBlocks,hitBlock,before,
  touchEnemy,stomp,kickShell,after,view,draw2D,romInformed:true,
  privacy:'NO original cartridge bytes, level maps, sprites or sounds shipped'});
 })();

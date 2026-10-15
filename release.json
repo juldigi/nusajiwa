@@ -939,6 +939,22 @@
       "core_version": "8.3 unchanged",
       "qa_device": "Real-device Safari iPhone not yet verified",
       "save": "No save schema changes"
+    },
+    {
+      "patch": "NJ131",
+      "status": "MERGED",
+      "title": "Unified physics and 3D/2D for spent blocks and rideable moving platforms",
+      "changes": [
+        "Reward blocks remain visible and solid after being activated; broken stone alone is removed",
+        "Original hidden blocks are intangible until struck, then remain physical",
+        "All renderer and physics states use common top/bottom geometry",
+        "Player inherits moving-platform displacement while supported; support resets on jump, respawn and life loss",
+        "Shared platform position aligns physics with WebGL and Canvas rendering"
+      ],
+      "scope": "32-stage Classic campaign; regression coverage added",
+      "qa": "Static and VM regression; real Safari iPhone visual/gameplay QA not yet verified",
+      "compatibility": "Original Tamagotchi, Kodex, 15-stage campaign and all persistence keys unchanged",
+      "tests": "tests/nusajiwa-physics-131.mjs"
     }
   ],
   "visual_audit": {
