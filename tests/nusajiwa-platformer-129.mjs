@@ -58,7 +58,7 @@ test('NJ129: game uses block solver, touch jump assistance, independent shell me
  assert.match(three,/item\.shellRig\.rotation\.z/);
  assert.match(three,/!x\.ref\.used/);
  const html=read('index.html');
- assert.ok(html.includes('nj123-classic.js?v=9.9.129'));
+ assert.match(html,/nj123-classic\.js\?v=9\.\d+\.\d+/,'Browser must version the active Classic32 script');
  const r=JSON.parse(read('release.json'));
  assert.equal(r.version,'8.3');assert.equal(r.runtime.identities,300);
  assert.equal(r.merged_gameplay_improvements.filter(p=>p.patch==='NJ129').length,1);

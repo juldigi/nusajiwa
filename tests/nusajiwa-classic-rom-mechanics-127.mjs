@@ -61,6 +61,6 @@ test('Existing Classic32 code paths and 3D/CSS fallbacks share runtime, no ROM d
  const r=JSON.parse(read('release.json'));
  assert.equal(r.runtime.identities,300);
  assert.equal(r.merged_gameplay_improvements.filter(x=>x.patch==='NJ127').length,1);
- assert.ok(read('.github/workflows/pages.yml').includes('cp nj127-rom-physics.js _site/'));
+ assert.ok(read('.github/workflows/pages.yml').includes('cp nj127-rom-physics.js'),'Physics asset must be copied even when batched');
  assert.ok(read('.github/workflows/tamagotchi-quality.yml').includes('node --check nj127-rom-physics.js'));
 });
