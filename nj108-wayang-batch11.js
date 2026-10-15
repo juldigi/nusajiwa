@@ -149,7 +149,7 @@ window.NUSAJIWA_SCULPT108=function(group,body,M,id,stage,T,ell,tube){
    [[j*.08,.58,.18],[j*.12,.35,.27],[j*.13,.20,.27]],.020,M.gold);
   if(s>=2)for(let j=-2;j<=2;j++)C('Gatotkaca-royal-jamang-'+j,
    j*.094,hy+.38-Math.abs(j)*.031,.08,.047,.16+(2-Math.abs(j))*.045,M.gold);
-  if(s>=3)pair(d=>L('aviator-cloak-without-biological-wing-'+d,
+  if(s>=3)pair(d=>L('aviator-cloak-wingless-fabric-tail-'+d,
    [[d*.27,1.29,-.26],[d*.42,.86,-.37],[d*.51,.40,-.39]],.047,M.gold));
   if(s===6)pair(d=>E('mature-banded-golden-bracers-'+d,d*.48,.80,.26,.15,.08,.095,M.gold));
   if(s===7)for(let j=-2;j<=2;j++)L('fictional-flowering-energy-flight-not-wings-'+j,
