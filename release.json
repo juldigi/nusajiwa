@@ -861,6 +861,30 @@
       "save_schema": "unchanged",
       "iphoneSafariQA": "NOT_VERIFIED",
       "test": "tests/nusajiwa-classic-rom-mechanics-127.mjs"
+    },
+    {
+      "patch": "NJ128",
+      "status": "MERGED",
+      "title": "Platformer life-state and guardian invulnerability consistency",
+      "files": [
+        "nj127-rom-physics.js",
+        "nj123-classic.js",
+        "tests/nusajiwa-classic-lifecycle-128.mjs"
+      ],
+      "changes": [
+        "Temporary powerups, active projectiles and Surya invulnerability cleared when a life is lost",
+        "Cahaya Surya protection now applies to guardian contact consistently",
+        "Pause resume clears stale directional/jump/run input and frame-time buffer"
+      ],
+      "unaffected": [
+        "300 catalog identities",
+        "Tamagotchi 3D save",
+        "15-stage adventure",
+        "32-stage campaign save",
+        "Kodex"
+      ],
+      "real_iPhone_Safari_qa": "NOT_VERIFIED",
+      "test": "tests/nusajiwa-classic-lifecycle-128.mjs"
     }
   ],
   "visual_audit": {

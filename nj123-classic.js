@@ -129,7 +129,7 @@ function makeUI(){
   const a=b.dataset.c,value=Number(b.dataset.i);
   if(a==='close'){close();return}if(a==='rom'){window.NUSAJIWA_ROM_REF?.open?.();return}if(a==='levels'){showLevels();return}
   if(a==='level'){start(value);return}if(a==='next'){start((status?.index??0)+1);return}
-  if(a==='retry'){start(status?.index??0);return}if(a==='resume'){playing=true;hideMenu();last=0;return}
+  if(a==='retry'){start(status?.index??0);return}if(a==='resume'){clearKeys();playing=true;hideMenu();last=0;buffer=0;return}
   if(a==='pause'){pause();return}if(a==='warp'){jumpTo(value);return}
   if(a==='secret'){enterSecret();return}
  });
@@ -214,6 +214,8 @@ function pause(){if(!active||!playing)return;
 }
 function die(reason){
  if(!status||status.stop)return;
+ // A lost life clears transient collectibles and invulnerability, not campaign progress.
+ window.NUSAJIWA_NES127?.resetLife?.(status);
  status.lives--;status.vx=0;status.vy=0;status.invincible=0;
  if(status.lives<=0){
   status.stop=true;show('Permainan berakhir','<p>'+esc(reason)+'. Kembali ke peta atau coba stage yang sama.</p>',
@@ -226,6 +228,7 @@ function die(reason){
  hint(reason+' · ♥ '+status.lives,1.9);
 }
 function damage(){
+ if(window.NUSAJIWA_NES127?.isProtected?.(status))return;
  if(status.invincible>0||status.stop)return;
  if(status.power>0){status.power=0;status.invincible=1.5;hint('Perisai Jiwa terpakai!',1.1);}
  else die('Terkena rintangan');
@@ -557,7 +560,7 @@ document.addEventListener('keyup',e=>keyboard(e,false),true);
 window.addEventListener('resize',resize,{passive:true});
 document.addEventListener('visibilitychange',()=>{if(active&&playing&&document.hidden)pause()});
 window.addEventListener('blur',()=>{if(active&&playing)pause()});
-window.NUSAJIWA_CLASSIC=Object.freeze({version:'9.7.NJ127',worldDesign:'NJ124-Worlds',renderSystem:'NJ125-Three-WebGL',open,close,levels:LEVELS.map(l=>({
+window.NUSAJIWA_CLASSIC=Object.freeze({version:'9.8.NJ128',worldDesign:'NJ124-Worlds',renderSystem:'NJ125-Three-WebGL',open,close,levels:LEVELS.map(l=>({
  index:l.index,world:l.world+1,stage:l.section+1,region:l.region,type:l.type,
  location:l.place,challenge:l.name,length:l.length,secretEntrances:l.secret.length,
  shortcuts:l.pipes.filter(p=>p.warp).length})),

@@ -21,6 +21,14 @@ function start(s,l){
   scoreEarned:0,picked:0,blocked:0};
  return true;
 }
+// NJ128: temporary powers belong to a life, not a checkpoint or a save.
+function isProtected(s){return !!(s?.nj127?.star>0);}
+function resetLife(s){
+ const fx=s?.nj127;if(!fx)return false;
+ fx.items.length=0;fx.shots.length=0;fx.star=0;
+ fx.runHeld=false;fx.fireCooldown=0;fx.shellChain=0;fx.stompCombo=0;
+ return true;
+}
 function hitBlock(s,l,b,hint){
  const fx=s?.nj127;
  if(!fx||b?.content!=='power')return false;
@@ -190,7 +198,7 @@ function draw2D(ctx,s,X,Y,p){
  }
  ctx.restore();
 }
-window.NUSAJIWA_NES127=Object.freeze({version:'NJ127.0',start,hitBlock,before,
+window.NUSAJIWA_NES127=Object.freeze({version:'NJ128.0',start,isProtected,resetLife,hitBlock,before,
  touchEnemy,stomp,kickShell,after,view,draw2D,romInformed:true,
  privacy:'NO original cartridge bytes, level maps, sprites or sounds shipped'});
 })();
