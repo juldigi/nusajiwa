@@ -369,6 +369,42 @@
       "production_visibility": "one authoritative sculpt rig per character and stage",
       "caveat": "spiritual/religious imagery grounded in regional source motifs; fantasy growth phases are not canon",
       "real_mobile_3d_visual_review": "PENDING"
+    },
+    {
+      "batch": "nj101",
+      "status": "MERGED",
+      "identity_ids": [
+        "barong",
+        "rangda",
+        "sembrani",
+        "kuda_lumping",
+        "singa_barong_reog"
+      ],
+      "stage_count": 8,
+      "constructions": 40,
+      "module": "nj101-ritual-batch4.js",
+      "test_file": "tests/nusajiwa-sculpt-101.mjs",
+      "previous_legacy_stages_superseded": [
+        {
+          "batch": "nj90",
+          "ids": [
+            "rangda",
+            "barong"
+          ]
+        },
+        {
+          "batch": "nj91",
+          "ids": [
+            "sembrani"
+          ]
+        }
+      ],
+      "identity_delta": 0,
+      "form_targets": "Balinese two-performer Barong vs Rangda masked humanoid; winged horse vs flat bamboo prop; Reog Dadak Merak fan / tiger mask",
+      "technique": "Native meshes, shallow extruded woven horse silhouette, feathers, mask relief; previous rigs made invisible",
+      "editorial_caveat": "Sacred rituals are not creatures that hatch or evolve; all phases are fantasy game interactions.",
+      "saved_progress": "unchanged",
+      "iphone_visual_render_qa": "NOT_YET_MANUALLY_VERIFIED"
     }
   ],
   "merged_gameplay_improvements": [
@@ -416,7 +452,7 @@
     "save_changes": "none",
     "catalog_size": 300
   },
-  "last_character_patch": "NJ100-B03",
+  "last_character_patch": "NJ101-B04",
   "visual_ui": {
     "patch": "NJ642",
     "status": "MERGED",

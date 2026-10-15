@@ -4412,6 +4412,8 @@ function makeAvatar(r, portraitMode=false, auditPhase=null){
  // NJ99: one visible full-sculpt rig for the next eight folklore identities.
  window.NUSAJIWA_SCULPT99?.(group,body,M,r[0],renderPhase,THREE,ell,tube);
  window.NUSAJIWA_SCULPT100?.(group,body,M,r[0],renderPhase,THREE,ell,tube);
+ // NJ101 full replacement of older sculpt rigs for five performance identities.
+ window.NUSAJIWA_SCULPT101?.(group,body,M,r[0],renderPhase,THREE,ell,tube);
  window.NUSAJIWA_RENDER97?.prepare(group,THREE,r[0],renderPhase);
  group.userData={...group.userData,body,type,base:body.position.y,phase:(living?.phase??null),legend:(living?.legend??null)};
  return group;

@@ -151,3 +151,10 @@ Pahat ulang geometri procedural 3D untuk 8 ID × 8 fase: Banaspati (api tidak hu
 ### NJ100 — Batch 03 lima identitas mitologi (15 Oktober 2026)
 
 Lembuswana, Garuda, Naga Basuki, Antaboga, dan Taksaka mendapat total 40 rekonstruksi fase 3D khusus. Bentuk menekankan hibrida Kutai (lembu + gajah + burung + kaki ayam + sisik), Garuda kepala elang dengan tangan dan kaki manusia, Basuki yang simbolis berhubungan dengan air, Antaboga sebagai raja naga bermahkota dengan variasi wujud antropomorf dalam cerita, dan Taksaka bernuansa lengkungan penjor Bali. Seluruh telur/evolusi bersifat **fiksi gameplay**, bukan klaim asal-usul atau praktik religi. Sumber identitas tercantum di `nj100-myth-batch3.js`. Render empat sudut pada Safari belum dilakukan.
+
+
+### NJ101 — Batch 04 seni pertunjukan dan folklor Jawa–Bali (15 Oktober 2026)
+
+Lima karakter dipahat ulang melalui geometri 3D khusus untuk setiap fase: Barong Ket (`barong`, makhluk berkaki empat dan kostum dengan kepala topeng), Rangda (`rangda`, sosok tegak bertopeng, rambut ritual dan lidah memanjang), Kuda Sembrani (`sembrani`, kuda tiga dimensi dengan sayap berkembang), Kuda Kepang (`kuda_lumping`, **properti kuda pipih anyaman bambu** bukan hewan berkaki empat), dan Singo Barong Reog (`singa_barong_reog`, kepala harimau dan dadak merak bermotif bulu kipas). Sumber identitas: [Barong Ket](https://www.maskmuseum.org/mask/bali-barong-ket/), [Rangda](https://www.maskmuseum.org/mask/bali-rangda/), [Kuda Lumping](https://www.indonesia.travel/id/id/travel-ideas/culture/kesenian-kuda-lumping), [Reog Ponorogo](https://visitponorogo.id/tours/monumen-reog-ponorogo). 
+
+Catatan: Batch NJ89/NJ90 adalah pekerjaan morfologi lama untuk sebagian ID yang sama; **NJ101 menggantikannya pada layer visual saat runtime** tanpa menambah ID ke katalog. Telur, pertumbuhan, dan legenda adalah mekanisme permainan fiksi, bukan pernyataan tentang benda seni pertunjukan atau ritual sakral. Pengujian Node menguji kontrak struktural, bukan sertifikasi rupa visual di Safari iPhone.
