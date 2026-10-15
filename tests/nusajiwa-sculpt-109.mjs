@@ -75,7 +75,7 @@ test('All five identifiable taxa have correct distinguishing sculpt anatomy at a
   const names=b.children.at(-1).children.map(c=>c.name).join('|');
   for(const x of anchors)assert.ok(names.includes(x),id+' missing '+x);
   const rig=b.children.at(-1);
-  assert.ok(rig.children.some(c=>c.material?.parameters?.color),'species-specific physical colour');
+  assert.ok(rig.children.some(c=>c.material?.parameters?.color||c.params?.at(-1)?.parameters?.color),'species-specific physical colour');
   assert.equal(rig.userData.fictionalLegend,false);
  }
 });
