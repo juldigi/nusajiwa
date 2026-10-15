@@ -912,6 +912,33 @@
         "32-stage save schema"
       ],
       "qa": "Automated regression required; visual iPhone Safari manual testing still not verified"
+    },
+    {
+      "patch": "NJ130",
+      "status": "MERGED",
+      "title": "32 unique Indonesian stage blueprints with physical spring stones, moving sentries and authored pacing",
+      "levels": 32,
+      "worlds": 8,
+      "mode": "Classic32",
+      "files": [
+        "nj130-stage-director.js",
+        "nj123-classic.js",
+        "nj125-classic-3d.js",
+        "tests/nusajiwa-director-130.mjs"
+      ],
+      "gameplay": [
+        "32 explicit stage blueprints (not Nintendo cartridge maps)",
+        "ground-mounted bounce-stone interactions",
+        "moving sentry collision and per-life cooldown",
+        "guided collectible arcs",
+        "regional enemy patrol pacing",
+        "additional moving crossover platforms",
+        "matching Canvas 2D and native Three.js 3D geometry"
+      ],
+      "risk": "No claim of 1:1 Nintendo level layouts/cycle-exact NES physics",
+      "core_version": "8.3 unchanged",
+      "qa_device": "Real-device Safari iPhone not yet verified",
+      "save": "No save schema changes"
     }
   ],
   "visual_audit": {

@@ -19,6 +19,7 @@ let THREE=null,renderer=null,scene=null,camera=null,canvas=null,host=null,oldCan
 let pending=null,active=false,broken=false,stageKey='',geo=[],mats=[],objects=[],decor=[];
 let player=null,coins=[],enemies=[],blocks=[],pipes=[],secret=[],platforms=[],boss=null,gate=null;
 let fxPickup=[],fxShots=[],fxAura=null,fxGold=null,fxEmber=null,fxStone=null;
+let stagePads=[],stageSentries=[];
 let worldLabel='',frameCount=0,quality='standard',lastRun=null,lastCanvasWidth=0,lastCanvasHeight=0;
 const create=async()=>{
  if(THREE)return THREE;
@@ -62,6 +63,7 @@ function clearStage(){
  geo=[];mats=[];objects=[];decor=[];player=null;coins=[];enemies=[];blocks=[];
  pipes=[];secret=[];platforms=[];boss=null;gate=null;stageKey='';
  fxPickup=[];fxShots=[];fxAura=null;fxGold=null;fxEmber=null;fxStone=null;
+ stagePads=[];stageSentries=[];
 }
 function setSize(){
  if(!renderer||!host)return;
@@ -368,6 +370,24 @@ function build(level,pet){
   shellRig.visible=false;
   g.position.set(e.x,0,.04);enemies.push({ref:e,group:g,body,shellRig});
  }
+ // NJ130: gameplay interactables are genuine 3D geometry, not flat overlays.
+ if(level.nj130){
+  const padMaterial=mat(0xf6d684,.23,.40,{emissive:0x665522,emissiveIntensity:.22});
+  const dangerMaterial=mat(level.nj130.biome==='lava'||level.nj130.biome==='boss'?
+    0xf48b64:0x9adbc9,.08,.30,{emissive:0x487a73,emissiveIntensity:.36});
+  for(const pad of level.nj130.pads){
+   const g=new THREE.Group();scene.add(g);
+   cyl(m.dark,0,.05,0,.45,.48,.11,g,18);
+   const tip=cone(padMaterial,0,.31,0,.34,.43,g,6);
+   g.position.set(pad.x,0,.38);stagePads.push({ref:pad,group:g,tip});
+  }
+  for(const sentry of level.nj130.sentries){
+   const g=new THREE.Group();scene.add(g);
+   const core=make(new THREE.IcosahedronGeometry(sentry.radius,1),dangerMaterial,g);
+   const halo=make(new THREE.TorusGeometry(sentry.radius*1.35,.035,6,18),m.gold,g);
+   halo.position.z=.07;stageSentries.push({ref:sentry,group:g,core,halo});
+  }
+ }
  if(level.boss){
   const g=new THREE.Group();scene.add(g);
   const torso=ell(m.rock,0,1.08,0,.69,.85,.55,g);
@@ -447,6 +467,14 @@ function frame(level,status,pet){
    fxAura.rotation.z=t*.9;
    fxAura.scale.setScalar(1+.06*Math.sin(t*12));
   }
+ }
+ for(const pad of stagePads){
+  pad.tip.scale.y=1+.12*Math.sin(t*7+pad.ref.x);
+ }
+ for(const hazard of stageSentries){
+  const at=window.NUSAJIWA_STAGE130?.position?.(hazard.ref,t);
+  if(at){hazard.group.position.set(at.x,at.y,.57);
+   hazard.core.rotation.y=t*1.9;hazard.halo.rotation.z=t*.85;}
  }
  for(const item of enemies){
   item.group.visible=!!item.ref.alive;

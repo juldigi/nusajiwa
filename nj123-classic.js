@@ -91,7 +91,8 @@ function plan(index){
   boss:gauntlet?{x:length-10,hp:2+Math.floor(world/2),name:v.boss,phase:0}:null,
   reward:['tanah','air','angin','bayangan','api','cahaya','air','cahaya'][world],
   colors:v,signature:type+'-'+index};
- return window.NUSAJIWA_CLASSIC124?.decorateLevel?.(stage)||stage;
+ const base=window.NUSAJIWA_CLASSIC124?.decorateLevel?.(stage)||stage;
+ return window.NUSAJIWA_STAGE130?.decorate?.(base)||base;
 }
 const LEVELS=Array.from({length:MAX},(_,i)=>plan(i));
 function load(){try{const a=JSON.parse(localStorage.getItem(KEY)||'null');if(a?.version===1&&a.pets)return a;}catch(_){}return {version:1,pets:{}}}
@@ -205,6 +206,7 @@ function start(n){
   completed:false,stop:false,gravityScale:1,worldTime:0};
  window.NUSAJIWA_CLASSIC124?.start?.(status,level);
  window.NUSAJIWA_NES127?.start?.(status,level);
+ window.NUSAJIWA_STAGE130?.start?.(status,level);
  key.pressed=false;playing=true;hideMenu();hint((level.world+1)+'—'+(level.section+1)+' · '+level.region+' / '+level.name,2.4);
  updateHud();last=0;buffer=0;return true;
 }
@@ -225,6 +227,7 @@ function die(reason){
  const checkpoint=window.NUSAJIWA_CLASSIC124?.respawn?.(status,level);
  status.x=checkpoint??2.1;status.y=0;status.cameraX=checkpoint?Math.max(0,checkpoint-6):0;status.power=0;status.shield=0;status.invincible=1.2;
  status.jumpBuffer=0;status.coyote=.10;status.grounded=true;
+ window.NUSAJIWA_STAGE130?.resetLife?.(status);
  status.remaining=level.clock;status.bonus=false;status.bonusTimer=0;
  hint(reason+' · ♥ '+status.lives,1.9);
 }
@@ -328,6 +331,7 @@ function update(dt){
  }
  // NJ129: rune/stone/power blocks also have solid tops and sides.
  window.NUSAJIWA_NES127?.resolveBlocks?.(s,l,oldX,oldY);
+ window.NUSAJIWA_STAGE130?.bounce?.(s,l,hint);
  // Solid wall collision with portal pillars until player jumps onto them.
  for(const tube of l.pipes){
   const dx=s.x-tube.x;
@@ -417,6 +421,8 @@ function update(dt){
   }
  }
  window.NUSAJIWA_NES127?.after?.(s,l,dt,hint);
+ window.NUSAJIWA_STAGE130?.update?.(s,l,dt,damage,hint);
+ if(s.stop)return;
  window.NUSAJIWA_CLASSIC124?.update?.(s,l,dt,hint,addCoin);
  if(s.bonus&&Math.floor(s.elapsed*2.5)!==Math.floor((s.elapsed-dt)*2.5)){addCoin(2);s.score+=30;}
  if(s.x>=l.length-3.2&&(!l.boss||l.boss.hp<=0))finish();
@@ -499,6 +505,7 @@ function render(){
  window.NUSAJIWA_CLASSIC124?.drawForeground?.(ctx,l,s,X,Y,p);
  for(const c of l.coins){if(c.got)continue;ctx.fillStyle='#ffe3a1';ctx.beginPath();
   ctx.ellipse(X(c.x),Y(c.y),p*.15,p*.23,0,0,6.283);ctx.fill();}
+ window.NUSAJIWA_STAGE130?.draw2D?.(ctx,s,l,X,Y,p);
  for(const e of l.enemies){if(!e.alive)continue;const yy=Y(e.y+.2),xx=X(e.x);
   ctx.fillStyle=e.type==='fish'?'#f4a96e':e.type==='jelly'?'#d5a4df':
    e.type==='shelled'||e.shell?'#678c84':'#ac6a61';
@@ -581,7 +588,7 @@ document.addEventListener('keyup',e=>keyboard(e,false),true);
 window.addEventListener('resize',resize,{passive:true});
 document.addEventListener('visibilitychange',()=>{if(active&&playing&&document.hidden)pause()});
 window.addEventListener('blur',()=>{if(active&&playing)pause()});
-window.NUSAJIWA_CLASSIC=Object.freeze({version:'9.9.NJ129',worldDesign:'NJ124-Worlds',renderSystem:'NJ125-Three-WebGL',open,close,levels:LEVELS.map(l=>({
+window.NUSAJIWA_CLASSIC=Object.freeze({version:'9.10.NJ130',worldDesign:'NJ124-Worlds',renderSystem:'NJ125-Three-WebGL',open,close,levels:LEVELS.map(l=>({
  index:l.index,world:l.world+1,stage:l.section+1,region:l.region,type:l.type,
  location:l.place,challenge:l.name,length:l.length,secretEntrances:l.secret.length,
  shortcuts:l.pipes.filter(p=>p.warp).length})),
@@ -590,7 +597,9 @@ window.NUSAJIWA_CLASSIC=Object.freeze({version:'9.9.NJ129',worldDesign:'NJ124-Wo
  gaps:l.gaps.map(g=>g.slice()),portals:l.pipes.map(p=>({x:p.x,secret:p.secret,warp:p.warp})),
  enemies:l.enemies.length,platforms:l.platforms.length,blocks:l.blocks.length,
  shortcuts:l.pipes.filter(p=>p.warp).length,
- bonuses:l.secret.length,boss:!!l.boss,clock:l.clock}:null;},
+ bonuses:l.secret.length,boss:!!l.boss,clock:l.clock,
+  choreography:l.nj130?.signature||null,pads:l.nj130?.pads?.length||0,
+  sentries:l.nj130?.sentries?.length||0}:null;},
  getStatus:()=>status?{index:status.index,x:status.x,y:status.y,coins:status.coins,
  lives:status.lives,shield:status.power,time:status.remaining,
  bonus:status.bonus,secret:status.secretFlag,playing}:null,
