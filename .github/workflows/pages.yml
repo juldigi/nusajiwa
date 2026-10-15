@@ -26,6 +26,7 @@ jobs:
           node --check nj121-adventure-worlds.js
           node --check nj122-hidden-sanctuaries.js
           node --check nj123-classic.js
+          node --check nj124-rom-reference.js
           node --check nj89-ten.js
           node --check nj90-forty.js
           node --check nj94-fauna.js
@@ -80,7 +81,7 @@ jobs:
           cp tamagotchi-3d.js tamagotchi-3d.css nusajiwa-adventure.js nusajiwa-adventure.css nj121-adventure-worlds.js nj122-hidden-sanctuaries.js _site/
           cp -r assets _site/
           cp nj98-mistis-batch1.js nj99-folklore-batch2.js nj100-myth-batch3.js nj101-ritual-batch4.js nj102-regional-batch5.js nj103-cryptid-batch6.js nj104-regional-batch7.js nj105-urban-batch8.js nj106-folktales-batch9.js nj107-mythic-batch10.js nj108-wayang-batch11.js nj109-fauna-batch12.js _site/
-          cp nj120-aquatic-batch13.js nj123-classic.js nj123-classic.css _site/
+          cp nj120-aquatic-batch13.js nj123-classic.js nj123-classic.css nj124-rom-reference.js nj124-rom-reference.css _site/
           cp release.json _site/
       - name: Stamp public build SHA
         run: |

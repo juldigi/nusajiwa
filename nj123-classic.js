@@ -126,7 +126,7 @@ function makeUI(){
  root.addEventListener('click',event=>{
   const b=event.target.closest('button[data-c]');if(!b)return;
   const a=b.dataset.c,value=Number(b.dataset.i);
-  if(a==='close'){close();return}if(a==='levels'){showLevels();return}
+  if(a==='close'){close();return}if(a==='rom'){window.NUSAJIWA_ROM_REF?.open?.();return}if(a==='levels'){showLevels();return}
   if(a==='level'){start(value);return}if(a==='next'){start((status?.index??0)+1);return}
   if(a==='retry'){start(status?.index??0);return}if(a==='resume'){playing=true;hideMenu();last=0;return}
   if(a==='pause'){pause();return}if(a==='warp'){jumpTo(value);return}
@@ -171,7 +171,7 @@ function showLevels(){
  show('Jelajah Klasik · 32 Stage',
  '<p>Delapan wilayah, 32 lokasi dan tantangan berbeda. Pilih level yang terbuka. Kendali mengikuti DNA platformer NES: <b>A</b> lompat (tahan untuk lebih tinggi), <b>B</b> berlari, <b>↓</b> portal. Ada musuh, blok rahasia, batu elemen, jalur bonus, serta pintasan antar dunia.</p>'+
  '<p class="njc-note">Peta dan visual dirancang asli untuk NUSAJIWA. Mode 15 level sebelumnya tetap tersedia.</p>'+grid,
- [['close','Kembali ke Petualangan 15 Level']]);
+ [['rom','📼 Buka ROM asli (file pribadi)'],['close','Kembali ke Petualangan 15 Level']]);
 }
 function open(p){
  const candidate=p||(()=>{try{const a=window.NUSAJIWA_TAMAGOTCHI?.getSave();return a?.pets?.[a.active];}catch(_){return null}})();
@@ -518,7 +518,7 @@ function loop(now){
  render();raf=requestAnimationFrame(loop);
 }
 function keyboard(ev,down){
- if(!active)return;const target=ev.target;
+ if(!active||window.NUSAJIWA_ROM_REF?.isOpen?.())return;const target=ev.target;
  if(target?.tagName==='INPUT'||target?.tagName==='TEXTAREA')return;
  const codes={ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',
  ArrowUp:'jump',Space:'jump',KeyZ:'jump',KeyK:'jump',KeyX:'run',KeyJ:'run',

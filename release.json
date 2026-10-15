@@ -809,6 +809,23 @@
       "campaign_save_key": "nusajiwa-classic-32-v1",
       "real_mobile_qa": "NOT_VERIFIED",
       "currency_note": "Classic coin campaign stores progress independently; does not award incompatible 15-stage XP"
+    },
+    {
+      "patch": "NJ124",
+      "status": "MERGED",
+      "feature": "Local NES ROM reference player",
+      "library": "jsnes Browser (Apache 2.0)",
+      "library_uri": "https://unpkg.com/jsnes@2.1.0/dist/jsnes.min.js",
+      "local_zip_unpack": "JSZip on demand",
+      "module": "nj124-rom-reference.js",
+      "stylesheet": "nj124-rom-reference.css",
+      "test": "tests/nusajiwa-rom-reference-124.mjs",
+      "input": "User-selected local .nes or .zip containing one .nes",
+      "security": "No ROM bytes included in GitHub Pages deployment or uploaded to any server; browser RAM only",
+      "use": "Comparison of authentic ROM behaviour to original NUSAJIWA Classic 32 adaptations",
+      "limitations": "Emulator runs original 8-bit cartridge; does not replace NUSAJIWA creature sprites/assets; NES emulator accuracy depends on jsnes and browser",
+      "compatibility": "iPhone touch overlay, desktop keyboard and gamepad library",
+      "existing_modes": "15 original stages and NJ123 32 stages preserved; no progress mutation"
     }
   ],
   "visual_audit": {

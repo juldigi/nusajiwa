@@ -1,0 +1,70 @@
+/* NJ124 · Private NES reference workspace inside NUSAJIWA */
+#njromref[hidden]{display:none!important}
+#njromref{position:fixed;inset:0;z-index:100001;background:#081622;color:#f5f1e3;
+font:500 13px/1.5 ui-sans-serif,system-ui,-apple-system,sans-serif;
+touch-action:none;user-select:none;-webkit-user-select:none}
+#njromref *{box-sizing:border-box}
+#njromref .njr-toolbar{position:absolute;left:0;right:0;top:0;min-height:55px;
+padding:calc(env(safe-area-inset-top,0px) + 7px) 17px 7px;
+display:flex;justify-content:space-between;align-items:center;gap:12px;
+background:linear-gradient(140deg,#142a3c,#0a1b2b);border-bottom:1px solid #ebddad3c;z-index:5}
+#njromref .njr-toolbar strong{font-size:13px;letter-spacing:.10em;display:block;color:#f7e9bb}
+#njromref .njr-toolbar small{display:block;font-size:10px;color:#c8d7da}
+#njromref .njr-toolbar button{border:1px solid #e0dfc47a;background:#294556;color:#fff5d7;
+width:34px;height:34px;border-radius:9px;font-size:20px}
+#njromref .njr-container{position:absolute;inset:75px 0 114px;display:flex;flex-direction:column;
+align-items:center;justify-content:center;gap:10px;overflow:auto}
+#njromref .njr-player{width:min(100%,min(85dvh * 1.067,900px));
+height:min(70dvh,calc(100vw * .9375));aspect-ratio:256/240;max-width:calc(100vw - 24px);
+display:grid;place-items:center;background:#030a12;border:1px solid #e5d9b255;
+border-radius:12px;overflow:hidden;box-shadow:0 18px 48px #02080c8c}
+#njromref .njr-player canvas{width:100%!important;height:100%!important;object-fit:contain;
+image-rendering:pixelated;touch-action:none}
+#njromref .njr-setup{position:absolute;left:50%;top:49%;transform:translate(-50%,-50%);
+width:min(530px,92vw);padding:23px;border-radius:17px;
+background:#142c3af2;border:1px solid #e5dbb677;box-shadow:0 20px 45px #000b;text-align:center}
+#njromref .njr-setup[hidden]{display:none!important}
+#njromref .njr-setup h2{font-size:22px;line-height:1.25;margin:0 0 10px;color:#f5e6b1}
+#njromref .njr-setup p{margin:0 0 15px;color:#deede4;font-size:13px}
+#njromref .njr-setup .njr-note{font-size:11px;color:#b9d1cf}
+#njromref .njr-upload{display:block;margin:11px auto 13px;padding:12px;border:1px solid #eee0b0;
+background:#d1b77d;border-radius:9px;color:#182b35;font-weight:850;letter-spacing:.03em;cursor:pointer}
+#njromref .njr-upload input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+#njromref #njrStatus{padding:3px 12px;text-align:center;font-size:11px;color:#e9d5a1;
+max-width:94%;overflow-wrap:anywhere}
+#njromref .njr-joy{position:absolute;left:0;right:0;bottom:0;display:flex;
+align-items:flex-end;justify-content:space-between;gap:9px;
+padding:10px max(12px,env(safe-area-inset-left,0px));
+padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));
+background:linear-gradient(transparent,#081925e6);pointer-events:none}
+#njromref .njr-joy>div{display:flex;align-items:center;gap:7px;flex-wrap:wrap;pointer-events:auto}
+#njromref .njr-joy button{min-width:47px;height:48px;border-radius:11px;
+border:1px solid #cad4cb75;background:#284455d9;color:#f4efda;font-weight:840;font-size:18px;
+touch-action:none;pointer-events:auto;-webkit-tap-highlight-color:transparent}
+#njromref .njr-joy button:active{transform:translateY(2px);background:#4c7e79}
+#njromref .njr-joy .njr-a{background:#428f6bd4}
+#njromref .njr-joy .njr-b{background:#956345d4}
+#njromref .njr-joy .njr-start,#njromref .njr-joy .njr-select{font-size:10px}
+body.njr-playing{overflow:hidden!important}
+@media(max-width:690px){
+ #njromref .njr-toolbar{padding:calc(env(safe-area-inset-top,0px) + 6px) 11px 6px}
+ #njromref .njr-toolbar strong{font-size:10px}
+ #njromref .njr-toolbar small{font-size:8px}
+ #njromref .njr-container{inset:58px 0 136px}
+ #njromref .njr-player{width:min(calc(100vw - 14px),65dvh);height:auto;aspect-ratio:256/240}
+ #njromref .njr-setup{padding:15px}
+ #njromref .njr-setup h2{font-size:17px}
+ #njromref .njr-setup p{font-size:11px}
+ #njromref .njr-joy{padding:6px 7px calc(env(safe-area-inset-bottom,0px) + 7px)}
+ #njromref .njr-joy>div{gap:4px;max-width:49%;justify-content:center}
+ #njromref .njr-joy button{min-width:39px;width:39px;height:43px;font-size:16px}
+ #njromref .njr-joy .njr-start,#njromref .njr-joy .njr-select{font-size:8px}
+}
+@media(max-height:470px) and (orientation:landscape){
+ #njromref .njr-container{inset:46px 0 47px}
+ #njromref .njr-player{width:auto;height:100%;aspect-ratio:256/240}
+ #njromref .njr-toolbar{min-height:39px}
+ #njromref .njr-joy{max-width:75%;margin:auto;left:0;right:0;padding-bottom:5px}
+ #njromref .njr-joy button{height:36px;min-width:37px}
+ #njromref .njr-setup{top:45%;max-width:500px}
+}
