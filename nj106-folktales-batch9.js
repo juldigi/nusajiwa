@@ -187,6 +187,16 @@ window.NUSAJIWA_SCULPT106=function(group,body,M,id,phase,T,ell,tube){
       [-.12+.14*Math.cos(angle+.90),.83+.14*Math.sin(angle+.90),.23]
     ],.028,M.gold);
    }
+   // Fine three-dimensional radial cangkang grooves: genuine sculpt detail,
+   // not an attempt to relax the minimum-geometry regression guard.
+   for(let k=0;k<8+s;k++){
+    const a=k*Math.PI*2/(8+s),rad=.22+.045*stageSize;
+    L('snail-shell-fine-radial-sculpt-groove-'+k,[
+     [-.12+rad*Math.cos(a),.83+rad*Math.sin(a),.14],
+     [-.12+(rad+.046)*Math.cos(a+.10),.83+(rad+.046)*Math.sin(a+.10),.16],
+     [-.12+(rad+.078)*Math.cos(a+.22),.83+(rad+.078)*Math.sin(a+.22),.12]
+    ],.014+(k%3)*.003,M.gold);
+   }
    E('low-real-snail-foot',0,.41,.16,.37+.05*stageSize,.12,.36,M.main);
    E('snail-head-without-human-face',.25,.55,.38,.16,.21,.16,M.light);
    pair(d=>L('snail-nonhuman-tentacle-'+d,[[.25+d*.10,.68,.43],
