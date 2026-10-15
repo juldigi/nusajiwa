@@ -405,6 +405,42 @@
       "editorial_caveat": "Sacred rituals are not creatures that hatch or evolve; all phases are fantasy game interactions.",
       "saved_progress": "unchanged",
       "iphone_visual_render_qa": "NOT_YET_MANUALLY_VERIFIED"
+    },
+    {
+      "batch": "nj102",
+      "status": "MERGED",
+      "identity_ids": [
+        "bujang_ganong",
+        "warak_ngendog",
+        "boraspati_tano",
+        "kebo_iwa"
+      ],
+      "identity_delta": 0,
+      "stage_count": 8,
+      "constructions": 32,
+      "module": "nj102-regional-batch5.js",
+      "test_file": "tests/nusajiwa-sculpt-102.mjs",
+      "native_and_older_geometry": "masked at runtime for selected IDs",
+      "historical_morphology_overridden": [
+        {
+          "batch": "nj91",
+          "ids": [
+            "warak_ngendog",
+            "boraspati_tano"
+          ]
+        },
+        {
+          "batch": "nj92",
+          "ids": [
+            "kebo_iwa",
+            "bujang_ganong"
+          ]
+        }
+      ],
+      "visual_rationale": "Ganong masked acrobat; Warak Dugderan coloured four-legged composite with egg; Batak gorga flat tokay relief; Kebo Iwa giant human well builder",
+      "editorial": "historically described identities with locally variable depictions; artificial egg/legend evolution only fantasy game",
+      "save_keys": "unchanged",
+      "iPhone_visualQA": "PENDING"
     }
   ],
   "merged_gameplay_improvements": [
@@ -452,7 +488,7 @@
     "save_changes": "none",
     "catalog_size": 300
   },
-  "last_character_patch": "NJ101-B04",
+  "last_character_patch": "NJ102-B05",
   "visual_ui": {
     "patch": "NJ642",
     "status": "MERGED",

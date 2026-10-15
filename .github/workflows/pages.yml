@@ -31,6 +31,7 @@ jobs:
           node --check nj99-folklore-batch2.js
           node --check nj100-myth-batch3.js
           node --check nj101-ritual-batch4.js
+          node --check nj102-regional-batch5.js
           node --check nj97-render-guard.js
           node --check nj95-visual-audit.js
           node --check nj642-living.js
@@ -67,7 +68,7 @@ jobs:
           cp index.html atlas-evolusi.html script_*.js nj89-ten.js nj90-forty.js nj94-fauna.js nj96-fauna.js nj97-render-guard.js nj95-visual-audit.js nj642-living.js pages-fixes.js css_*.css nj642-living.css .nojekyll css_35.css script_34.js nj42-bridge.css nj42-bridge.js _site/
           cp tamagotchi-3d.js tamagotchi-3d.css nusajiwa-adventure.js nusajiwa-adventure.css _site/
           cp -r assets _site/
-          cp nj98-mistis-batch1.js nj99-folklore-batch2.js nj100-myth-batch3.js nj101-ritual-batch4.js _site/
+          cp nj98-mistis-batch1.js nj99-folklore-batch2.js nj100-myth-batch3.js nj101-ritual-batch4.js nj102-regional-batch5.js _site/
           cp release.json _site/
       - name: Stamp public build SHA
         run: |
