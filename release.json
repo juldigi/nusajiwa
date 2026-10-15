@@ -760,6 +760,22 @@
       "save_key": "nusajiwa-adventure-v1",
       "save_migration": "none",
       "note": "Node regression and geometry state tests only; manual Safari iPhone playthrough still pending"
+    },
+    {
+      "patch": "NJ122",
+      "status": "MERGED",
+      "module": "nj122-hidden-sanctuaries.js",
+      "parent": "NJ121",
+      "secret_levels": 15,
+      "entry": "hit hidden rune block from below; use SKILL in proximity",
+      "challenge": "3 distinct sigils, patrolling guardian, short gaps, reward-coin route, stage-specific environment",
+      "exit": "return to original level without bypassing locked primary guardian sigils",
+      "result": "90 Jiwa earned in-run; hiddenSanctuaries[index] saved only on normal stage completion",
+      "save_key": "nusajiwa-adventure-v1",
+      "save_migration": "none",
+      "identity_delta": 0,
+      "art_originality": "No Nintendo ROM resources or copied level geometry/audio, original Indonesian-themed optional rooms",
+      "qa": "automated mechanic and live app tests; manual Safari iPhone complete playthrough pending"
     }
   ],
   "visual_audit": {

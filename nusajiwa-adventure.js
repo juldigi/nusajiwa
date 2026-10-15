@@ -77,7 +77,7 @@ function levelMenu(){
  const r=record(p.id);
  const entries=LEVELS.map((l,i)=>{const unlocked=i===0||!!r.completed[i-1];const info=WORLD_INFO[l.world||'sumatra'];const title=i%LEVELS_PER_WORLD===0?
   '<div class="nja-world-heading"><b>'+info.icon+' WORLD '+(Math.floor(i/LEVELS_PER_WORLD)+1)+' · '+info.name+'</b><small>'+info.hint+'</small></div>':'';
-  return title+'<button type="button" class="nja-level '+(unlocked?'':'locked')+'" data-nja="level" data-value="'+i+'" '+(unlocked?'':'disabled')+'><b>'+(Math.floor(i/LEVELS_PER_WORLD)+1)+'—'+((i%LEVELS_PER_WORLD)+1)+' · '+safe(l.name)+'</b><small>'+safe(l.tag)+'</small><em>'+(r.completed[i]?'✓ '+r.completed[i]+' ★':unlocked?'MAINKAN':'🔒 Terkunci')+'</em></button>';}).join('');
+  return title+'<button type="button" class="nja-level '+(unlocked?'':'locked')+'" data-nja="level" data-value="'+i+'" '+(unlocked?'':'disabled')+'><b>'+(Math.floor(i/LEVELS_PER_WORLD)+1)+'—'+((i%LEVELS_PER_WORLD)+1)+' · '+safe(l.name)+'</b><small>'+safe(l.tag)+'</small><em>'+(r.completed[i]?'✓ '+r.completed[i]+' ★'+(r.hiddenSanctuaries?.[i]?' · ❖':''):unlocked?'MAINKAN':'🔒 Terkunci')+'</em></button>';}).join('');
  const ability=pet.type==='spirit'?'Melayang':pet.type==='bird'?'Terbang sekali':pet.type==='tiger'?'Lari kilat':'Lompat dorong';
  present('Jelajah Evolusi','<p>Lima belas level di tiga dunia 2.5D bersama <b>'+safe(p.id.replaceAll('_',' '))+'</b>. '+(p.stage===1?'Tahap Bayi: latihan dapat dimainkan sejak dini. ':'')+'Kemampuan khusus: <b>'+ability+'</b>. Kumpulkan Jiwa, sentuh checkpoint dan capai gerbang.</p><div class="nja-levels">'+entries+'</div><p class="nja-tip">iPhone: ◀ ▶, LOMPAT, SKILL · Komputer: ← →, ↑/Spasi, X. Kualitas perawatan tetap memengaruhi evolusi.</p>',[['exit','Kembali ke Habitat']]);
 }
@@ -88,6 +88,7 @@ function begin(n){
  run={level,coins,gem:{x:level.gem,y:2.1,got:false},patrols:(level.patrols||[]).map(([start,end,y,speed])=>({start,end,y,speed})),
   sigils:(level.sigils||[]).map(([x,y])=>({x,y,got:false})),gateHintAt:-20,x:2,y:0,vx:0,vy:0,grounded:true,coyote:.12,jumpBuffer:0,double:false,heroFacing:1,health:3,score:0,checkpoint:2,usedCp:[],hurtUntil:0,skillUntil:0,skillCool:0,seconds:0,accum:0,fx:[],cameraX:2.5,ended:false};
  window.NUSAJIWA_ADVENTURE121?.init(run,levelIndex);
+ window.NUSAJIWA_ADVENTURE122?.init?.(run,levelIndex);
  mode='play';playing=true;overlay.hidden=true;clearInput();
  $('#njaAudio').textContent=soundEnabled?'♫':'♪̸';
  $('#njaRegion').textContent='JELAJAH EVOLUSI · '+WORLD_INFO[level.world||'sumatra'].name;
@@ -144,6 +145,11 @@ function jump(){
 }
 function special(){
  if(run.skillCool>0)return;
+ if(window.NUSAJIWA_ADVENTURE122?.enter?.(run,levelIndex,announce,emitFx,playFx)){
+  $('#njaRegion').textContent='❖ CERUK RAHASIA · '+run.level.name;
+  try{setupVisual()}catch(e){console.warn('Hidden sanctuary scene fallback:',e);set2D()}
+  return;
+ }
  if(window.NUSAJIWA_ADVENTURE121?.special?.(run,announce,emitFx,playFx))return;
  if(getAbility()==='bird'){
   if(!run.grounded&&!run.double){run.vy=7.5;run.double=true;run.skillCool=.65;emitFx(run.x,run.y+.4,'magic',7);playFx('skill');announce('↟ Kepakan sayap!')}
@@ -165,7 +171,7 @@ function hurt(){
 function finish(){
  if(!run||run.ended)return;run.ended=true;playing=false;clearInput();
  playFx('win');emitFx(run.x,run.y+.8,'magic',15);
- const r=record(pet.id);window.NUSAJIWA_ADVENTURE121?.finish?.(run,r,levelIndex);const gems=run.gem.got;const stars=clamp(1+(run.health===3?1:0)+(gems?1:0),1,3);
+ const r=record(pet.id);window.NUSAJIWA_ADVENTURE121?.finish?.(run,r,levelIndex);window.NUSAJIWA_ADVENTURE122?.finish?.(run,r,levelIndex);const gems=run.gem.got;const stars=clamp(1+(run.health===3?1:0)+(gems?1:0),1,3);
  const previous=Number(r.completed[levelIndex])||0,first=!previous;
  r.completed[levelIndex]=Math.max(previous,stars);r.best[levelIndex]=Math.max(Number(r.best[levelIndex])||0,run.score);
  if(gems)r.gems[levelIndex]=true;
@@ -226,6 +232,10 @@ function physics(dt){
  for(const coin of s.coins){if(!coin.got&&Math.hypot(s.x-coin.x,s.y+.5-coin.y)<.85){coin.got=true;s.score+=5;emitFx(coin.x,coin.y,'coin',5);playFx('coin')}}
  if(!s.gem.got&&Math.hypot(s.x-s.gem.x,s.y+.5-s.gem.y)<1.05){s.gem.got=true;s.score+=25;emitFx(s.gem.x,s.gem.y,'magic',14);playFx('gem');announce('◆ Batu '+s.level.element+' ditemukan!')}
  for(const cp of s.level.checkpoints){if(!s.usedCp.includes(cp)&&s.x>=cp){s.checkpoint=cp;s.usedCp.push(cp);emitFx(cp,1,'magic',7);playFx('checkpoint');announce('⚑ Checkpoint disimpan')}}
+ if(window.NUSAJIWA_ADVENTURE122?.tick?.(s,announce,emitFx,playFx)){
+  $('#njaRegion').textContent='JELAJAH EVOLUSI · '+WORLD_INFO[s.level.world||'sumatra'].name;
+  try{setupVisual()}catch(e){console.warn('Sanctuary return scene fallback:',e);set2D()}
+ }
  const narrow=(canvas.clientWidth||window.innerWidth)/Math.max(1,canvas.clientHeight||window.innerHeight)<.8;
  const lead=narrow?1.25:3.2,minimum=narrow?3:6.6;
  s.cameraX+=(clamp(s.x+lead,minimum,s.level.length-(narrow?3:5.5))-s.cameraX)*Math.min(1,dt*5.5);
@@ -336,6 +346,7 @@ function setupVisual(){
    }
   }
  }
+ const bonusSealVisuals=window.NUSAJIWA_ADVENTURE122?.decorate3D?.(run,T,mesh,box,material)||[];
  const mobileVisuals=(run.nj121?.moving||[]).map(p=>box(gold,p.x,p.y-.17,-.45,p.width,.34,1.3));
  const secretVisuals=(run.nj121?.blocks||[]).map(b=>box(gold,b.x,b.y,-.1,.75,.70,.75));
  const springVisuals=(run.nj121?.springs||[]).map(b=>mesh(new T.TorusGeometry(.34,.095,6,16),leaf2,b.x,.18,.7));
@@ -428,6 +439,7 @@ function setupVisual(){
   fallingVisuals.forEach((o,i)=>{const f=run.nj121.falling[i],t=(run.seconds+f.phase)%3.2;o.position.y=t>1.75&&t<2.60?3.8-(t-1.75)*4.3:3.8;});
   patrolVisuals.forEach((o,i)=>{o.visible=!run.patrols[i].defeated;o.position.x=patrolX(run.patrols[i],run.seconds);o.rotation.y=run.seconds*2});
   sealVisuals.forEach((o,i)=>{o.visible=!run.sigils[i].got;o.rotation.z=run.seconds*.9});
+  bonusSealVisuals.forEach((o,i)=>{o.visible=!run.sigils[i]?.got;o.rotation.z=run.seconds*.8});
   collect.forEach(({o,c})=>{o.visible=!c.got;o.rotation.y=run.seconds*1.75});
   gemObj.visible=!run.gem.got;gemObj.rotation.y=run.seconds*1.5;
   renderer.render(scene,camera);
@@ -479,6 +491,7 @@ function draw2d(){
    const y=t>1.75&&t<2.60?3.8-(t-1.75)*4.3:3.8;
    ctx.beginPath();ctx.arc(sx(f.x),sy(y),unit*.27,0,Math.PI*2);ctx.fill();}
  }
+ window.NUSAJIWA_ADVENTURE122?.draw2D?.(run,ctx,sx,sy,unit);
  ctx.fillStyle='#e9876b';for(const x of run.level.hazards){ctx.beginPath();ctx.moveTo(sx(x-.45),sy(0));ctx.lineTo(sx(x),sy(.82));ctx.lineTo(sx(x+.45),sy(0));ctx.fill()}
  if(run.level.gusts){ctx.strokeStyle='#e3fff2';ctx.lineWidth=Math.max(2,unit*.08);for(const [a,b,push] of run.level.gusts){const x=sx((a+b)/2),y=sy(1.5),dx=(push>0?1:-1)*unit*.4;ctx.beginPath();ctx.moveTo(x-dx,y);ctx.lineTo(x+dx,y);ctx.lineTo(x+dx-Math.sign(dx)*unit*.17,y-unit*.12);ctx.moveTo(x+dx,y);ctx.lineTo(x+dx-Math.sign(dx)*unit*.17,y+unit*.12);ctx.stroke();}}
  ctx.fillStyle='#d76b5e';for(const enemy of run.patrols){if(enemy.defeated)continue;const x=patrolX(enemy,run.seconds);ctx.beginPath();ctx.arc(sx(x),sy(enemy.y),unit*.36,0,Math.PI*2);ctx.fill()}
@@ -506,8 +519,8 @@ function draw2d(){
  ctx.globalAlpha=1;
 }
 function hud(){
- $('#njaStage').textContent=(Math.floor(levelIndex/LEVELS_PER_WORLD)+1)+'—'+(levelIndex%LEVELS_PER_WORLD+1)+' · '+Math.round(run.x/run.level.length*100)+'%';
- $('#njaCoins').textContent='✦ '+run.score+(run.sigils.length?' · ◇ '+run.sigils.filter(v=>v.got).length+'/'+run.sigils.length:'')+(run.nj121?.secretFound?' · ❖ Rahasia':'');
+ $('#njaStage').textContent=(run.nj122?.active?'❖ BONUS':(Math.floor(levelIndex/LEVELS_PER_WORLD)+1)+'—'+(levelIndex%LEVELS_PER_WORLD+1))+' · '+Math.round(run.x/run.level.length*100)+'%';
+ $('#njaCoins').textContent='✦ '+run.score+(run.sigils.length?' · ◇ '+run.sigils.filter(v=>v.got).length+'/'+run.sigils.length:'')+(run.nj121?.secretFound?' · ❖ Rahasia':'')+(run.nj122?.active?' · RUANG TERSEMBUNYI':'');
  $('#njaLives').textContent='♥ '.repeat(run.health).trim();
  $('#njaFill').style.width=clamp(run.x/run.level.length*100,0,100)+'%';
 }
@@ -568,7 +581,7 @@ document.addEventListener('keyup',e=>{if(!opened||!keyNames[e.code])return;e.pre
 window.addEventListener('blur',()=>{if(opened&&playing)pause()});
 document.addEventListener('visibilitychange',()=>{if(opened&&playing&&document.hidden)pause()});
 window.addEventListener('resize',resize,{passive:true});
-window.NUSAJIWA_ADVENTURE={version:'8.3',designVersion:'NJ121',open,close:exit,levels:LEVELS.map(l=>l.name),getSave:()=>JSON.parse(JSON.stringify(progress)),isOpen:()=>opened,
+window.NUSAJIWA_ADVENTURE={version:'8.3',designVersion:'NJ121',extraSecretVersion:'NJ122',open,close:exit,levels:LEVELS.map(l=>l.name),getSave:()=>JSON.parse(JSON.stringify(progress)),isOpen:()=>opened,
  getStageInfo:()=>LEVELS.map((l,i)=>({index:i,name:l.name,world:l.world||'sumatra',location:l.nj121?.place||l.name,biome:l.nj121?.biome,challenge:l.nj121?.challenge,mechanic:l.nj121?.mechanic})),
- getRunStatus:()=>run?{level:levelIndex,biome:run.nj121?.zone.biome,hiddenBlock:!!run.nj121?.blocks[0]?.revealed,hiddenFound:!!run.nj121?.secretFound,movingPlatforms:run.nj121?.moving.length||0,waterBreath:run.nj121?.waterBreath,x:run.x,y:run.y,vx:run.vx,vy:run.vy,grounded:run.grounded,score:run.score,health:run.health,skillCool:run.skillCool,particles:run.fx.length,gust:run.currentGust||0,playing}:null};
+ getRunStatus:()=>run?{level:levelIndex,hiddenSanctuary:window.NUSAJIWA_ADVENTURE122?.ui?.(run),biome:run.nj121?.zone.biome,hiddenBlock:!!run.nj121?.blocks[0]?.revealed,hiddenFound:!!run.nj121?.secretFound,movingPlatforms:run.nj121?.moving.length||0,waterBreath:run.nj121?.waterBreath,x:run.x,y:run.y,vx:run.vx,vy:run.vy,grounded:run.grounded,score:run.score,health:run.health,skillCool:run.skillCool,particles:run.fx.length,gust:run.currentGust||0,playing}:null};
 })();
