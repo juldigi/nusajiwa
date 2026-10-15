@@ -180,10 +180,12 @@ function open(p){
  makeUI();pet={...candidate,type:persona(candidate)};
  store=load();stateFor(pet.id);
  active=true;root.hidden=false;document.body.classList.add('njc-playing');
- resize();showLevels();last=0;buffer=0;cancelAnimationFrame(raf);raf=requestAnimationFrame(loop);
+ resize();showLevels();window.NUSAJIWA_CLASSIC3D?.init?.(root);
+ last=0;buffer=0;cancelAnimationFrame(raf);raf=requestAnimationFrame(loop);
  return true;
 }
-function close(){active=false;playing=false;cancelAnimationFrame(raf);raf=0;last=0;buffer=0;
+function close(){active=false;playing=false;window.NUSAJIWA_CLASSIC3D?.close?.();
+ cancelAnimationFrame(raf);raf=0;last=0;buffer=0;
  clearKeys();status=null;pet=null;
  if(root)root.hidden=true;document.body.classList.remove('njc-playing');
  window.NUSAJIWA_ADVENTURE?.open?.();
@@ -195,6 +197,7 @@ function start(n){
  const record=stateFor(pet.id);
  if(n>0&&!record.clears[n-1]&&n>record.highest)return false;
  level=plan(n);
+ window.NUSAJIWA_CLASSIC3D?.init?.(root);
  status={index:n, x:2.1,y:0,vx:0,vy:0,grounded:true,elapsed:0,remaining:level.clock,
   cameraX:0,facing:1,score:0,coins:0,lives:3,power:0,shield:0,invincible:0,spin:0,
   lastFeet:0,pendingJump:false,bonus:false,bonusTimer:0,bonusReturn:0,hiddenCount:0,
@@ -402,6 +405,7 @@ function resize(){
  pixelScale=clamp(w/22,22,40);viewWidth=w/pixelScale;
 }
 function render(){
+ if(window.NUSAJIWA_CLASSIC3D?.frame?.(level,status,pet))return;
  if(!ctx||!canvas)return;
  const w=canvas.width/Math.min(2,window.devicePixelRatio||1),
  h=canvas.height/Math.min(2,window.devicePixelRatio||1),camera=status?.cameraX||0,
@@ -542,7 +546,7 @@ document.addEventListener('keyup',e=>keyboard(e,false),true);
 window.addEventListener('resize',resize,{passive:true});
 document.addEventListener('visibilitychange',()=>{if(active&&playing&&document.hidden)pause()});
 window.addEventListener('blur',()=>{if(active&&playing)pause()});
-window.NUSAJIWA_CLASSIC=Object.freeze({version:'9.2.NJ123',worldDesign:'NJ124-Worlds',open,close,levels:LEVELS.map(l=>({
+window.NUSAJIWA_CLASSIC=Object.freeze({version:'9.5.NJ125',worldDesign:'NJ124-Worlds',renderSystem:'NJ125-Three-WebGL',open,close,levels:LEVELS.map(l=>({
  index:l.index,world:l.world+1,stage:l.section+1,region:l.region,type:l.type,
  location:l.place,challenge:l.name,length:l.length,secretEntrances:l.secret.length,
  shortcuts:l.pipes.filter(p=>p.warp).length})),

@@ -88,3 +88,7 @@ body.njc-playing{overflow:hidden!important}
  #njclassic .njc-menu{max-height:91dvh}
  #njclassic .njc-controls button small{font-size:6px}
 }
+/* NJ125 Three.js canvas does not occlude HUD, touch controls or dialog. */
+#njclassic .njc-real-three{position:absolute!important;inset:0;z-index:1;pointer-events:none;touch-action:none;display:block}
+#njclassic .njc-top,#njclassic .njc-controls,#njclassic #njcNotice{z-index:4}
+#njclassic .njc-overlay{z-index:6}

@@ -911,5 +911,26 @@
     "stored_game_progress": "unchanged",
     "original_artwork": true,
     "ROM_uploaded_to_public_site": false
+  },
+  "gameplay_3d_rom_reference": {
+    "edition": "NJ125.0",
+    "status": "MERGED",
+    "rom_file": "Super Mario Bros. (World).nes",
+    "rom_sha256": "0b3d9e1f01ed1668205bab34d6c82b0e281456e137352e4f36a9b2cfa3b66dea",
+    "header": {
+      "format": "iNES",
+      "mapper": 0,
+      "prg_rom_bytes": 32768,
+      "chr_rom_bytes": 8192
+    },
+    "module": "nj125-classic-3d.js",
+    "integration": "nj123-classic.js",
+    "renderer": "Actual procedural Three.js WebGL 3D meshes, side orthographic camera",
+    "stage_data": "Current 32-stage NUSAJIWA original level plans, NOT exact NES map coordinates",
+    "stage_art": "Original Indonesian biomes / actual 3D terrain, pipes, enemies, backdrop",
+    "mechanics": "Classic physics, collision, enemies, boss, timer, warp and bonuses preserved; ROM exactness not yet verified",
+    "copyright": "No NES ROM bytes, Nintendo sprites, maps or audio shipped",
+    "visual_qa": "Pending real Safari iPhone verification",
+    "progression": "Existing Tamagotchi, encyclopedia, 15-level adventure, Classic saves unchanged"
   }
 }

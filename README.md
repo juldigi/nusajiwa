@@ -256,3 +256,12 @@ Penting: **Mode Referensi ROM** memang menjalankan instruksi dan data dari ROM p
 ### NJ124 Worlds — 32 lokasi Indonesia dan gameplay lanjutan
 
 Mode klasik yang telah dihubungkan ke menu Jelajah Evolusi kini memiliki 32 nama lokasi unik, ragam latar dan tantangan setiap stage, checkpoint, koleksi relik sekali ambil, zona arus/angin/batu panas, dan penyimpanan rekor lokal. Modul `nj124-classic-worlds.js` melengkapi `nj123-classic.js` tanpa menimpa `nj124-rom-reference.js` (emulator ROM NES lokal dari berkas yang dipilih pengguna). ROM, sprite, tata level, dan musik komersial tidak disertakan ke situs publik. Fisika dan penempatan NUSAJIWA adalah interpretasi orisinal, bukan reproduksi byte-perfect mesin NES.
+
+
+### NJ125 · ROM NES referensi → Klasik 32 WebGL 3D (15 Oktober 2026)
+
+ROM pengguna `Super Mario Bros. (World).zip` telah diinspeksi langsung: iNES mapper 0, 32KB PRG + 8KB CHR. SHA-256 `0b3d9e1f01ed1668205bab34d6c82b0e281456e137352e4f36a9b2cfa3b66dea`.
+
+Mode Klasik 32 kini menampilkan Three.js WebGL 3D sesungguhnya dengan permukaan tanah volumetrik, celah, pipa, platform bergerak, blok, item, musuh, boss, gerbang, air tembus pandang, karakter 3D, kamera samping, dan latar dunia Nusantara yang memiliki kedalaman. Jika WebGL atau CDN tidak tersedia, 2D Canvas sebelumnya menjadi fallback. Peta 32 stage, collision, timer, input/touch, penyimpanan dan fitur Tamagotchi/ensiklopedia tidak diganti.
+
+**Audit kejujuran:** ini bukan konversi pixel-perfect semua data ROM. Peta rintangan, panjang, kemunculan musuh, warp, dan physics Klasik masih desain NUSAJIWA yang berpatokan pada struktur NES (8 dunia × 4 stage), bukan decoding penuh koordinat asli; status ini tidak boleh dipromosikan sebagai 100% identik. ROM mentah, font, grafis Nintendo dan audio cartridge **tidak dipublikasikan**. Pengujian artistik dan performa Safari pada iPhone nyata masih diperlukan.
