@@ -600,6 +600,44 @@
       "ui": "unchanged",
       "folklore_caveat": "egg and aging phases invented Tamagotchi gameplay, not canonical birth cycles",
       "visual_safari_4angle": "NOT VERIFIED"
+    },
+    {
+      "batch": "nj107",
+      "status": "MERGED",
+      "identity_ids": [
+        "jatayu",
+        "bedawang_nala",
+        "hanoman",
+        "makara_candi",
+        "naga_padoha"
+      ],
+      "identity_delta": 0,
+      "stage_count": 8,
+      "constructions": 40,
+      "module": "nj107-mythic-batch10.js",
+      "test_file": "tests/nusajiwa-sculpt-107.mjs",
+      "previous_morphology_layers_overridden": [
+        {
+          "batch": "nj91",
+          "ids": [
+            "hanoman",
+            "jatayu",
+            "makara_candi"
+          ]
+        },
+        {
+          "batch": "nj93",
+          "ids": [
+            "bedawang_nala",
+            "naga_padoha"
+          ]
+        }
+      ],
+      "sculpt_contract": "full authoritative rig hides all previous visible meshes in named characters; stages differ in shape and parts",
+      "source_motifs": "Jatayu brave bird; Bedawang cosmic tortoise surrounded by serpents; Hanoman white monkey hero; Makara stone temple guardian; Padoha earth serpent",
+      "caveat": "Folklore/sacred icons are not biological species with eggs or ageing; eight stages are game fiction",
+      "progress_schema": "unchanged",
+      "mobile_four_angle_artistic_review": "NOT_VERIFIED"
     }
   ],
   "merged_gameplay_improvements": [
@@ -647,7 +685,7 @@
     "save_changes": "none",
     "catalog_size": 300
   },
-  "last_character_patch": "NJ106-B09",
+  "last_character_patch": "NJ107-B10",
   "visual_ui": {
     "patch": "NJ642",
     "status": "MERGED",

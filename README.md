@@ -195,3 +195,16 @@ Gaya red dress adalah interpretasi tertentu: variasi cerita Si Manis juga menamp
 Empat puluh konstruksi fase 3D untuk lima identitas lama: `jaka_tarub` petani Jawa dengan cangkul, ikatan padi dan selendang yang disembunyikan; `nawang_wulan` bidadari perempuan manusia dengan **selendang** dan periuk beras ajaib, **tanpa sayap burung** ([buku Kemendikdasmen](https://budi.kemendikdasmen.go.id/storage/book/aatE0oHQdC45WD1b8cPRYahEQnKwbw4GwyMwyTE4.pdf)); `timun_mas` pelari berambut panjang membawa empat bekal (biji timun, jarum, garam, terasi; [detik Jateng](https://www.detik.com/jateng/budaya/d-8477438/kisah-timun-mas-dan-buto-ijo-cerita-rakyat-jawa-tengah-lengkap-pesan-moralnya)); `keong_mas` Candra Kirana **betul-betul dalam wujud keong emas** pada fase kecil, hibrida saat perubahan, baru sosok putri pada fase besar ([detik Jatim](https://www.detik.com/jatim/budaya/d-6280957/keong-mas-cerita-rakyat-dari-jawa-timur-yang-sarat-pesan-moral)); `putri_mandalika` Putri Sasak dari legenda Bau Nyale, busana songket dan pola nyale **simbolis** ([Kemenpar](https://www.kemenpar.go.id/hasil-pencarian/menyambut-festival-bau-nyale-2026)).
 
 Kelahiran melalui telur dan perkembangan fase legenda tetap **fantasi game**, bukan interpretasi ilmiah atau versi baku folklor. Modul mengikuti mekanisme pematian geometri lama per target tanpa mengubah save key, katalog 300 ID, level mini game, maupun UI. Pemeriksaan 4 sisi dan rendering Safari iPhone belum dilakukan.
+
+
+### NJ107 — Batch 10 mitologi dan pahatan percandian (15 Oktober 2026)
+
+Lima ikon mendapat penggantian bentuk **3D yang terlihat** pada 8 fase permainan (40 konstruksi berbeda):
+
+- **Jatayu:** burung perkasa Ramayana dengan kepala/paruh burung, sayap bulu primer dan kaki/cakar burung; tidak sekadar Garuda dengan tangan manusia. Rujukan [Museum Sonobudoyo](https://sonobudoyo.jogjaprov.go.id/id/tulisan/read/jatayu-burung-penjaga-kebenaran-dalam-kisah-ramayana-dan-imajinasi-budaya-jawa).
+- **Bedawang Nala:** penyangga dunia berbentuk kura-kura Bali, mulut berapi, pola karapas dan dua kepala naga pengapit; variasi satu/dua naga dalam tradisi diakui. Rujukan [ARTEKS](https://journal.unwira.ac.id/ARTEKS/id/article/view/1721).
+- **Hanoman:** tubuh manusia-kera putih, wajah monyet, jari tangan, ekor panjang, kain dan jamang pewayangan; tidak menjadi gorila generik. [Kajian wayang Ramayana](https://repositori.kemendikdasmen.go.id/7770/1/ARTI%20MAKNA%20TOKOH%20PEWAYANGAN%20RAMAYANA%20DALAM%20PEMBENTUKAN%20DAN%20PEMBINAAN%20WATAK%20SERI%20III.pdf).
+- **Makara Candi:** relief batu besar dengan belalai gajah, rahang, gigi dan sulur-sulur **sebagai ornamen arsitektur**, bukan hewan hidup. [Balai Konservasi Borobudur](https://kebudayaan.kemdikbud.go.id/bkborobudur/makara-sebagai-hiasan-di-pintu-masuk-candi/).
+- **Naga Padoha:** ular kosmologis Batak Toba, tubuh melingkar di bawah tanah dan belitan/pengikat bumi; tanpa sayap atau empat kaki naga Barat. [Rujukan UNIMED](https://digilib.unimed.ac.id/id/eprint/18333/3/8.%20NIM%203103121084%20BAB%20I.pdf).
+
+Evolusi telur, bayi hingga Legend adalah **desain fantasi** untuk Tamagotchi, tidak diklaim sebagai siklus hidup ikon sakral. Game, login, katalog 300, 15 level, save dan UI tidak dimutasi. Tes Node mengecek 40 konstruksi dan kesinambungan bundel; penilaian dari empat sudut di iPhone sungguhan belum dilakukan.
