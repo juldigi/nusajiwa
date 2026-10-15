@@ -68,6 +68,6 @@ test('Other IDs untouched and production load/deploy contracts include NJ100',()
  assert.ok(html.includes('./nj100-myth-batch3.js'));
  assert.ok(html.indexOf('./nj100-myth-batch3.js')<html.indexOf('./script_32.js'));
  const p=read('.github/workflows/pages.yml'),q=read('.github/workflows/tamagotchi-quality.yml');
- assert.ok(p.includes('node --check nj100-myth-batch3.js'));assert.ok(p.includes('nj100-myth-batch3.js _site/'));
+ assert.ok(p.includes('node --check nj100-myth-batch3.js'));assert.ok(p.split('\n').some(line=>line.includes('cp nj98-mistis-batch1.js')&&line.includes('nj100-myth-batch3.js')&&line.includes('_site/')));
  assert.ok(q.includes("      - 'nj100-myth-batch3.js'"));
 });
