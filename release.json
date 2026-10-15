@@ -776,6 +776,39 @@
       "identity_delta": 0,
       "art_originality": "No Nintendo ROM resources or copied level geometry/audio, original Indonesian-themed optional rooms",
       "qa": "automated mechanic and live app tests; manual Safari iPhone complete playthrough pending"
+    },
+    {
+      "patch": "NJ123",
+      "status": "MERGED",
+      "mode": "Klasik 32",
+      "module": "nj123-classic.js",
+      "css": "nj123-classic.css",
+      "test": "tests/nusajiwa-classic-123.mjs",
+      "worlds": 8,
+      "stages_per_world": 4,
+      "levels": 32,
+      "gameplay": [
+        "run/walk inertia and turning deceleration",
+        "variable jump hold",
+        "swimming physics",
+        "overworld, cave, night, sky platforms, underwater, castle",
+        "patrolling and aquatic enemies",
+        "stomp and shell response",
+        "blocks hit from below",
+        "power shell and 100-coin extra life",
+        "portal skips and secret passageways",
+        "optional mysterious bonus realm",
+        "boss gate challenges",
+        "mobile A/B directional controls",
+        "separate per-pet progression"
+      ],
+      "source_rom": "Provided iNES Super Mario Bros World; checked locally for iNES mapper 0 only",
+      "copyright": "Mechanics study only; no Nintendo source, music, sprite, asset, copyrighted original layouts, or ROM published",
+      "limitation": "Inspired by platformer gameplay, not a byte-accurate emulator or 1:1 reproduction of the supplied cartridge",
+      "existing_modes": "15-stage 3D adventure unchanged, separate classic save key",
+      "campaign_save_key": "nusajiwa-classic-32-v1",
+      "real_mobile_qa": "NOT_VERIFIED",
+      "currency_note": "Classic coin campaign stores progress independently; does not award incompatible 15-stage XP"
     }
   ],
   "visual_audit": {

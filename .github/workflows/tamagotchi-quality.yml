@@ -35,6 +35,8 @@ on:
       - 'tamagotchi-3d.js'
       - 'tamagotchi-3d.css'
       - 'nusajiwa-adventure.js'
+      - 'nj123-classic.js'
+      - 'nj123-classic.css'
       - 'nj121-adventure-worlds.js'
       - 'nj122-hidden-sanctuaries.js'
       - 'nusajiwa-adventure.css'
@@ -64,6 +66,7 @@ jobs:
           node --check nusajiwa-adventure.js
           node --check nj121-adventure-worlds.js
           node --check nj122-hidden-sanctuaries.js
+          node --check nj123-classic.js
           node --check nj89-ten.js
           node --check nj90-forty.js
           node --check nj94-fauna.js

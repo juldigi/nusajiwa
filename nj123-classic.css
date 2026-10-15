@@ -1,0 +1,90 @@
+/* NJ123 32-stage classic adventure, isolated design to protect main UI */
+#njclassic[hidden]{display:none!important}
+#njclassic{position:fixed;inset:0;z-index:99998;background:#0b1f2a;color:#f9f4e7;
+font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+font-weight:500;user-select:none;-webkit-user-select:none;touch-action:none}
+#njclassic *{box-sizing:border-box}
+#njclassic .njc-screen{position:absolute;inset:0;overflow:hidden;background:#142d3e}
+#njclassic canvas{display:block;width:100%;height:100%;image-rendering:auto;touch-action:none}
+#njclassic .njc-top{pointer-events:none;position:absolute;top:env(safe-area-inset-top,0px);
+left:0;right:0;display:flex;align-items:center;gap:12px;justify-content:space-between;
+padding:12px max(13px,env(safe-area-inset-left));height:auto;min-height:52px;
+background:linear-gradient(#0a1c2cdc,#0a1c2c45 75%,transparent);color:#fff5df}
+#njclassic .njc-top strong{font-size:14px;letter-spacing:.12em;font-weight:850;display:block;
+text-shadow:0 1px 2px #0005}
+#njclassic .njc-top small{display:block;font-size:9px;letter-spacing:.05em;color:#e4e8dd;margin-top:1px;max-width:210px}
+#njclassic .njc-metrics{display:flex;align-items:center;gap:15px;
+font-size:12px;font-variant-numeric:tabular-nums;text-shadow:0 1px 2px #0005;white-space:nowrap}
+#njclassic .njc-top button{pointer-events:auto;background:#1c3646cb;border:1px solid #d7d4c34d;
+color:#fff;border-radius:10px;min-height:32px;min-width:33px;padding:3px 6px;font-size:18px}
+#njclassic #njcNotice{position:absolute;pointer-events:none;left:50%;top:20%;
+transform:translateX(-50%);color:#fff4cf;font-weight:720;text-align:center;
+font-size:13px;text-shadow:0 2px 5px #051318bd;max-width:80%;min-height:18px}
+#njclassic .njc-controls{pointer-events:none;position:absolute;bottom:calc(13px + env(safe-area-inset-bottom,0px));
+left:0;right:0;display:flex;align-items:flex-end;justify-content:space-between;
+padding:0 max(20px,env(safe-area-inset-left));gap:24px}
+#njclassic .njc-controls>div{display:flex;align-items:center;gap:10px;pointer-events:auto}
+#njclassic .njc-controls button{touch-action:none;min-width:56px;height:56px;border-radius:16px;
+border:1px solid #fff7db6e;background:#122b3bd0;color:#fff8da;
+box-shadow:0 5px 15px #08111954, inset 0 1px #e4e3ce2b;
+font-size:23px;font-weight:850;line-height:1;position:relative;display:grid;
+align-content:center;justify-items:center;gap:3px;-webkit-tap-highlight-color:transparent}
+#njclassic .njc-controls button:active{background:#47796e;transform:translateY(2px)}
+#njclassic .njc-controls button small{display:block;font-size:7px;letter-spacing:.05em;font-weight:750}
+#njclassic .njc-controls .njc-a{background:#2e8067de}
+#njclassic .njc-controls .njc-b{background:#845a3fd9}
+#njclassic .njc-overlay[hidden]{display:none!important}
+#njclassic .njc-overlay{position:absolute;inset:0;z-index:6;background:#0a1826bd;
+backdrop-filter:blur(13px);-webkit-backdrop-filter:blur(13px);
+display:flex;align-items:center;justify-content:center;padding:14px;
+padding-top:max(16px,env(safe-area-inset-top));padding-bottom:max(16px,env(safe-area-inset-bottom))}
+#njclassic .njc-menu{width:min(660px,100%);max-height:min(85dvh,800px);
+overflow-y:auto;overscroll-behavior:contain;background:linear-gradient(157deg,#1a343c,#152835 75%);
+border:1px solid #e0cf9d78;border-radius:20px;padding:22px 23px 19px;
+box-shadow:0 26px 80px #030b12b5;text-align:left}
+#njclassic .njc-eyebrow{font-size:10px;font-weight:850;letter-spacing:.17em;color:#e4cc8b;margin:0 0 8px}
+#njclassic .njc-menu h2{font-size:clamp(20px,4vw,27px);letter-spacing:-.025em;margin:0 0 10px;
+font-weight:820;line-height:1.17;color:#fff4e0}
+#njclassic .njc-copy{font-size:13px;color:#d2e3db;line-height:1.57}
+#njclassic .njc-copy p{margin:0 0 11px}
+#njclassic .njc-note{font-size:11px;color:#d3c4a4}
+#njclassic .njc-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;
+margin:13px 0 16px}
+#njclassic .njc-world{border:1px solid #d8d2ac45;border-radius:11px;padding:11px;background:#09202c68}
+#njclassic .njc-world h3{font-size:12px;line-height:1.2;margin:1px 0 8px;font-weight:760;color:#eddbaf}
+#njclassic .njc-world button{width:100%;text-align:left;display:flex;
+align-items:center;gap:6px;border:1px solid #d7e1d024;background:#24494e8a;
+border-radius:7px;color:#f3f4dc;padding:8px;font:inherit;font-size:11px;
+margin:5px 0;cursor:pointer}
+#njclassic .njc-world button small{font-size:10px;color:#d3e5dd;flex:1}
+#njclassic .njc-world button:disabled{opacity:.45;cursor:not-allowed}
+#njclassic .njc-world button:not(:disabled):active{background:#376a67}
+#njclassic .njc-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:13px}
+#njclassic .njc-actions button{background:#d9c28b;border:1px solid #fff0bc6e;border-radius:10px;
+padding:11px 14px;color:#15262a;font-size:12px;font-weight:800;cursor:pointer}
+#njclassic .njc-actions button:last-child{background:#314d53;color:#fff4dc}
+#njclassic .njc-actions button:active{transform:translateY(1px)}
+body.njc-playing{overflow:hidden!important}
+@media(max-width:650px){
+ #njclassic .njc-top{padding:8px 9px;gap:6px;min-height:44px}
+ #njclassic .njc-top strong{font-size:11px}
+ #njclassic .njc-top small{font-size:8px;max-width:120px}
+ #njclassic .njc-metrics{font-size:10px;gap:7px}
+ #njclassic .njc-controls{padding:0 10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));gap:7px}
+ #njclassic .njc-controls>div{gap:5px}
+ #njclassic .njc-controls button{min-width:45px;width:45px;height:50px;border-radius:11px;font-size:20px}
+ #njclassic .njc-controls button small{font-size:6px}
+ #njclassic .njc-menu{padding:15px;max-height:86dvh}
+ #njclassic .njc-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ #njclassic .njc-world{padding:8px}
+ #njclassic .njc-world h3{font-size:10px}
+ #njclassic .njc-world button{font-size:10px;padding:7px 6px}
+ #njclassic .njc-world button small{font-size:8px}
+}
+@media(max-height:480px) and (orientation:landscape){
+ #njclassic .njc-top{padding:4px 12px;min-height:34px}
+ #njclassic .njc-controls{bottom:max(4px,env(safe-area-inset-bottom))}
+ #njclassic .njc-controls button{height:43px;width:51px;min-width:51px}
+ #njclassic .njc-menu{max-height:91dvh}
+ #njclassic .njc-controls button small{font-size:6px}
+}

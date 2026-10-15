@@ -79,7 +79,7 @@ function levelMenu(){
   '<div class="nja-world-heading"><b>'+info.icon+' WORLD '+(Math.floor(i/LEVELS_PER_WORLD)+1)+' · '+info.name+'</b><small>'+info.hint+'</small></div>':'';
   return title+'<button type="button" class="nja-level '+(unlocked?'':'locked')+'" data-nja="level" data-value="'+i+'" '+(unlocked?'':'disabled')+'><b>'+(Math.floor(i/LEVELS_PER_WORLD)+1)+'—'+((i%LEVELS_PER_WORLD)+1)+' · '+safe(l.name)+'</b><small>'+safe(l.tag)+'</small><em>'+(r.completed[i]?'✓ '+r.completed[i]+' ★'+(r.hiddenSanctuaries?.[i]?' · ❖':''):unlocked?'MAINKAN':'🔒 Terkunci')+'</em></button>';}).join('');
  const ability=pet.type==='spirit'?'Melayang':pet.type==='bird'?'Terbang sekali':pet.type==='tiger'?'Lari kilat':'Lompat dorong';
- present('Jelajah Evolusi','<p>Lima belas level di tiga dunia 2.5D bersama <b>'+safe(p.id.replaceAll('_',' '))+'</b>. '+(p.stage===1?'Tahap Bayi: latihan dapat dimainkan sejak dini. ':'')+'Kemampuan khusus: <b>'+ability+'</b>. Kumpulkan Jiwa, sentuh checkpoint dan capai gerbang.</p><div class="nja-levels">'+entries+'</div><p class="nja-tip">iPhone: ◀ ▶, LOMPAT, SKILL · Komputer: ← →, ↑/Spasi, X. Kualitas perawatan tetap memengaruhi evolusi.</p>',[['exit','Kembali ke Habitat']]);
+ present('Jelajah Evolusi','<p>Lima belas level di tiga dunia 2.5D bersama <b>'+safe(p.id.replaceAll('_',' '))+'</b>. '+(p.stage===1?'Tahap Bayi: latihan dapat dimainkan sejak dini. ':'')+'Kemampuan khusus: <b>'+ability+'</b>. Kumpulkan Jiwa, sentuh checkpoint dan capai gerbang.</p><div class="nja-levels">'+entries+'</div><p class="nja-tip">iPhone: ◀ ▶, LOMPAT, SKILL · Komputer: ← →, ↑/Spasi, X. Kualitas perawatan tetap memengaruhi evolusi.</p>',[['classic','🎮 Kampanye Klasik · 32 Stage'],['exit','Kembali ke Habitat']]);
 }
 function buildCoins(l){const coins=[];for(let x=5;x<l.length-2;x+=5){const seg=l.ground.find(g=>x>=g[0]+.5&&x<=g[1]-.5);if(seg)coins.push({x,y:1+(x%3===0?.7:0),got:false});}l.ledges.forEach(p=>coins.push({x:p[0],y:p[1]+.85,got:false}));return coins;}
 function begin(n){
@@ -561,6 +561,7 @@ root.addEventListener('click',e=>{const b=e.target.closest('button[data-nja]');i
  else if(a==='pause')pause();
  else if(a==='levels')levelMenu();
  else if(a==='level')begin(n);
+ else if(a==='classic'){const currentPet={...pet};exit();window.NUSAJIWA_CLASSIC?.open?.(currentPet);}
  else if(a==='resume'){mode='play';playing=true;overlay.hidden=true;last=0}
  else if(a==='retry')begin(levelIndex);
  else if(a==='next')begin(levelIndex+1);
