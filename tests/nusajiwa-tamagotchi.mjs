@@ -106,7 +106,7 @@ test('iPhone layout regression: action buttons never consume the 3D pet screen',
 test('iPhone 7.6: 3D lighting is brighter and the shell no longer darkens the scene',()=>{
  const fix=css.slice(css.indexOf('/* 7.6 — brighter glass'));
  assert.ok(fix.length>3000,'Bright glass and compact controls must be at the end of CSS');
- const cacheTag=html.match(/script_32\\.js\\?v=(\\d+)\\.(\\d+)\\.(\\d+)/);
+ const cacheTag=html.match(/script_32\.js\?v=(\d+)\.(\d+)\.(\d+)/);
  assert.ok(cacheTag,'WebGL engine must carry a cache-busting semver tag');
  assert.ok(Number(cacheTag[1])>8||(Number(cacheTag[1])===8&&Number(cacheTag[2])>=2),
   'Updated WebGL engine version must never regress below 8.2.0');
