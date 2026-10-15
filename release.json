@@ -638,6 +638,40 @@
       "caveat": "Folklore/sacred icons are not biological species with eggs or ageing; eight stages are game fiction",
       "progress_schema": "unchanged",
       "mobile_four_angle_artistic_review": "NOT_VERIFIED"
+    },
+    {
+      "batch": "nj108",
+      "status": "MERGED",
+      "identity_ids": [
+        "dewi_sri",
+        "batara_kala",
+        "gatotkaca",
+        "bima_wayang",
+        "buto_cakil"
+      ],
+      "identity_delta": 0,
+      "constructions": 40,
+      "stage_count": 8,
+      "module": "nj108-wayang-batch11.js",
+      "test_file": "tests/nusajiwa-sculpt-108.mjs",
+      "superseded_prior_morphology": [
+        {
+          "batch": "nj91",
+          "ids": [
+            "batara_kala"
+          ]
+        },
+        {
+          "batch": "nj92",
+          "ids": [
+            "dewi_sri"
+          ]
+        }
+      ],
+      "progress_schema": "unchanged",
+      "distinction": "Sri human rice goddess; Kala big ornate mask; Gatotkaca Kotang without wings; Bima Pancanaka/Poleng; Cakil projecting lower jaw/keris",
+      "four_angle_iphone_qa": "NOT_VERIFIED",
+      "fiction": "Tamagotchi eggs/evolution are not folklore claims"
     }
   ],
   "merged_gameplay_improvements": [
@@ -685,7 +719,7 @@
     "save_changes": "none",
     "catalog_size": 300
   },
-  "last_character_patch": "NJ107-B10",
+  "last_character_patch": "NJ108-B11",
   "visual_ui": {
     "patch": "NJ642",
     "status": "MERGED",

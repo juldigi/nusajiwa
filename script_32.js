@@ -4426,6 +4426,7 @@ function makeAvatar(r, portraitMode=false, auditPhase=null){
  window.NUSAJIWA_SCULPT106?.(group,body,M,r[0],renderPhase,THREE,ell,tube);
  // NJ107: authoritative five mythic/architectural reconstructions on top of previous rigs.
  window.NUSAJIWA_SCULPT107?.(group,body,M,r[0],renderPhase,THREE,ell,tube);
+ window.NUSAJIWA_SCULPT108?.(group,body,M,r[0],renderPhase,THREE,ell,tube);
  window.NUSAJIWA_RENDER97?.prepare(group,THREE,r[0],renderPhase);
  group.userData={...group.userData,body,type,base:body.position.y,phase:(living?.phase??null),legend:(living?.legend??null)};
  return group;
