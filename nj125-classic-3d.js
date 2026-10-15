@@ -18,6 +18,7 @@ const color=(v,alt)=>typeof v==='string'?v:alt;
 let THREE=null,renderer=null,scene=null,camera=null,canvas=null,host=null,oldCanvas=null;
 let pending=null,active=false,broken=false,stageKey='',geo=[],mats=[],objects=[],decor=[];
 let player=null,coins=[],enemies=[],blocks=[],pipes=[],secret=[],platforms=[],boss=null,gate=null;
+let fxPickup=[],fxShots=[],fxAura=null,fxGold=null,fxEmber=null,fxStone=null;
 let worldLabel='',frameCount=0,quality='standard',lastRun=null,lastCanvasWidth=0,lastCanvasHeight=0;
 const create=async()=>{
  if(THREE)return THREE;
@@ -60,6 +61,7 @@ function clearStage(){
  for(const g of geo)g.dispose?.();for(const m of mats)m.dispose?.();
  geo=[];mats=[];objects=[];decor=[];player=null;coins=[];enemies=[];blocks=[];
  pipes=[];secret=[];platforms=[];boss=null;gate=null;stageKey='';
+ fxPickup=[];fxShots=[];fxAura=null;fxGold=null;fxEmber=null;fxStone=null;
 }
 function setSize(){
  if(!renderer||!host)return;
@@ -400,6 +402,45 @@ function frame(level,status,pet){
   item.group.visible=!item.ref.got;
   item.ring.rotation.y=t*2.4+item.ref.x*.13;
   item.group.position.y=item.ref.y+Math.sin(t*2+item.ref.x*.20)*.055;
+ }
+ // NJ127: pooled live Three.js geometry for collectible power, fire and star.
+ const effect=window.NUSAJIWA_NES127?.view?.(status);
+ if(effect){
+  fxGold=fxGold||mat(0xffd977,.13,.27,{emissive:0xffc052,emissiveIntensity:.48});
+  fxEmber=fxEmber||mat(0xff9852,.05,.38,{emissive:0xc05c26,emissiveIntensity:.54});
+  fxStone=fxStone||mat(0xc1e6c6,.06,.40,{emissive:0x3e8065,emissiveIntensity:.25});
+  while(fxPickup.length<effect.items.length){
+   const g=new THREE.Group();scene.add(g);
+   const stone=make(new THREE.OctahedronGeometry(.25),fxStone,g);
+   const sun=make(new THREE.IcosahedronGeometry(.24),fxGold,g);
+   const rim=make(new THREE.TorusGeometry(.30,.032,6,24),fxGold,g);
+   rim.position.z=.16;fxPickup.push({g,stone,sun,rim});
+  }
+  fxPickup.forEach((o,i)=>{
+   const item=effect.items[i];o.g.visible=!!item;
+   if(!item)return;
+   o.g.position.set(item.x,item.y,.48);
+   o.g.rotation.y=t*2.4;
+   o.stone.visible=item.kind!=='surya';
+   o.sun.visible=o.rim.visible=item.kind==='surya';
+  });
+  while(fxShots.length<effect.shots.length){
+   fxShots.push(make(new THREE.IcosahedronGeometry(.15),fxEmber));
+  }
+  fxShots.forEach((o,i)=>{
+   const item=effect.shots[i];o.visible=!!item;
+   if(item){o.position.set(item.x,item.y,.53);o.rotation.z=t*12;}
+  });
+  if(!fxAura){
+   fxAura=make(new THREE.TorusGeometry(.66,.055,7,34),fxGold);
+   fxAura.rotation.x=.15;
+  }
+  fxAura.visible=effect.star>0;
+  if(fxAura.visible){
+   fxAura.position.set(px,py+.70,.55);
+   fxAura.rotation.z=t*.9;
+   fxAura.scale.setScalar(1+.06*Math.sin(t*12));
+  }
  }
  for(const item of enemies){
   item.group.visible=!!item.ref.alive;

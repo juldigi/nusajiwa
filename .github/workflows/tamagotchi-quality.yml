@@ -38,6 +38,7 @@ on:
       - 'nj123-classic.js'
       - 'nj124-classic-worlds.js'
       - 'nj125-classic-3d.js'
+      - 'nj127-rom-physics.js'
       - 'nj123-classic.css'
       - 'nj124-rom-reference.js'
       - 'nj124-rom-reference.css'
@@ -73,6 +74,7 @@ jobs:
           node --check nj123-classic.js
           node --check nj124-classic-worlds.js
           node --check nj125-classic-3d.js
+          node --check nj127-rom-physics.js
           node --check nj124-rom-reference.js
           node --check nj89-ten.js
           node --check nj90-forty.js

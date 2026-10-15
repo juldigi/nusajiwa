@@ -204,6 +204,7 @@ function start(n){
   fire:[],released:false,secretFlag:false,boss:level.boss,world:level.world,
   completed:false,stop:false,gravityScale:1,worldTime:0};
  window.NUSAJIWA_CLASSIC124?.start?.(status,level);
+ window.NUSAJIWA_NES127?.start?.(status,level);
  key.pressed=false;playing=true;hideMenu();hint((level.world+1)+'—'+(level.section+1)+' · '+level.region+' / '+level.name,2.4);
  updateHud();last=0;buffer=0;return true;
 }
@@ -280,6 +281,7 @@ function update(dt){
  if(!s||s.stop)return;
  s.elapsed+=dt;s.worldTime+=dt;s.remaining-=dt;s.invincible=Math.max(0,s.invincible-dt);
  if(s.remaining<=0){die('Waktu habis');return;}
+ window.NUSAJIWA_NES127?.before?.(s,l,key,dt);
  if(key.down){key.down=false;pickPipe();if(!playing)return;}
  if(key.pressed){
   key.pressed=false;
@@ -336,7 +338,11 @@ function update(dt){
      b.used=true;
      if(b.content==='coin'){addCoin(1);hint('✧ Jiwa +1');}
      else if(b.content==='life'){s.lives++;hint('Rahasia: nyawa tambahan!');s.secretFlag=true;}
-     else if(b.content==='power'){s.power=Math.min(2,s.power+1);hint('Perisai Jiwa naik!');}
+     else if(b.content==='power'){
+      if(!window.NUSAJIWA_NES127?.hitBlock?.(s,l,b,hint)){
+       s.power=Math.min(2,s.power+1);hint('Perisai Jiwa naik!');
+      }
+     }
     }
     break;
    }
@@ -366,12 +372,15 @@ function update(dt){
    if(e.x<=e.start||e.x>=e.end)e.vx*=-1;
   }
   if(Math.abs(s.x-e.x)<.56&&Math.abs((s.y+.55)-(e.y+.15))<.69){
+   if(window.NUSAJIWA_NES127?.touchEnemy?.(s,l,e,hint))break;
    if(!water&&oldY>e.y+.38&&s.vy<-.4&&!e.shell){
+    if(window.NUSAJIWA_NES127?.stomp?.(s,l,e,hint)){s.vy=6.6;break;}
     if(e.type==='shelled'){e.shell=true;e.vx=0;e.y=.22;hint('Cangkang terpental!');}
     else{e.alive=false;s.score+=150;}
     s.vy=6.6;break;
    }
    if(e.shell){
+    if(window.NUSAJIWA_NES127?.kickShell?.(s,l,e,hint)){s.vy=4.4;break;}
     e.vx=s.facing*9;e.shell=false;e.type='shell';s.vy=4.4;s.score+=60;
    }else if(s.invincible===0)damage();
   }
@@ -383,6 +392,7 @@ function update(dt){
    else if(s.invincible===0)damage();
   }
  }
+ window.NUSAJIWA_NES127?.after?.(s,l,dt,hint);
  window.NUSAJIWA_CLASSIC124?.update?.(s,l,dt,hint,addCoin);
  if(s.bonus&&Math.floor(s.elapsed*2.5)!==Math.floor((s.elapsed-dt)*2.5)){addCoin(2);s.score+=30;}
  if(s.x>=l.length-3.2&&(!l.boss||l.boss.hp<=0))finish();
@@ -512,6 +522,7 @@ function render(){
   if(!s.grounded){ctx.globalAlpha=.65;fill('#fff3be',-.14*p,.34*p,.31*p,.07*p);}
   ctx.restore();
  }
+ window.NUSAJIWA_NES127?.draw2D?.(ctx,s,X,Y,p);
  if(s?.bonus){
   fill('#14273fdf',w*.18,h*.12,w*.64,h*.18);
   ctx.fillStyle='#ffe7a9';ctx.font='bold '+Math.round(Math.max(14,p*.36))+'px system-ui';
@@ -546,7 +557,7 @@ document.addEventListener('keyup',e=>keyboard(e,false),true);
 window.addEventListener('resize',resize,{passive:true});
 document.addEventListener('visibilitychange',()=>{if(active&&playing&&document.hidden)pause()});
 window.addEventListener('blur',()=>{if(active&&playing)pause()});
-window.NUSAJIWA_CLASSIC=Object.freeze({version:'9.5.NJ125',worldDesign:'NJ124-Worlds',renderSystem:'NJ125-Three-WebGL',open,close,levels:LEVELS.map(l=>({
+window.NUSAJIWA_CLASSIC=Object.freeze({version:'9.7.NJ127',worldDesign:'NJ124-Worlds',renderSystem:'NJ125-Three-WebGL',open,close,levels:LEVELS.map(l=>({
  index:l.index,world:l.world+1,stage:l.section+1,region:l.region,type:l.type,
  location:l.place,challenge:l.name,length:l.length,secretEntrances:l.secret.length,
  shortcuts:l.pipes.filter(p=>p.warp).length})),

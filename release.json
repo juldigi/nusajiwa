@@ -838,6 +838,29 @@
       "rom_audit": "NES mapper0, 32 KB PRG, 8 KB CHR verified on user-supplied ZIP. The 32 stages are originals, not identical maps.",
       "test": "tests/nusajiwa-classic-3d-126.mjs",
       "Safari_iPhone_real_device_visual": "NOT_VERIFIED"
+    },
+    {
+      "patch": "NJ127",
+      "status": "MERGED",
+      "title": "Original 3D platformer informed by owner's iNES cartridge",
+      "original_rom": "Super Mario Bros. (World).nes | NES mapper0, 32KB PRG, 8KB CHR",
+      "files": [
+        "nj127-rom-physics.js",
+        "nj123-classic.js",
+        "nj125-classic-3d.js"
+      ],
+      "gameplay": [
+        "Power block spawns collectible before character power upgrade",
+        "B button fires limited bounce-projectiles after second shield",
+        "Surya temporary invincibility for 8 seconds",
+        "Stomp shell, kick shell, rolling-shell collision chain points",
+        "3D powerups, shots and aura; Canvas fallback"
+      ],
+      "levels": "32 original Indonesian stages not byte-identical NES maps",
+      "visual": "original three.js assets only; no proprietary ROM graphics, music, audio",
+      "save_schema": "unchanged",
+      "iphoneSafariQA": "NOT_VERIFIED",
+      "test": "tests/nusajiwa-classic-rom-mechanics-127.mjs"
     }
   ],
   "visual_audit": {
