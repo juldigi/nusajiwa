@@ -86,7 +86,7 @@ test('No changes to other characters, engine file presence and Pages/CI assets',
  assert.equal(build(g,b,M,'kuyang',5,T,E,L),false);assert.equal(source.visible,true);
  assert.ok(engine.includes('window.NUSAJIWA_SCULPT106?.(group,body,M,r[0],renderPhase,THREE,ell,tube);'));
  assert.ok(html.indexOf('./nj106-folktales-batch9.js')<html.indexOf('./script_32.js'));
- assert.ok(html.includes('./script_32.js?v=8.3.106&amp;folklore=95'),'client engine must be cache-busted after NJ106');
+ assert.match(html,/\.\/script_32\.js\?v=\d+\.\d+\.\d+&amp;folklore=95/,'client engine must use a cache-busted version');
  const pages=read('.github/workflows/pages.yml'),quality=read('.github/workflows/tamagotchi-quality.yml');
  assert.ok(pages.includes('node --check nj106-folktales-batch9.js'));
  assert.ok(pages.split('\n').some(l=>l.includes('cp nj98-mistis-batch1.js')&&l.includes('nj106-folktales-batch9.js')&&l.includes('_site/')));

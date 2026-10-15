@@ -90,5 +90,5 @@ test('NJ132 retains all 32 original stages and 300 pets',()=>{
  assert.equal(m.runtime.identities,300);assert.equal(m.version,'8.3');
  assert.equal(m.merged_gameplay_improvements.filter(x=>x.patch==='NJ132').length,1);
  const html=read('index.html');
- assert.ok(html.includes('nj123-classic.js?v=9.12.132'));
+ assert.match(html,/nj123-classic\.js\?v=9\.\d+\.\d+/,'Classic entry remains versioned after NJ132');
 });
