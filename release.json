@@ -672,6 +672,30 @@
       "distinction": "Sri human rice goddess; Kala big ornate mask; Gatotkaca Kotang without wings; Bima Pancanaka/Poleng; Cakil projecting lower jaw/keris",
       "four_angle_iphone_qa": "NOT_VERIFIED",
       "fiction": "Tamagotchi eggs/evolution are not folklore claims"
+    },
+    {
+      "batch": "nj109",
+      "status": "MERGED",
+      "identity_ids": [
+        "rangkong_papan",
+        "merpati_mahkota_biru",
+        "kura_leher_ular_rote",
+        "kucing_merah_borneo",
+        "kukang_sumatra"
+      ],
+      "identity_delta": 0,
+      "stage_count": 8,
+      "constructions": 40,
+      "module": "nj109-fauna-batch12.js",
+      "test_file": "tests/nusajiwa-sculpt-109.mjs",
+      "visual_identity": "hornbill solid casque/tail, lacy crowned pigeon, snake-neck Rote chelid, red Borneo bay cat, huge-eyed grasping slow loris",
+      "anatomy": "species-specific full rigs with PBR colour palettes and phase-specific physical geometry",
+      "old_models": "hidden for selected IDs only",
+      "save_schema": "unchanged",
+      "layout_and_adventure": "unchanged",
+      "reference_quality": "IUCN Hornbill SG, Birds of the World, Marwell Zoo, IUCN CatSG, NParks",
+      "biological_legend": "phase 7 is fictional; stage 0 mammals are fictional game tokens",
+      "visual_four_angle_iphone": "NOT_VERIFIED"
     }
   ],
   "merged_gameplay_improvements": [
@@ -719,7 +743,7 @@
     "save_changes": "none",
     "catalog_size": 300
   },
-  "last_character_patch": "NJ108-B11",
+  "last_character_patch": "NJ109-B12",
   "visual_ui": {
     "patch": "NJ642",
     "status": "MERGED",
