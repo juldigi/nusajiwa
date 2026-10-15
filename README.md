@@ -265,3 +265,10 @@ ROM pengguna `Super Mario Bros. (World).zip` telah diinspeksi langsung: iNES map
 Mode Klasik 32 kini menampilkan Three.js WebGL 3D sesungguhnya dengan permukaan tanah volumetrik, celah, pipa, platform bergerak, blok, item, musuh, boss, gerbang, air tembus pandang, karakter 3D, kamera samping, dan latar dunia Nusantara yang memiliki kedalaman. Jika WebGL atau CDN tidak tersedia, 2D Canvas sebelumnya menjadi fallback. Peta 32 stage, collision, timer, input/touch, penyimpanan dan fitur Tamagotchi/ensiklopedia tidak diganti.
 
 **Audit kejujuran:** ini bukan konversi pixel-perfect semua data ROM. Peta rintangan, panjang, kemunculan musuh, warp, dan physics Klasik masih desain NUSAJIWA yang berpatokan pada struktur NES (8 dunia × 4 stage), bukan decoding penuh koordinat asli; status ini tidak boleh dipromosikan sebagai 100% identik. ROM mentah, font, grafis Nintendo dan audio cartridge **tidak dipublikasikan**. Pengujian artistik dan performa Safari pada iPhone nyata masih diperlukan.
+
+
+### NJ126 — Karakter 3D asli + optimisasi WebGL mode Klasik 32 (15 Oktober 2026)
+
+3D platformer NJ125 kini tidak lagi hanya memakai proxy bentuk generik: **NJ126 lebih dahulu memanggil `NJ35.getAdventureAvatar`** untuk meminjam salinan terpisah dari model makhluk aktual beserta morfologi tahap evolusi yang sedang aktif. Penyesuaian batas bentuk menggunakan bounding box mesh nyata; Jenglot mendapat batas proporsi miniatur. Saat model belum siap, fallback 3D sederhana tetap aman, dan Canvas 2D tetap tersedia jika WebGL bermasalah. Salinan geometry/material dimasukkan ke siklus dispose untuk mencegah kebocoran GPU. `renderer.setSize` kini hanya dijalankan ketika dimensi canvas berubah—bukan 60 kali per detik di iPhone. Mekanisme, 32 stage, world map, hadiah, save maupun game 15 level tidak dimodifikasi.
+
+ROM asli milik pengguna tersimpan di Library dan **tidak diunggah ke repositori**. Analisis byte header, fitur yang ada dan kesenjangan 1:1 dicatat dalam `ROM_AUDIT_2026-10-15.md`.

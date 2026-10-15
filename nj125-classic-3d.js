@@ -18,7 +18,7 @@ const color=(v,alt)=>typeof v==='string'?v:alt;
 let THREE=null,renderer=null,scene=null,camera=null,canvas=null,host=null,oldCanvas=null;
 let pending=null,active=false,broken=false,stageKey='',geo=[],mats=[],objects=[],decor=[];
 let player=null,coins=[],enemies=[],blocks=[],pipes=[],secret=[],platforms=[],boss=null,gate=null;
-let worldLabel='',frameCount=0,quality='standard',lastRun=null;
+let worldLabel='',frameCount=0,quality='standard',lastRun=null,lastCanvasWidth=0,lastCanvasHeight=0;
 const create=async()=>{
  if(THREE)return THREE;
  for(const url of IMPORTS){
@@ -65,7 +65,9 @@ function setSize(){
  if(!renderer||!host)return;
  const rect=host.getBoundingClientRect(),w=Math.max(300,rect.width||window.innerWidth),
    h=Math.max(220,rect.height||window.innerHeight);
- renderer.setSize(w,h,false);
+ if(w!==lastCanvasWidth||h!==lastCanvasHeight){
+  renderer.setSize(w,h,false);lastCanvasWidth=w;lastCanvasHeight=h;
+ }
  const aspect=w/h;
  const worldHeight=clamp(h/49,8.5,15.0);
  const worldWidth=clamp(w/38,17,32);
@@ -215,6 +217,47 @@ function environment(level){
  return {c,soil,grass,rock,white,gold,leaf,dark,blue};
 }
 function makeHero(pet,materials){
+ // NJ126: Reuse the real, already-sculpted and evolved 3D creature from NJ35.
+ // Only the currently adopted pet is cloned. The habitat original is NEVER moved.
+ // If the habitat has not loaded 3D, the existing safe fallback remains available.
+ let original=null;
+ try{original=window.NJ35?.getAdventureAvatar?.(pet?.id)||null;}
+ catch(e){console.warn('Native pet not yet available in Classic32',e)}
+ if(original?.isObject3D){
+  const bounds=new THREE.Box3();bounds.makeEmpty();
+  original.updateMatrixWorld(true);
+  original.traverse(o=>{
+   if(!o.isMesh)return;
+   for(let p=o;p;p=p.parent){if(p.visible===false)return}
+   bounds.expandByObject(o);
+  });
+  if(!bounds.isEmpty()){
+   const size=new THREE.Vector3(),center=new THREE.Vector3();
+   bounds.getSize(size);bounds.getCenter(center);
+   const miniature=pet?.id==='jenglot';
+   const limitHeight=miniature?1.00:1.52,limitWidth=miniature?.62:1.14;
+   const fitScale=Math.min(limitHeight/Math.max(.1,size.y),
+      limitWidth/Math.max(.1,size.x),2.8);
+   const mount=new THREE.Group(),fitted=new THREE.Group();
+   scene.add(mount);mount.add(fitted);fitted.add(original);
+   fitted.scale.setScalar(fitScale);
+   fitted.position.set(-center.x*fitScale,-bounds.min.y*fitScale,
+      -center.z*fitScale);
+   // NJ35.getAdventureAvatar creates independent geometry/material clones.
+   // Register them in NJ125 cleanup arrays to avoid GPU memory leaks.
+   original.traverse(o=>{
+    if(o.geometry)geo.push(o.geometry);
+    if(o.material)for(const m of Array.isArray(o.material)?o.material:[o.material])mats.push(m);
+   });
+   const shade=make(new THREE.CircleGeometry(.4,20),
+    mat(0x213434,0,1,{transparent:true,opacity:.23}),mount);
+   shade.rotation.x=-Math.PI/2;shade.position.set(0,.010,.24);
+   shade.userData.heroShadow=true;
+   mount.userData={kind:'NUSAJIWA-original',nativeAvatar:true,
+    species:pet.id,shadow:shade,phase:pet.stage??pet.phase??null};
+   return mount;
+  }
+ }
  const g=new THREE.Group();scene.add(g);
  const kind=pet?.type||'forest';
  const coat=kind==='bird'?mat(0xceac6c):kind==='spirit'?mat(0xcbdcd1):
@@ -394,6 +437,7 @@ function frame(level,status,pet){
 function close(){
  active=false;lastRun=null;broken=false;stageKey='';clearStage();
  renderer?.dispose?.();renderer?.forceContextLoss?.();renderer=null;
+ lastCanvasWidth=0;lastCanvasHeight=0;
  canvas?.remove();canvas=null;
  if(oldCanvas){oldCanvas.style.visibility='visible';oldCanvas.style.pointerEvents='';}
  host=null;oldCanvas=null;scene=null;camera=null;pending=null;

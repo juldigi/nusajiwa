@@ -826,6 +826,18 @@
       "limitations": "Emulator runs original 8-bit cartridge; does not replace NUSAJIWA creature sprites/assets; NES emulator accuracy depends on jsnes and browser",
       "compatibility": "iPhone touch overlay, desktop keyboard and gamepad library",
       "existing_modes": "15 original stages and NJ123 32 stages preserved; no progress mutation"
+    },
+    {
+      "patch": "NJ126",
+      "status": "MERGED",
+      "title": "Native NUSAJIWA pet integration and WebGL resize throttling",
+      "integration": "NJ35.getAdventureAvatar gives full existing 3D species and current evolution form; no replacement fake sphere if native available",
+      "changes": "Normalize visible avatar bounds in the Classic32 side-scroller, retain Jenglot miniature proportions, dispose cloned GPU meshes/materials correctly, cache canvas dimensions to avoid setSize every frame",
+      "scope": "visual renderer and performance only; no change to 32 level rules, controls, 15-stage game or progress",
+      "fallback": "generic proxy only if original habitat avatar is unavailable; older 2D remains fallback",
+      "rom_audit": "NES mapper0, 32 KB PRG, 8 KB CHR verified on user-supplied ZIP. The 32 stages are originals, not identical maps.",
+      "test": "tests/nusajiwa-classic-3d-126.mjs",
+      "Safari_iPhone_real_device_visual": "NOT_VERIFIED"
     }
   ],
   "visual_audit": {
