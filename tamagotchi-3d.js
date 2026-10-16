@@ -376,7 +376,7 @@ function drawPanel(){
  let title='',content='';
  if(screen==='food'){title='🍙 Beri Makan';content='<p>Isi perutnya secukupnya. Camilan menambah kebahagiaan tetapi juga berat badan.</p>'+
  choices([['meal','🍚 Makanan utama','Kenyang +2, berat +1'],['snack','🍡 Camilan','Kenyang +1, bahagia +1, berat +2']]);}
- else if(screen==='playChoices'){title='✦ Ayo Bermain';content='<p>Mainkan permainan klasik untuk merawat sahabat, atau jelajahi tiga dunia petualangan 3D untuk pengalaman evolusi.</p>'+choices([['classic32','🎮 Main Klasik · 32 Stage','Platformer 3D · delapan dunia'],['quickGame','◈ Tebak Arah · 5 ronde','Permainan tebakan klasik'],['trailGame','🐾 Jejak Nusantara · Ingat Pola','Tiga putaran, 2–4 simbol'],['adventure','🎮 Jelajah Evolusi · 15 level','Platformer 2.5D, Jiwa & XP']]);}
+ else if(screen==='playChoices'){title='✦ Ayo Bermain';content='<p>Mainkan permainan klasik untuk merawat sahabat, atau jelajahi tiga dunia petualangan 3D untuk pengalaman evolusi.</p>'+choices([['nesOriginal','🎮 NES Asli · ROM Pribadi','Emulasi gameplay asli, tidak diubah'],['classic32','🎮 Main Klasik · 32 Stage','Platformer 3D · delapan dunia'],['quickGame','◈ Tebak Arah · 5 ronde','Permainan tebakan klasik'],['trailGame','🐾 Jejak Nusantara · Ingat Pola','Tiga putaran, 2–4 simbol'],['adventure','🎮 Jelajah Evolusi · 15 level','Platformer 2.5D, Jiwa & XP']]);}
  else if(screen==='light'){title='☾ Lampu & Tidur';content='<p>Padamkan lampu saat istirahat seperti Tamagotchi klasik. Nyalakan saat ingin bermain lagi.</p>'+
  choices([['lightOff','☾ Matikan lampu','Sahabat beristirahat'],['lightOn','☀ Nyalakan lampu','Sahabat bangun']]);}
  else if(screen==='status'){title='♥ Buku Kesehatan';content=statusContent(p);}
@@ -521,6 +521,11 @@ element.addEventListener('click',ev=>{
  if(a==='trailReady'){trailReady();return}
  if(a==='trailPick'){trailPick(Number(b.dataset.value));return}
  if(a==='trailNext'){trailNext();return}
+ if(a==='nesOriginal'){
+  if(!window.NUSAJIWA_ROM_REF?.open?.({source:'habitat'}))
+   toast('Mesin NES belum termuat. Muat ulang halaman.');
+  return;
+ }
  if(a==='classic32'){
   const p=active();
   if(!p||p.stage===0||p.retired||p.sick||p.sleep){toast('Makhluk harus sudah menetas, sehat, dan bangun.');return;}

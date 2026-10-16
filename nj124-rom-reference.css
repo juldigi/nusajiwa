@@ -68,3 +68,32 @@ body.njr-playing{overflow:hidden!important}
  #njromref .njr-joy button{height:36px;min-width:37px}
  #njromref .njr-setup{top:45%;max-width:500px}
 }
+/* NJ137 ROM-first UI. NES content is loaded locally, 3D projection is experimental. */
+#njromref .njr-player{position:relative;isolation:isolate}
+#njromref .njr-player .njr-three-canvas{position:absolute!important;inset:0;width:100%;height:100%;
+ pointer-events:none;z-index:3}
+#njromref .njr-player.njr-projecting>canvas:not(.njr-three-canvas){opacity:0}
+#njromref .njr-view-switch{display:flex;gap:5px;margin:5px 0;max-width:100%;padding:4px;
+ border:1px solid #d4cfaa6b;border-radius:12px;background:#102935;z-index:4;position:relative}
+#njromref .njr-view-switch button{flex:1;min-height:43px;min-width:0;
+ padding:7px 10px;border:0;border-radius:9px;font:600 11px/1.3 system-ui;color:#d2e0db;background:transparent}
+#njromref .njr-view-switch button[aria-pressed="true"]{background:#e7d5a1;color:#183139}
+#njromref .njr-tools{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;
+ padding:4px 10px;position:relative;z-index:3}
+#njromref .njr-tools button{min-height:40px;padding:7px 11px;
+ background:#244453;border:1px solid #e1d1a16b;color:#faecca;border-radius:10px;
+ font:650 11px/1.2 system-ui;touch-action:manipulation}
+#njromref .njr-toolbar button{min-height:44px;min-width:44px}
+@media(max-width:690px){
+ #njromref .njr-container{inset:calc(env(safe-area-inset-top,0px) + 59px) 0
+   calc(161px + env(safe-area-inset-bottom,0px));gap:6px}
+ #njromref .njr-player{width:min(calc(100vw - 16px),58dvh)}
+ #njromref .njr-joy button{min-width:43px;width:43px;min-height:48px}
+ #njromref .njr-view-switch button{font-size:10px;padding:6px 5px}
+ #njromref .njr-tools button{font-size:10px;min-height:36px;padding:6px 8px}
+}
+@media(max-height:510px) and (orientation:landscape){
+ #njromref .njr-container{inset:47px 0 48px}
+ #njromref .njr-player{width:auto;max-width:58vw;height:min(67dvh,390px)}
+ #njromref .njr-joy button{height:37px;min-height:37px}
+}

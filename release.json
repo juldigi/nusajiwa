@@ -1064,6 +1064,28 @@
       "qa": "Automated VM tests; hands-on iPhone gameplay and exhaustive 32-stage completion not yet performed",
       "save": "No changes to localStorage keys or saved progress schema",
       "test_file": "tests/nusajiwa-scoring-136.mjs"
+    },
+    {
+      "patch": "NJ137",
+      "status": "MERGED",
+      "title": "Genuine local-ROM NES play directly from NUSAJIWA Main, with experimental WebGL framebuffer perspective",
+      "behavior": [
+        "Original ROM interprets all gameplay via jsnes instead of homemade NUSAJIWA logic",
+        "Clearly named authentic mode at top of Main and in Tamagotchi game choices",
+        "Supports local .nes or .zip input without uploading cartridge to GitHub",
+        "iPhone multi-finger A/B/Dpad with release on blur, stop/start, reset, eject",
+        "Cartridge session stays only in volatile browser RAM until eject or reload",
+        "Optional perspective 3D renders live NES video on a Three.js plane while NES remains authoritative",
+        "Original 32-stage 3D NUSAJIWA adaptation remains available separately"
+      ],
+      "limitations": [
+        "User must select their own ROM file before gameplay starts",
+        "3D mode is a projected 2D framebuffer, NOT fully rebuilt 3D level geometry or a 3D replacement Mario character",
+        "No real iPhone playthrough or ROM-specific validation yet",
+        "CDN availability required for jsnes and Three.js dependencies"
+      ],
+      "tests": "tests/nusajiwa-rom-native-137.mjs",
+      "saved_data": "No persistent NUSAJIWA save schema modified"
     }
   ],
   "visual_audit": {

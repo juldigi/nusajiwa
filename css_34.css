@@ -82,3 +82,12 @@
 @media(prefers-reduced-motion:reduce){
  #nj35.njx .nj-side,#nj35.njx .nj133-play-choices button{transition:none!important;animation:none!important}
 }
+
+/* NJ137 · make genuine ROM NES gameplay unambiguously first, with separate 3D adaptation. */
+#nj35.njx .nj133-play-choices .nj137-nes-play{
+ width:100%;min-height:76px;display:flex;flex-direction:column;justify-content:center;
+ align-items:flex-start;gap:5px;padding:13px 17px;border:1px solid #f0dba4;
+ border-radius:14px;background:#f3e2ad;color:#203032;text-align:left;
+ font:700 14px/1.3 var(--g-font-u);touch-action:manipulation}
+#nj35.njx .nj137-nes-play small{display:block;font:500 11px/1.4 var(--g-font-u);color:#3a514f}
+#nj35.njx .nj137-nes-play:focus-visible{outline:3px solid #fff;outline-offset:3px}
