@@ -33,7 +33,7 @@
     {
       "version": "NJ139",
       "status": "merged",
-      "scope": "Clean navigation: hide superseded 32-stage/15-stage entry points, optional legacy expedition UI, classic archive shortcuts and version-era catalog filters; preserve saves and runtime compatibility."
+      "scope": "Clean navigation: hide superseded 32-stage/15-stage entry points, classic archive shortcuts and version-era catalog filters; preserve active expedition/evolution systems, saves and runtime compatibility."
     }
   ],
   "runtime": {
