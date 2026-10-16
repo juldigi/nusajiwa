@@ -59,7 +59,7 @@ test('NJ135: visual, registry, mobile controls, safe area and progress contracts
  assert.ok(css.includes('touch-action:none'));
  for(const f of ['nj123-classic.js','nj125-classic-3d.js',
  'nj127-rom-physics.js','nj123-classic.css'])
- assert.ok(index.includes(f+'?v=9.15.135'),f);
+ assert.match(index,new RegExp(f.replace(/\\./g,'\\.')+'\\?v=9\\.\\d+\\.\\d+'),f);
  const m=JSON.parse(read('release.json'));
  assert.equal(m.version,'8.3');assert.equal(m.runtime.identities,300);
  assert.equal(m.merged_gameplay_improvements.filter(e=>e.patch==='NJ135').length,1);

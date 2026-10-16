@@ -45,6 +45,36 @@ function resolveBlocks(s,l,oldX,oldY){
 }
 // 1/60s robust crossing: land from above the enemy, rather than requiring
 // exact center overlap at a specific frame (fast fall could skip it).
+// NJ136: chain bonuses rise for consecutive aerial stomps and reset on
+// actual safe landing. Movement speed does not affect score consistency.
+function stompAward(s,hint){
+ const fx=s?.nj127;if(!fx)return 0;
+ const multiplier=Math.min(7,Math.max(0,fx.stompCombo));
+ const amount=Math.min(8000,100*(2**multiplier));
+ fx.stompCombo=Math.min(8,fx.stompCombo+1);
+ s.score=(s.score||0)+amount;fx.scoreEarned+=amount;
+ hint?.('✦ Injak beruntun · +'+amount+' poin');
+ return amount;
+}
+function resetStompChain(s){
+ const fx=s?.nj127;
+ if(!fx)return false;
+ fx.stompCombo=0;return true;
+}
+// NJ136: coin rollover may award multiple lives, while only coins actually
+// earned THIS stage count towards the permanent lifetime statistic.
+function collectCoins(s,amount){
+ if(!s||!Number.isFinite(amount))return null;
+ const earned=Math.max(0,Math.trunc(amount));
+ if(!earned)return 0;
+ const tally=Math.max(0,Math.trunc(s.coins||0))+earned;
+ const extraLives=Math.floor(tally/100);
+ s.coins=tally%100;
+ s.lives=Math.max(0,Math.trunc(s.lives||0))+extraLives;
+ s.stageCoins=Math.max(0,Math.trunc(s.stageCoins||0))+earned;
+ s.score=Math.max(0,Math.trunc(s.score||0))+100*earned;
+ return extraLives;
+}
 function stompContact(s,e,oldFoot,water){
  if(!s||!e||water||e.shell||s.vy>=-.4)return false;
  const top=(e.y??0)+.48;
@@ -115,13 +145,13 @@ function stomp(s,l,e,hint){
  if(!s?.nj127||!e||!e.alive)return false;
  if(e.type==='shelled'&&!e.shell){
   e.shell=true;e.vx=0;e.y=.22;
-  s.nj127.stompCombo++;s.score+=100;
+  stompAward(s);
   hint?.('Cangkang diam · sentuh dari samping untuk menendang');
   return true;
  }
  if(e.type==='shell'){
   e.type='shelled';e.shell=true;e.vx=0;e.y=.22;
-  s.nj127.stompCombo++;
+  stompAward(s);
   hint?.('Cangkang dihentikan');
   return true;
  }
@@ -259,8 +289,8 @@ function draw2D(ctx,s,X,Y,p){
  }
  ctx.restore();
 }
-window.NUSAJIWA_NES127=Object.freeze({version:'NJ135.0',start,isProtected,resetLife,resolveBlocks,
- stompContact,stageCarry,hitBlock,before,
+window.NUSAJIWA_NES127=Object.freeze({version:'NJ136.0',start,isProtected,resetLife,resolveBlocks,
+ stompContact,stompAward,resetStompChain,collectCoins,stageCarry,hitBlock,before,
  touchEnemy,stomp,kickShell,after,view,draw2D,romInformed:true,
  privacy:'NO original cartridge bytes, level maps, sprites or sounds shipped'});
 })();

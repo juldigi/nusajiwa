@@ -217,7 +217,7 @@ function start(n,continueRun=false){
  level=plan(n);
  window.NUSAJIWA_CLASSIC3D?.init?.(root);
  status={index:n, x:2.1,y:0,vx:0,vy:0,grounded:true,elapsed:0,remaining:level.clock,
-  cameraX:0,facing:1,score:carry?.score||0,coins:carry?.coins||0,
+  cameraX:0,facing:1,score:carry?.score||0,coins:carry?.coins||0,stageCoins:0,
   lives:carry?.lives||3,power:carry?.power||0,shield:0,invincible:0,spin:0,
   lastFeet:0,pendingJump:false,jumpBuffer:0,coyote:.10,support:null,bonus:false,bonusTimer:0,bonusReturn:0,hiddenCount:0,
   fire:[],released:false,secretFlag:false,boss:level.boss,world:level.world,
@@ -256,26 +256,38 @@ function damage(){
  else die('Terkena rintangan');
 }
 function addCoin(amount=1){
- status.coins+=amount;status.score+=amount*100;
- if(status.coins>=100){status.coins-=100;status.lives++;hint('100 Jiwa · nyawa tambahan!',2);}
+ const lives=window.NUSAJIWA_NES127?.collectCoins?.(status,amount);
+ if(lives===null||lives===undefined){
+  const earned=Math.max(0,Math.trunc(amount));
+  status.coins+=earned;status.stageCoins=(status.stageCoins||0)+earned;
+  status.score+=earned*100;
+  if(status.coins>=100){const extra=Math.floor(status.coins/100);
+   status.coins%=100;status.lives+=extra;hint('100 Jiwa · nyawa tambahan!',2);}
+ }else if(lives>0)hint('100 Jiwa · '+lives+' nyawa tambahan!',2);
 }
 function finish(){
  if(!status||status.stop)return;
  status.stop=true;status.completed=true;const index=status.index,r=stateFor(pet.id),first=!r.clears[index];
+ // End-of-level countdown awards a one-time score bonus before saving.
+ const timeBonus=Math.max(0,Math.floor(status.remaining))*10;
+ status.score+=timeBonus;
  r.clears[index]=true;r.highest=Math.max(r.highest,index+1);
  r.best[index]=Math.max(r.best[index]||0,status.score);
- r.totalCoins=(r.totalCoins||0)+status.coins;
+ r.totalCoins=(r.totalCoins||0)+(status.stageCoins||0);
  if(status.secretFlag)r.hidden[index]=true;
  window.NUSAJIWA_CLASSIC124?.finish?.(status,r,index);
  save();
  // Existing Tamagotchi rewards deliberately accept levels 0..14 ONLY.
  // Do not fabricate XP/element reward by mapping unrelated levels onto that key.
- show('Segel wilayah berhasil!','<p>Stage '+(level.world+1)+'—'+(level.section+1)+' selesai. Skor '+
-  status.score+' · Jiwa '+status.coins+' · '+(status.secretFlag?'❖ Rahasia ditemukan':'Jalur biasa')+'. '+
-  (first?'Stage berikutnya dibuka.':'Rekor disimpan.')+
-  '</p><p class="njc-note">Progres kampanye klasik tersimpan sendiri; progres dan hadiah petualangan 15 level tetap aman.</p>',
-  [[index<31?'next':'levels',index<31?'▶ Lanjut Stage':'✓ Kembali ke Peta'],
-   ['retry','↻ Main Lagi'],['levels','Peta 32 Stage'],['close','Habitat / Petualangan']]);
+ const finalStage=index===MAX-1;
+ show(finalStage?'✦ Legenda Nusantara · Tamat!':'Segel wilayah berhasil!',
+  '<p>'+ (finalStage?'Selamat! Seluruh delapan dunia dan 32 stage telah diselesaikan.':'Stage '+(level.world+1)+'—'+(level.section+1)+' selesai.')+
+  ' Skor '+status.score+' · Bonus waktu +'+timeBonus+' · Jiwa '+status.coins+'. '+
+  (status.secretFlag?'❖ Rahasia ditemukan. ':'')+
+  (first?(finalStage?'Petualangan lengkap tercatat!':'Stage berikutnya dibuka. '):'Rekor disimpan. ')+
+  '</p><p class="njc-note">Progres kampanye klasik tersimpan terpisah. Kemajuan Tamagotchi dan Jelajah Evolusi tetap aman.</p>',
+  [[finalStage?'levels':'next',finalStage?'✓ Lihat Peta Lengkap':'▶ Lanjut Stage'],
+   ['retry','↻ Main Lagi'],['levels','Peta 32 Stage'],['close','Kembali ke Habitat']]);
 }
 function jumpTo(index){
  const r=stateFor(pet.id);r.highest=Math.max(r.highest,index);save();
@@ -355,6 +367,8 @@ function update(dt){
  }
  // NJ129: rune/stone/power blocks also have solid tops and sides.
  window.NUSAJIWA_NES127?.resolveBlocks?.(s,l,oldX,oldY);
+ // Ground, pipes, platforms, and intact blocks all end the aerial streak.
+ if(s.grounded&&!wasGrounded)window.NUSAJIWA_NES127?.resetStompChain?.(s);
  window.NUSAJIWA_STAGE130?.bounce?.(s,l,hint);
  // Solid wall collision with portal pillars until player jumps onto them.
  for(const tube of l.pipes){
@@ -435,7 +449,10 @@ function update(dt){
    if(sweptStomp){
     if(window.NUSAJIWA_NES127?.stomp?.(s,l,e,hint)){s.vy=6.6;break;}
     if(e.type==='shelled'){e.shell=true;e.vx=0;e.y=.22;hint('Cangkang terpental!');}
-    else{e.alive=false;s.score+=150;}
+    else{
+     e.alive=false;
+     if(!window.NUSAJIWA_NES127?.stompAward?.(s,hint))s.score+=150;
+    }
     s.y=Math.max(s.y,e.y+.50);s.vy=6.6;break;
    }
    if(e.shell){
@@ -630,7 +647,7 @@ document.addEventListener('keyup',e=>keyboard(e,false),true);
 window.addEventListener('resize',resize,{passive:true});
 document.addEventListener('visibilitychange',()=>{if(active&&playing&&document.hidden)pause()});
 window.addEventListener('blur',()=>{if(active&&playing)pause()});
-window.NUSAJIWA_CLASSIC=Object.freeze({version:'9.15.NJ135',worldDesign:'NJ124-Worlds',renderSystem:'NJ125-Three-WebGL',open,close,levels:LEVELS.map(l=>({
+window.NUSAJIWA_CLASSIC=Object.freeze({version:'9.16.NJ136',worldDesign:'NJ124-Worlds',renderSystem:'NJ125-Three-WebGL',open,close,levels:LEVELS.map(l=>({
  index:l.index,world:l.world+1,stage:l.section+1,region:l.region,type:l.type,
  location:l.place,challenge:l.name,length:l.length,secretEntrances:l.secret.length,
  shortcuts:l.pipes.filter(p=>p.warp).length})),

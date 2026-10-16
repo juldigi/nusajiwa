@@ -1048,6 +1048,22 @@
       "device_qa": "Tests run via GitHub Actions; physical Safari iPhone touch/playthrough remains pending",
       "compatible": "No new localStorage keys; Kodex, evolution and 300-species data unaffected",
       "tests": "tests/nusajiwa-classic-controls-135.mjs"
+    },
+    {
+      "patch": "NJ136",
+      "status": "MERGED",
+      "title": "32-stage airborne stomp chains, accurate lifetime coin totals and final campaign victory",
+      "gameplay": [
+        "Enemy stomp scoring increases consecutively without touching safe ground",
+        "Stomp chain resets on safe landing, including moving platforms and blocks",
+        "Collected coins accumulate per-stage for permanent lifetime stats; carried coin balance is not double-counted",
+        "Crossing 100 coins grants life, including multiple bonuses from a single pickup",
+        "Remaining time adds a one-time stage completion score bonus",
+        "Final stage 8-4 shows the complete 32-stage victory rather than another generic stage-clear message"
+      ],
+      "qa": "Automated VM tests; hands-on iPhone gameplay and exhaustive 32-stage completion not yet performed",
+      "save": "No changes to localStorage keys or saved progress schema",
+      "test_file": "tests/nusajiwa-scoring-136.mjs"
     }
   ],
   "visual_audit": {
