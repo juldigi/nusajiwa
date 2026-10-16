@@ -150,7 +150,7 @@ function syncMode(){
   b.setAttribute('aria-pressed',String(b.dataset.jr===displayMode)));
 }
 function parseRomInfo(bytes){
- if(!(bytes instanceof Uint8Array)||bytes.length<16||bytes[0]!==0x4e||bytes[1]!==0x45||bytes[2]!==0x53||bytes[3]!==0x1a)throw Error('Header iNES tidak valid.');
+ if(!bytes||typeof bytes.length!=='number'||bytes.length<16||bytes[0]!==0x4e||bytes[1]!==0x45||bytes[2]!==0x53||bytes[3]!==0x1a)throw Error('Header iNES tidak valid.');
  const h=bytes.subarray(0,16),nes2=(h[7]&0x0c)===0x08;
  const mapper=(h[6]>>4)|(h[7]&0xf0)|(nes2?((h[8]&0x0f)<<8):0);
  const trainer=(h[6]&4)!==0,prg=(nes2?(h[4]|((h[9]&0x0f)<<8)):h[4])*16384;

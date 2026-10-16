@@ -50,7 +50,7 @@ test('NJ137 volatile session, finger ownership, 3D transparency and safe fallbac
 });
 test('NJ137 styles, cache invalidation, original game catalog and save continuity',()=>{
  const html=read('index.html'),css=read('css_34.css'),romcss=read('nj124-rom-reference.css');
- assert.ok(html.includes('nj124-rom-reference.js?v=9.3.124&amp;nj137=2'));
+ assert.ok(html.includes('nj124-rom-reference.js?v=9.3.124&amp;nj138=1'));
  assert.ok(html.includes('script_32.js?v=9.14.134&amp;folklore=95&amp;nj137=1'));
  assert.ok(css.includes('NJ137 · make genuine ROM'));
  assert.ok(romcss.includes('NJ137 ROM-first UI'));
