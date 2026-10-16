@@ -50,7 +50,7 @@ test('NJ137 volatile session, finger ownership, 3D transparency and safe fallbac
 });
 test('NJ137 styles, cache invalidation, original game catalog and save continuity',()=>{
  const html=read('index.html'),css=read('css_34.css'),romcss=read('nj124-rom-reference.css');
- assert.ok(html.includes('nj124-rom-reference.js?v=9.3.124&amp;nj137=1'));
+ assert.ok(html.includes('nj124-rom-reference.js?v=9.3.124&amp;nj137=2'));
  assert.ok(html.includes('script_32.js?v=9.14.134&amp;folklore=95&amp;nj137=1'));
  assert.ok(css.includes('NJ137 · make genuine ROM'));
  assert.ok(romcss.includes('NJ137 ROM-first UI'));
@@ -58,4 +58,11 @@ test('NJ137 styles, cache invalidation, original game catalog and save continuit
  assert.equal(rel.runtime.identities,300);
  assert.equal(rel.version,'8.3');
  assert.equal(rel.merged_gameplay_improvements.filter(x=>x.patch==='NJ137').length,1);
+});
+
+test('NJ137 performance hotfix: WebGL resizes only for logical dimension changes',()=>{
+ const js=read('nj124-rom-reference.js');
+ assert.ok(js.includes('p.sizeW!==w||p.sizeH!==h'));
+ assert.ok(js.includes('p.sizeW=w;p.sizeH=h;'));
+ assert.ok(js.includes("if(displayMode!=='3d')return;"));
 });

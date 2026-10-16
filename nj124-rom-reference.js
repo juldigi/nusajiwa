@@ -116,13 +116,14 @@ async function beginProjection(){
     new THREE.MeshStandardMaterial({color:0x3a5559,roughness:.7}));
   frame.position.z=-.22;frame.rotation.copy(plane.rotation);scene.add(frame);
   scene.add(new THREE.AmbientLight(0xffffff,2));
-  const p={renderer,scene,camera,canvas,source,texture,raf:0};
+  const p={renderer,scene,camera,canvas,source,texture,raf:0,sizeW:0,sizeH:0};
   projection=p;screen.classList.add('njr-projecting');
   const draw=()=>{
    if(projection!==p||!active)return;
    const w=Math.max(160,screen.clientWidth||256),h=Math.max(140,screen.clientHeight||240);
-   if(canvas.width!==w||canvas.height!==h){
-    renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
+   if(p.sizeW!==w||p.sizeH!==h){
+    renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();
+    p.sizeW=w;p.sizeH=h;}
    texture.needsUpdate=true;renderer.render(scene,camera);
    p.raf=requestAnimationFrame(draw);
   };
@@ -135,6 +136,7 @@ function setDisplayMode(mode){
  if(mode==='native'){stopProjection();status('NES asli · mode layar 2D.');}
  else if(!browser){displayMode='native';status('Pilih ROM pribadi terlebih dahulu.');}
  else{beginProjection().then(ok=>{
+  if(displayMode!=='3d')return;
   if(!ok){displayMode='native';status('WebGL tidak tersedia; gameplay NES 2D tetap berjalan.');}
   else status('Proyeksi WebGL aktif. Semua logika permainan tetap dari ROM NES.');
   syncMode();
