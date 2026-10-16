@@ -77,5 +77,5 @@ test('NJ138: iNES header parser reports mapper and pattern tile count',()=>{
  assert.equal(info.prgBytes,32768);assert.equal(info.chrBytes,8192);
  assert.equal(info.chrTileCount,512);assert.equal(info.mirroring,'Horizontal');
  assert.equal(info.complete,true);
- assert.throws(()=>api.parseRomInfo(new Uint8Array(16)),/Ukuran PRG\/CHR/);
+ assert.throws(()=>api.parseRomInfo(new Uint8Array(16)),/Header iNES/);
 });
