@@ -29,11 +29,6 @@
       "version": "8.3",
       "status": "merged",
       "scope": "Adventure Kalimantan / five levels, gusts, themed scenery, guardian finale, release integrity gate"
-    },
-    {
-      "version": "NJ139",
-      "status": "merged",
-      "scope": "Clean navigation: hide superseded 32-stage/15-stage entry points, classic archive shortcuts and version-era catalog filters; preserve active expedition/evolution systems, saves and runtime compatibility."
     }
   ],
   "runtime": {
@@ -1209,5 +1204,12 @@
     "copyright": "No NES ROM bytes, Nintendo sprites, maps or audio shipped",
     "visual_qa": "Pending real Safari iPhone verification",
     "progression": "Existing Tamagotchi, encyclopedia, 15-level adventure, Classic saves unchanged"
-  }
+  },
+  "interface_patches": [
+    {
+      "patch": "NJ139",
+      "status": "MERGED",
+      "scope": "Hide superseded 32-stage/15-stage entry points, classic archive shortcuts and version-era catalog filters; preserve active expedition/evolution systems, saves and runtime compatibility."
+    }
+  ]
 }
