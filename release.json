@@ -995,6 +995,43 @@
       ],
       "test_file": "tests/nusajiwa-navigation-133.mjs",
       "device_qa": "iPhone Safari interaction remains unverified"
+    },
+    {
+      "patch": "NJ134",
+      "status": "MERGED",
+      "title": "Mobile-first NUSAJIWA main navigation and progressive-disclosure play hub",
+      "design_principles": [
+        "One clear Main destination",
+        "Keep 3D habitat visible behind bottom sheet",
+        "Use platformer buttons as primary actions",
+        "Separate region expedition into optional detail",
+        "44px+ touch targets",
+        "Photo and care actions no longer confused with platformer"
+      ],
+      "implementation": [
+        "Bottom nav Jelajah renamed Main; care action relabelled Hibur",
+        "Direct 32-stage and 15-stage mode cards in main hub",
+        "Expedition regions collapsed by default in independent details",
+        "Bottom-sheet play menu on portrait mobile and slim overlay on landscape",
+        "Backdrop and Escape-to-close with ARIA/inert state synchronization",
+        "Camera pinch remains on mobile with nonessential zoom buttons hidden",
+        "Clear active-tab state on panel open/close",
+        "Content remains scrollable within safe-area sheet"
+      ],
+      "preserved": [
+        "Save data and all 300 identities",
+        "3D pet meshes",
+        "Classic32 and Adventure15 runtimes",
+        "Codex, evolution, region rituals"
+      ],
+      "qa": "GitHub automated suite; real iPhone Safari interaction needs live user validation",
+      "files": [
+        "script_32.js",
+        "script_34.js",
+        "css_34.css",
+        "index.html",
+        "tests/nusajiwa-ux-134.mjs"
+      ]
     }
   ],
   "visual_audit": {

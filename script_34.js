@@ -212,7 +212,7 @@
     /* ---------- Lembar menu: kenali panel, rapikan isinya ---------- */
     var PANELS = [
       ['roster', '.nj-roster-summary', 'Koleksi'],
-      ['explore', '#nj38QuestBoard', 'Jelajah'],
+      ['explore', '#nj38QuestBoard', 'Main & Ekspedisi'],
       ['ritual', '.nj-stage-track', 'Altar evolusi'],
       ['archive', '.nj-codex-facts', 'Kodex'],
       ['journal', '.nj61-journal-list', 'Catatan penemuan']
