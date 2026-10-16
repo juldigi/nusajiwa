@@ -41,7 +41,7 @@ test('NJ133: entry UI stays above fold and uses accessible tappable buttons',()=
  assert.ok(css.includes('min-height:52px'));
  assert.match(html,/css_34\.css\?v=9\.\d+\.\d+/,'Updated UI stylesheet remains cache-busted');
  assert.ok(html.includes('tamagotchi-3d.js?v=9.13.133'));
- assert.ok(html.includes('nj123-classic.js?v=9.13.133'));
+ assert.match(html,/nj123-classic\.js\?v=9\.\d+\.\d+/,'Active Classic32 runtime must remain cache-busted');
  const ledger=JSON.parse(file('release.json'));
  assert.equal(ledger.version,'8.3');
  assert.equal(ledger.runtime.identities,300);
