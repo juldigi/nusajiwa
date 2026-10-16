@@ -16,7 +16,7 @@ const ground=(level,x)=>!level.gaps.some(g=>intersects(x,g));
 const nearPipe=(level,x,y)=>level.pipes.some(p=>Math.abs(p.x-x)<.79&&y<p.h+.32);
 const sweep=(a,b,c,r)=>Math.min(a,b)<=c+r&&Math.max(a,b)>=c-r;
 // Consumed reward blocks remain physical; only broken stone disappears.
-const solid=b=>!b.destroyed&&(b.kind!=='hidden'||b.reveal!==false);
+const solid=b=>!b.destroyed&&(b.kind!=='hidden'||b.reveal===true);
 /* All 3D/Canvas blocks share one collision box: top y+.40, bottom y-.40. */
 function resolveBlocks(s,l,oldX,oldY){
  if(!s||!l?.blocks)return false;
@@ -42,6 +42,23 @@ function resolveBlocks(s,l,oldX,oldY){
   else if(oldX>=right-.02&&s.x<right){s.x=right;s.vx=0;hit=true;}
  }
  return hit;
+}
+// 1/60s robust crossing: land from above the enemy, rather than requiring
+// exact center overlap at a specific frame (fast fall could skip it).
+function stompContact(s,e,oldFoot,water){
+ if(!s||!e||water||e.shell||s.vy>=-.4)return false;
+ const top=(e.y??0)+.48;
+ return Math.abs(s.x-e.x)<.64&&oldFoot>=top-.12&&s.y<=top+.06;
+}
+// Scores, coins, powers and lives persist only when genuinely advancing
+// to the next campaign stage; reselect/retry begin fresh sessions.
+function stageCarry(previous,nextIndex){
+ if(!previous?.completed||previous.stop!==true||
+    nextIndex!==previous.index+1)return null;
+ return {lives:Math.max(1,Math.trunc(previous.lives||1)),
+  score:Math.max(0,Math.trunc(previous.score||0)),
+  coins:Math.max(0,Math.trunc(previous.coins||0))%100,
+  power:clamp(previous.power||0,0,2)};
 }
 function start(s,l){
  if(!s||!l)return false;
@@ -242,7 +259,8 @@ function draw2D(ctx,s,X,Y,p){
  }
  ctx.restore();
 }
-window.NUSAJIWA_NES127=Object.freeze({version:'NJ132.0',start,isProtected,resetLife,resolveBlocks,hitBlock,before,
+window.NUSAJIWA_NES127=Object.freeze({version:'NJ135.0',start,isProtected,resetLife,resolveBlocks,
+ stompContact,stageCarry,hitBlock,before,
  touchEnemy,stomp,kickShell,after,view,draw2D,romInformed:true,
  privacy:'NO original cartridge bytes, level maps, sprites or sounds shipped'});
 })();

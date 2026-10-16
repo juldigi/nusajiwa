@@ -101,7 +101,8 @@ const stateFor=id=>{store=store||load();return store.pets[id]||(store.pets[id]={
 function save(){try{localStorage.setItem(KEY,JSON.stringify(store))}catch(_){}}
 let root=null,canvas=null,ctx=null,menu=null,pet=null,status=null,level=null,active=false,playing=false,returnTarget='adventure',
  last=0,buffer=0,raf=0,message='',messageUntil=0,pixelScale=32,viewWidth=24;
-let key={left:false,right:false,jump:false,run:false,down:false,pressed:false},touch={};
+let key={left:false,right:false,jump:false,run:false,down:false,pressed:false};
+const keySources={left:new Set(),right:new Set(),jump:new Set(),run:new Set(),down:new Set()};
 const persona=p=>/kuyang|palasik|banaspati|pocong|kuntilanak|wewe|leak/.test(p.id)?'spirit':
  /rangkong|bird|elang|kakatua|garuda/.test(p.id)?'bird':
  /tiger|harimau|kucing|macan/.test(p.id)?'tiger':'forest';
@@ -129,23 +130,30 @@ function makeUI(){
   const b=event.target.closest('button[data-c]');if(!b)return;
   const a=b.dataset.c,value=Number(b.dataset.i);
   if(a==='close'){close();return}if(a==='rom'){window.NUSAJIWA_ROM_REF?.open?.();return}if(a==='levels'){showLevels();return}
-  if(a==='level'){start(value);return}if(a==='next'){start((status?.index??0)+1);return}
+  if(a==='level'){start(value);return}if(a==='next'){start((status?.index??0)+1,true);return}
   if(a==='retry'){start(status?.index??0);return}if(a==='resume'){clearKeys();playing=true;hideMenu();last=0;buffer=0;return}
   if(a==='pause'){pause();return}if(a==='warp'){jumpTo(value);return}
   if(a==='secret'){enterSecret();return}
  });
  for(const btn of root.querySelectorAll('[data-h]')){
   const n=btn.dataset.h;
-  btn.addEventListener('pointerdown',ev=>{ev.preventDefault();btn.setPointerCapture?.(ev.pointerId);setKey(n,true)});
+  btn.addEventListener('pointerdown',ev=>{
+   if(!playing)return;
+   ev.preventDefault();
+   try{btn.setPointerCapture?.(ev.pointerId)}catch(_){}
+   setKey(n,true,'pointer:'+ev.pointerId);
+  });
   for(const t of ['pointercancel','pointerup','lostpointercapture'])btn.addEventListener(t,ev=>{
-   ev.preventDefault();setKey(n,false);
+   ev.preventDefault();setKey(n,false,'pointer:'+ev.pointerId);
   });
  }
 }
-function setKey(which,on){
- const k=which==='down'?'down':which==='run'?'run':which;
- if(k==='jump'&&on&&!key.jump)key.pressed=true;
- key[k]=on;
+function setKey(which,on,source='keyboard'){
+ const k=which,owners=keySources[k];if(!owners)return;
+ if(on)owners.add(source);else owners.delete(source);
+ const held=owners.size>0;
+ if(k==='jump'&&held&&!key.jump)key.pressed=true;
+ key[k]=held;
 }
 function show(title,description,buttons){
  playing=false;clearKeys();root.querySelector('.njc-overlay').hidden=false;
@@ -154,7 +162,10 @@ function show(title,description,buttons){
  '<button data-c="'+x[0]+'"'+(x[2]!==undefined?' data-i="'+x[2]+'"':'')+'>'+esc(x[1])+'</button>').join('')+'</div>';
 }
 function hideMenu(){root.querySelector('.njc-overlay').hidden=true;}
-function clearKeys(){key={left:false,right:false,jump:false,run:false,down:false,pressed:false};}
+function clearKeys(){
+ key={left:false,right:false,jump:false,run:false,down:false,pressed:false};
+ for(const owners of Object.values(keySources))owners.clear();
+}
 function showLevels(){
  if(!active)return;const record=stateFor(pet.id);
  let grid='<div class="njc-grid">';
@@ -198,21 +209,23 @@ function close(){active=false;playing=false;window.NUSAJIWA_CLASSIC3D?.close?.()
 }
 function hint(text,seconds=1.7){message=text;messageUntil=(status?.elapsed||0)+seconds;
  if(root)root.querySelector('#njcNotice').textContent=text;}
-function start(n){
+function start(n,continueRun=false){
  if(!Number.isInteger(n)||n<0||n>=MAX||!pet)return false;
+ const carry=continueRun?window.NUSAJIWA_NES127?.stageCarry?.(status,n):null;
  const record=stateFor(pet.id);
  if(n>0&&!record.clears[n-1]&&n>record.highest)return false;
  level=plan(n);
  window.NUSAJIWA_CLASSIC3D?.init?.(root);
  status={index:n, x:2.1,y:0,vx:0,vy:0,grounded:true,elapsed:0,remaining:level.clock,
-  cameraX:0,facing:1,score:0,coins:0,lives:3,power:0,shield:0,invincible:0,spin:0,
+  cameraX:0,facing:1,score:carry?.score||0,coins:carry?.coins||0,
+  lives:carry?.lives||3,power:carry?.power||0,shield:0,invincible:0,spin:0,
   lastFeet:0,pendingJump:false,jumpBuffer:0,coyote:.10,support:null,bonus:false,bonusTimer:0,bonusReturn:0,hiddenCount:0,
   fire:[],released:false,secretFlag:false,boss:level.boss,world:level.world,
   completed:false,stop:false,gravityScale:1,worldTime:0};
  window.NUSAJIWA_CLASSIC124?.start?.(status,level);
  window.NUSAJIWA_NES127?.start?.(status,level);
  window.NUSAJIWA_STAGE130?.start?.(status,level);
- key.pressed=false;playing=true;hideMenu();hint((level.world+1)+'—'+(level.section+1)+' · '+level.region+' / '+level.name,2.4);
+ clearKeys();playing=true;hideMenu();hint((level.world+1)+'—'+(level.section+1)+' · '+level.region+' / '+level.name,2.4);
  updateHud();last=0;buffer=0;return true;
 }
 function pause(){if(!active||!playing)return;
@@ -248,7 +261,7 @@ function addCoin(amount=1){
 }
 function finish(){
  if(!status||status.stop)return;
- status.stop=true;const index=status.index,r=stateFor(pet.id),first=!r.clears[index];
+ status.stop=true;status.completed=true;const index=status.index,r=stateFor(pet.id),first=!r.clears[index];
  r.clears[index]=true;r.highest=Math.max(r.highest,index+1);
  r.best[index]=Math.max(r.best[index]||0,status.score);
  r.totalCoins=(r.totalCoins||0)+status.coins;
@@ -412,13 +425,18 @@ function update(dt){
     if(e.x<=e.start||e.x>=e.end)e.vx*=-1;
    }
   }
-  if(Math.abs(s.x-e.x)<.56&&Math.abs((s.y+.55)-(e.y+.15))<.69){
+  const sweptStomp=window.NUSAJIWA_NES127?.stompContact?.(s,e,oldY,water)||
+   (!water&&!e.shell&&oldY>e.y+.38&&s.vy<-.4&&
+     s.y<=e.y+.53&&Math.abs(s.x-e.x)<.64);
+  const bodyContact=Math.abs(s.x-e.x)<.56&&
+   Math.abs((s.y+.55)-(e.y+.15))<.69;
+  if(sweptStomp||bodyContact){
    if(window.NUSAJIWA_NES127?.touchEnemy?.(s,l,e,hint))break;
-   if(!water&&oldY>e.y+.38&&s.vy<-.4&&!e.shell){
+   if(sweptStomp){
     if(window.NUSAJIWA_NES127?.stomp?.(s,l,e,hint)){s.vy=6.6;break;}
     if(e.type==='shelled'){e.shell=true;e.vx=0;e.y=.22;hint('Cangkang terpental!');}
     else{e.alive=false;s.score+=150;}
-    s.vy=6.6;break;
+    s.y=Math.max(s.y,e.y+.50);s.vy=6.6;break;
    }
    if(e.shell){
     if(window.NUSAJIWA_NES127?.kickShell?.(s,l,e,hint)){s.vy=4.4;break;}
@@ -605,14 +623,14 @@ function keyboard(ev,down){
  if(!mapped&&ev.code!=='Escape')return;
  ev.preventDefault();ev.stopImmediatePropagation();
  if(ev.code==='Escape'&&down){if(playing)pause();else close();}
- else if(mapped)setKey(mapped,down);
+ else if(mapped)setKey(mapped,down,'keyboard:'+ev.code);
 }
 document.addEventListener('keydown',e=>keyboard(e,true),true);
 document.addEventListener('keyup',e=>keyboard(e,false),true);
 window.addEventListener('resize',resize,{passive:true});
 document.addEventListener('visibilitychange',()=>{if(active&&playing&&document.hidden)pause()});
 window.addEventListener('blur',()=>{if(active&&playing)pause()});
-window.NUSAJIWA_CLASSIC=Object.freeze({version:'9.12.NJ132',worldDesign:'NJ124-Worlds',renderSystem:'NJ125-Three-WebGL',open,close,levels:LEVELS.map(l=>({
+window.NUSAJIWA_CLASSIC=Object.freeze({version:'9.15.NJ135',worldDesign:'NJ124-Worlds',renderSystem:'NJ125-Three-WebGL',open,close,levels:LEVELS.map(l=>({
  index:l.index,world:l.world+1,stage:l.section+1,region:l.region,type:l.type,
  location:l.place,challenge:l.name,length:l.length,secretEntrances:l.secret.length,
  shortcuts:l.pipes.filter(p=>p.warp).length})),
@@ -625,7 +643,8 @@ window.NUSAJIWA_CLASSIC=Object.freeze({version:'9.12.NJ132',worldDesign:'NJ124-W
   choreography:l.nj130?.signature||null,pads:l.nj130?.pads?.length||0,
   sentries:l.nj130?.sentries?.length||0}:null;},
  getStatus:()=>status?{index:status.index,x:status.x,y:status.y,coins:status.coins,
- lives:status.lives,shield:status.power,time:status.remaining,
+ lives:status.lives,score:status.score,completed:status.completed,
+ shield:status.power,time:status.remaining,
  bonus:status.bonus,secret:status.secretFlag,playing}:null,
  getSave:()=>JSON.parse(JSON.stringify(store||load()))});
 })();

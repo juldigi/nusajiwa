@@ -16,7 +16,8 @@ const IMPORTS=[
 const clamp=(x,min,max)=>Math.max(min,Math.min(max,x));
 const color=(v,alt)=>typeof v==='string'?v:alt;
 let THREE=null,renderer=null,scene=null,camera=null,canvas=null,host=null,oldCanvas=null;
-let pending=null,active=false,broken=false,stageKey='',geo=[],mats=[],objects=[],decor=[];
+let pending=null,active=false,broken=false,stageKey='',stageLevel=null,
+ geo=[],mats=[],objects=[],decor=[];
 let player=null,coins=[],enemies=[],blocks=[],pipes=[],secret=[],platforms=[],boss=null,gate=null;
 let fxPickup=[],fxShots=[],fxAura=null,fxGold=null,fxEmber=null,fxStone=null;
 let stagePads=[],stageSentries=[],bossOrbs=[];
@@ -61,7 +62,7 @@ function clearStage(){
  if(scene){for(const child of scene.children.slice())scene.remove(child);}
  for(const g of geo)g.dispose?.();for(const m of mats)m.dispose?.();
  geo=[];mats=[];objects=[];decor=[];player=null;coins=[];enemies=[];blocks=[];
- pipes=[];secret=[];platforms=[];boss=null;gate=null;stageKey='';
+ pipes=[];secret=[];platforms=[];boss=null;gate=null;stageKey='';stageLevel=null;
  fxPickup=[];fxShots=[];fxAura=null;fxGold=null;fxEmber=null;fxStone=null;
  stagePads=[];stageSentries=[];bossOrbs=[];
 }
@@ -311,7 +312,7 @@ function makeHero(pet,materials){
 function build(level,pet){
  if(!THREE||!renderer)return false;
  reset();
- stageKey=level.index+':'+(pet?.id||'default');
+ stageKey=level.index+':'+(pet?.id||'default');stageLevel=level;
  const m=environment(level);
  const plant=mat(0x467960),enemy=mat(0xa96654),shell=mat(0x5e917c),
   aqua=mat(0xe49c66),violet=mat(0xa98fc0),ink=mat(0x223a42),
@@ -408,7 +409,7 @@ function build(level,pet){
 function frame(level,status,pet){
  if(!active||broken||!THREE||!renderer||!scene||!level||!status)return false;
  const id=level.index+':'+(pet?.id||'default');
- if(id!==stageKey){
+ if(id!==stageKey||stageLevel!==level){
   try{build(level,pet);}catch(e){
    console.warn('NJ125 stage build error; Canvas fallback',e);broken=true;
    if(canvas)canvas.style.display='none';
@@ -547,7 +548,7 @@ document.addEventListener('visibilitychange',()=>{if(active&&document.hidden){
   // Classical engine already pauses; stop screen redraw to preserve mobile GPU.
  }});
 window.NUSAJIWA_CLASSIC3D=Object.freeze({
- version:'NJ125.0',init,build,frame,close,isReady:()=>!!(renderer&&THREE&&!broken),
+ version:'NJ135.0',init,build,frame,close,isReady:()=>!!(renderer&&THREE&&!broken),
  diagnostic:()=>({active,ready:!!renderer,broken,stageKey,worldLabel,
   renderedFrames:frameCount,meshes:objects.length,mode:renderer?'three-webgl':'2d-fallback',
   cartridgeBundled:false,saveSchemaChanged:false,quality})

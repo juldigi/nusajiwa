@@ -92,3 +92,34 @@ body.njc-playing{overflow:hidden!important}
 #njclassic .njc-real-three{position:absolute!important;inset:0;z-index:1;pointer-events:none;touch-action:none;display:block}
 #njclassic .njc-top,#njclassic .njc-controls,#njclassic #njcNotice{z-index:4}
 #njclassic .njc-overlay{z-index:6}
+
+/* NJ135 Classic32: accessible multitouch controls, compact HUD, good safe-area placement */
+#njclassic .njc-controls button{touch-action:none;-webkit-user-select:none;user-select:none}
+#njclassic .njc-controls button:focus-visible{outline:3px solid #ffe7ad;outline-offset:3px}
+#njclassic .njc-top button{min-width:44px;min-height:44px;touch-action:manipulation}
+#njclassic .njc-actions button{min-height:44px}
+#njclassic .njc-world button{min-height:40px}
+@media(max-width:650px) and (orientation:portrait){
+ #njclassic .njc-controls{padding:0 max(12px,env(safe-area-inset-left)) 0 max(12px,env(safe-area-inset-right));gap:8px;bottom:calc(15px + env(safe-area-inset-bottom,0px))}
+ #njclassic .njc-controls>div{gap:7px}
+ #njclassic .njc-controls button{width:clamp(51px,12vw,64px);min-width:51px;height:clamp(54px,13vw,64px);border-radius:16px;font-size:23px;background:rgba(18,43,59,.82)}
+ #njclassic .njc-controls .njc-a{background:rgba(37,122,96,.88)}
+ #njclassic .njc-controls .njc-b{background:rgba(128,82,54,.88)}
+ #njclassic .njc-controls button small{font-size:8px}
+ #njclassic .njc-top strong{font-size:12px}
+ #njclassic .njc-top small{font-size:9px}
+ #njclassic .njc-metrics{gap:8px;font-size:11px}
+ #njclassic #njcNotice{top:15%;max-width:90%}
+ #njclassic .njc-grid{grid-template-columns:1fr 1fr;gap:8px}
+ #njclassic .njc-world button{min-height:46px;font-size:12px;padding:8px}
+ #njclassic .njc-world button small{font-size:11px}
+}
+@media(min-width:650px){
+ #njclassic .njc-controls{padding-inline:max(24px,env(safe-area-inset-left));}
+ #njclassic .njc-controls button{min-width:62px;height:62px;font-size:25px}
+}
+@media(max-height:480px) and (orientation:landscape){
+ #njclassic .njc-controls button{min-width:52px;width:52px;height:46px}
+ #njclassic .njc-top button{min-width:40px;min-height:38px}
+ #njclassic .njc-top small{max-width:240px}
+}

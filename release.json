@@ -1032,6 +1032,22 @@
         "index.html",
         "tests/nusajiwa-ux-134.mjs"
       ]
+    },
+    {
+      "patch": "NJ135",
+      "status": "MERGED",
+      "title": "Classic 32 stage true multi-finger mobile input, swept stomps, stage carry and renderer retry fixes",
+      "gameplay": [
+        "One held touch or keyboard source cannot cancel another held control",
+        "Falling from above can stomp enemies without requiring center overlap on a single frame",
+        "Hidden unactivated blocks are not invisible side walls",
+        "Lives, coins, score and powers now continue between consecutive completed stages",
+        "Retry and manual level selection intentionally create fresh campaign sessions",
+        "3D geometry rebinds on retries even when stage number and character stay the same"
+      ],
+      "device_qa": "Tests run via GitHub Actions; physical Safari iPhone touch/playthrough remains pending",
+      "compatible": "No new localStorage keys; Kodex, evolution and 300-species data unaffected",
+      "tests": "tests/nusajiwa-classic-controls-135.mjs"
     }
   ],
   "visual_audit": {
