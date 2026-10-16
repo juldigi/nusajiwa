@@ -1,0 +1,24 @@
+/* NJ139 — Focused interface: hide superseded entry points, preserve runtime and saves. */
+#nj35.njx #nj35Classic32,
+#nj35.njx #nj35Adventure15,
+#nj35.njx .nj134-expedition,
+#nj35.njx #nj35SideBody [data-njarchive],
+#nj35.njx #nj35SideBody [data-njfilter^="baru"],
+#nj35.njx #nj35SideBody [data-njfilter="kemarin"],
+#nj35.njx #nj35SideBody [data-njfilter="v40"],
+#nj35.njx #nj35SideBody [data-njfilter="v39"] {
+  display: none !important;
+}
+/* Keep the genuine ROM entry as the single visible platformer destination. */
+#nj35.njx .nj133-play-choices {
+  gap: 0;
+}
+#nj35.njx .nj133-play-choices .nj137-nes-play {
+  margin: 3px 0 8px;
+}
+#nj35.njx .nj133-play-choices .nj133-play-tip {
+  margin-top: 8px;
+}
+/* Legacy game menus may be opened by older flows; suppress their obsolete
+   links without deleting the code, save slots, or compatibility handlers. */
+#njromref[hidden] { display: none !important; }

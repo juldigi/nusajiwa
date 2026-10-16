@@ -2,7 +2,7 @@
   "project": "NUSAJIWA",
   "version": "8.3",
   "branch": "main",
-  "updated_on": "2026-10-15",
+  "updated_on": "2026-10-17",
   "purpose": "Single release ledger; do not count unmerged local work as published.",
   "release_history": [
     {
@@ -29,6 +29,11 @@
       "version": "8.3",
       "status": "merged",
       "scope": "Adventure Kalimantan / five levels, gusts, themed scenery, guardian finale, release integrity gate"
+    },
+    {
+      "version": "NJ139",
+      "status": "merged",
+      "scope": "Clean navigation: hide superseded 32-stage/15-stage entry points, optional legacy expedition UI, classic archive shortcuts and version-era catalog filters; preserve saves and runtime compatibility."
     }
   ],
   "runtime": {
