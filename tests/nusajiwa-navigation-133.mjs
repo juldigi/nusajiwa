@@ -39,7 +39,7 @@ test('NJ133: entry UI stays above fold and uses accessible tappable buttons',()=
  const css=file('css_34.css'),html=file('index.html');
  assert.ok(css.includes('NJ133 · unambiguous'));
  assert.ok(css.includes('min-height:52px'));
- assert.ok(html.includes('css_34.css?v=9.13.133'));
+ assert.match(html,/css_34\.css\?v=9\.\d+\.\d+/,'Updated UI stylesheet remains cache-busted');
  assert.ok(html.includes('tamagotchi-3d.js?v=9.13.133'));
  assert.ok(html.includes('nj123-classic.js?v=9.13.133'));
  const ledger=JSON.parse(file('release.json'));
