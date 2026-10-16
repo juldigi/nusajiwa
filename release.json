@@ -1086,6 +1086,18 @@
       ],
       "tests": "tests/nusajiwa-rom-native-137.mjs",
       "saved_data": "No persistent NUSAJIWA save schema modified"
+    },
+    {
+      "patch": "NJ138",
+      "status": "MERGED",
+      "title": "Local ROM header diagnostics for accurate future 3D reconstruction",
+      "changes": [
+        "Read iNES/NES 2.0 mapper, PRG/CHR size, trainer and mirroring from local ROM header",
+        "Expose cartridge geometry via Info ROM UI without uploading bytes",
+        "Prevent duplicate pointer ownership for multitouch controls"
+      ],
+      "limitation": "Header diagnostics do not yet reconstruct scrolling maps, sprite identities or full 3D meshes.",
+      "tests": "tests/nusajiwa-rom-native-137.mjs"
     }
   ],
   "visual_audit": {

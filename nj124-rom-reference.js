@@ -32,7 +32,7 @@ function ensureUI(){
  '<label class="njr-upload">PILIH BERKAS .NES / .ZIP'+
  '<input id="njrFile" type="file" accept=".nes,.zip,application/zip,application/octet-stream"></label>'+
  '<p class="njr-note">Kontrol: ← → ↑ ↓, X = A, Z = B, Enter = START. Di iPhone gunakan tombol layar.</p><p class="njr-note">Proyeksi 3D belum mengubah level atau Mario menjadi mesh 3D; gameplay selalu dijalankan emulator NES asli.</p></div>'+
- '<div id="njrStatus" role="status" aria-live="polite">Belum ada ROM yang dipilih.</div><div class="njr-tools"><button data-jr="pause">Ⅱ Jeda</button><button data-jr="resume">▶ Lanjut</button><button data-jr="reset">↺ Reset</button><button data-jr="eject">Keluarkan ROM</button></div></div>'+
+ '<div id="njrStatus" role="status" aria-live="polite">Belum ada ROM yang dipilih.</div><div class="njr-tools"><button data-jr="inspect">ⓘ Info ROM</button><button data-jr="pause">Ⅱ Jeda</button><button data-jr="resume">▶ Lanjut</button><button data-jr="reset">↺ Reset</button><button data-jr="eject">Keluarkan ROM</button></div></div>'+
  '<div class="njr-joy"><div>'+
  '<button data-nes="left" aria-label="Kiri">◀</button><button data-nes="right" aria-label="Kanan">▶</button>'+
  '<button data-nes="down" aria-label="Bawah">▼</button><button data-nes="up" aria-label="Atas">▲</button></div>'+
@@ -48,6 +48,7 @@ function ensureUI(){
   if(action==='resume'&&browser){browser.start?.();status('Gameplay NES aktif.');}
   if(action==='reset'&&browser){releaseInputs();browser.nes?.reset?.();browser.start?.();status('NES berhasil di-reset.');}
   if(action==='eject')eject();
+  if(action==='inspect')showRomInfo();
  });
  root.querySelector('.njr-view-switch').addEventListener('click',e=>{
   const mode=e.target.closest('[data-jr]')?.dataset.jr;if(mode==='native'||mode==='3d')setDisplayMode(mode);
@@ -59,8 +60,9 @@ function ensureUI(){
    e.preventDefault();try{b.setPointerCapture?.(e.pointerId)}catch(_){}
    const value=btn();if(value===undefined)return;
    const group=held.get(control)||new Set();
+   const owner=String(e.pointerId);if(group.has(owner))return;
    if(!group.size)browser.nes.buttonDown(1,value);
-   group.add(e.pointerId);held.set(control,group);
+   group.add(owner);held.set(control,group);
   };
   const lift=e=>{e.preventDefault();const group=held.get(control);
    if(!group)return;group.delete(e.pointerId);
@@ -147,6 +149,20 @@ function syncMode(){
  root?.querySelectorAll('.njr-view-switch button').forEach(b=>
   b.setAttribute('aria-pressed',String(b.dataset.jr===displayMode)));
 }
+function parseRomInfo(bytes){
+ if(!(bytes instanceof Uint8Array)||bytes.length<16||bytes[0]!==0x4e||bytes[1]!==0x45||bytes[2]!==0x53||bytes[3]!==0x1a)throw Error('Header iNES tidak valid.');
+ const h=bytes.subarray(0,16),nes2=(h[7]&0x0c)===0x08;
+ const mapper=(h[6]>>4)|(h[7]&0xf0)|(nes2?((h[8]&0x0f)<<8):0);
+ const trainer=(h[6]&4)!==0,prg=(nes2?(h[4]|((h[9]&0x0f)<<8)):h[4])*16384;
+ const chr=(nes2?(h[5]|((h[9]&0xf0)<<4)):h[5])*8192;
+ const offset=16+(trainer?512:0),prgEnd=offset+prg,chrEnd=prgEnd+chr;
+ if(prg===0||prgEnd>bytes.length||chrEnd>bytes.length)throw Error('Ukuran PRG/CHR tidak cocok dengan header cartridge.');
+ return Object.freeze({format:nes2?'NES 2.0':'iNES 1.0',mapper,prgBytes:prg,chrBytes:chr,trainer,mirroring:(h[6]&8)?'Empat layar':((h[6]&1)?'Vertikal':'Horizontal'),prgOffset:offset,chrOffset:prgEnd,chrRam:chr===0,hasBattery:(h[6]&2)!==0,romBytes:bytes.length,payloadBytes:bytes.length-offset,complete:chrEnd<=bytes.length,chrTileCount:chr?chr/16:0,prgBanks:prg/16384,chrBanks:chr/8192});
+}
+function showRomInfo(){
+ const info=browser?.__njRomInfo;if(!info){status('Muat ROM terlebih dahulu untuk membaca header.');return;}
+ status('ROM: '+loadedName+' · '+info.format+' · Mapper '+info.mapper+' · PRG '+Math.round(info.prgBytes/1024)+' KiB · CHR '+Math.round(info.chrBytes/1024)+' KiB · '+info.mirroring+' · '+(info.chrRam?'CHR RAM':info.chrTileCount+' pola tile')+' · '+info.romBytes+' byte.');
+}
 function eject(){
  releaseInputs();stopProjection();
  browser?.destroy?.();browser=null;loadedName='';
@@ -203,6 +219,7 @@ async function loadLocal(file){
    onError:e=>status('Emulator mengalami kesalahan: '+String(e?.message||e))
   });
   browser.loadROM(rom);
+  browser.__njRomInfo=parseRomInfo(rom);
   browser.fitInParent?.();
   loadedName=file.name;
   root.querySelector('#njrSetup').hidden=true;
@@ -243,7 +260,7 @@ document.addEventListener('visibilitychange',()=>{if(active&&document.hidden){re
 window.addEventListener('resize',()=>{if(active)browser?.fitInParent?.()},{passive:true});
 window.NUSAJIWA_ROM_REF=Object.freeze({
  version:'9.17.NJ137',open,close,eject,setDisplayMode,isOpen:()=>active,
- loadLocal,readNES,getStatus:()=>({active,romLoaded:!!browser,filename:loadedName,loading,displayMode,returnTarget}),
+ loadLocal,readNES,parseRomInfo,getStatus:()=>({active,romLoaded:!!browser,filename:loadedName,loading,displayMode,returnTarget}),
  privacy:'ROM is read only in the browser, never uploaded/stored or bundled'
 });
 })();

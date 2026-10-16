@@ -66,3 +66,16 @@ test('NJ137 performance hotfix: WebGL resizes only for logical dimension changes
  assert.ok(js.includes('p.sizeW=w;p.sizeH=h;'));
  assert.ok(js.includes("if(displayMode!=='3d')return;"));
 });
+
+test('NJ138: iNES header parser reports mapper and pattern tile count',()=>{
+ const win2={addEventListener(){}},doc2={addEventListener(){}};
+ new Script(src).runInNewContext({window:win2,document:doc2,Math,Date,Uint8Array,Map,Set});
+ const api=win2.NUSAJIWA_ROM_REF,bytes=new Uint8Array(16+32768+8192);
+ bytes.set([0x4e,0x45,0x53,0x1a,2,1,0,0]);
+ const info=api.parseRomInfo(bytes);
+ assert.equal(info.format,'iNES 1.0');assert.equal(info.mapper,0);
+ assert.equal(info.prgBytes,32768);assert.equal(info.chrBytes,8192);
+ assert.equal(info.chrTileCount,512);assert.equal(info.mirroring,'Horizontal');
+ assert.equal(info.complete,true);
+ assert.throws(()=>api.parseRomInfo(new Uint8Array(16)),/Ukuran PRG\/CHR/);
+});

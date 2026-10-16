@@ -97,3 +97,7 @@ body.njr-playing{overflow:hidden!important}
  #njromref .njr-player{width:auto;max-width:58vw;height:min(67dvh,390px)}
  #njromref .njr-joy button{height:37px;min-height:37px}
 }
+
+/* NJ138 cartridge diagnostics */
+#njromref .njr-tools [data-jr="inspect"]{border-color:#d9c58a;color:#f6e8bd}
+#njromref #njrStatus{overflow-wrap:anywhere;line-height:1.45}
