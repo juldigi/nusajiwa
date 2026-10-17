@@ -4502,8 +4502,9 @@ function makeAvatar(r, portraitMode=false, auditPhase=null){
  window.NUSAJIWA_SCULPT109?.(group,body,M,r[0],renderPhase,THREE,ell,tube);
  // NJ120 independently restored aquatic animal anatomy, avoiding concurrent fauna batches.
  window.NUSAJIWA_SCULPT120?.(group,body,M,r[0],renderPhase,THREE,ell,tube);
- // NJ140: final authoritative anatomy pass for the three Nusantara naga identities.
- window.NUSAJIWA_SCULPT100?.(group,body,M,r[0],renderPhase,THREE,ell,tube);
+ // NJ140: final authoritative anatomy pass for the three Nusantara naga identities only.
+ if(['naga_basuki','naga_antaboga','ular_naga'].includes(r[0]))
+  window.NUSAJIWA_SCULPT100?.(group,body,M,r[0],renderPhase,THREE,ell,tube);
  window.NUSAJIWA_RENDER97?.prepare(group,THREE,r[0],renderPhase);
  group.userData={...group.userData,body,type,base:body.position.y,phase:(living?.phase??null),legend:(living?.legend??null)};
  return group;
