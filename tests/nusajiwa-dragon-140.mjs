@@ -75,6 +75,11 @@ test('HTML loads the override after NJ100 and before the shared pet engine',()=>
  const i140=html.indexOf('nj140-dragon-morphology.js');
  const engine=html.indexOf('script_32.js');
  assert.ok(i100>=0&&i140>i100&&engine>i140);
+ const renderer=read('script_32.js');
+ const i120=renderer.indexOf('NUSAJIWA_SCULPT120?.(group,body,M,r[0],renderPhase,THREE,ell,tube);');
+ const i140Call=renderer.indexOf("if(['naga_basuki','naga_antaboga','ular_naga'].includes(r[0]))");
+ assert.ok(i120>=0&&i140Call>i120,'NJ140 must be called after older sculpt passes');
+ assert.match(renderer.slice(i140Call,i140Call+220),/NUSAJIWA_SCULPT100/);
  const workflow=read('.github/workflows/tamagotchi-quality.yml');
  assert.ok(workflow.includes("tests/*.mjs"));
 });
