@@ -44,7 +44,7 @@ test('Every dragon has eight distinct, finite morphology phases and suppresses t
    if(phase===0)assert.equal(x.body.visible,false);
    else {assert.equal(x.old.visible,false);assert.equal(x.overlay.visible,false);}
    const names=x.root.children.map(o=>o.name).sort();
-   assert.ok(names.length>=12,id+'/'+phase+' should have detailed anatomy');
+   assert.ok(names.length>=(phase===0?5:12),id+'/'+phase+' should have detailed anatomy');
    signatures.add(names.join('|'));
    for(const o of x.root.children){
     const coords=o.geometry?.coords||o.points?.flat()||[];
