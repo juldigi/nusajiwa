@@ -47,17 +47,36 @@ window.NUSAJIWA_SCULPT100=function(group,body,M,id,phase,T,ell,tube){
   path.push([x*size,y*size,z*size]);
  }
  L('continuous-tapered-serpent-trunk',path,.19*size,main);
- // Light ventral scutes follow the underside of the body in connected segments.
- for(let i=2;i<=25;i++){
-  const t=i/30,x=path[i][0],z=path[i][2],y=path[i][1]-.105*size;
-  E('individual-overlapping-ventral-scute-'+i,x,y,z,.095*size,.036*size,.070*size,belly);
+ // Sculpted overlapping body masses create a broad shoulder, tapering abdomen and flexible tail.
+ // The radius falls toward the tail, while the front third thickens into the neck.
+ for(let i=1;i<=29;i++){
+  const p=path[i],t=i/30;
+  const r=(.155 + .055*Math.sin(t*Math.PI) - .070*Math.max(0,(.30-t)/.30))*size;
+  const next=path[Math.min(30,i+1)],prev=path[Math.max(0,i-1)];
+  const dx=next[0]-prev[0],dz=next[2]-prev[2];
+  const yaw=Math.atan2(dx,dz);
+  const o=E('sculpted-muscle-segment-'+i,p[0],p[1],p[2],r*1.06,r*.88,.125*size,main);
+  o.rotation.y=yaw;
  }
- // Discrete keeled scales sit on the upper flanks, rather than random decorative dots.
- for(let i=2;i<=27;i++){
-  const t=i/30,p=path[i],r=.17*size*(1-t*.52);
+ // A raised, tapered nape bridges the serpent trunk into the cranium without a floating head.
+ L('raised-neck-transition',[
+  [path[25][0],path[25][1],path[25][2]],
+  [path[27][0],path[27][1]+.07*size,path[27][2]],
+  [path[29][0],path[29][1]+.15*size,path[29][2]],
+  [path[30][0],path[30][1]+.17*size,path[30][2]+.06*size]
+ ],.135*size,main);
+ // Belly scutes sit on the near-facing underside and shrink naturally at both ends.
+ for(let i=3;i<=25;i++){
+  const t=i/30,p=path[i],r=.105*size*(.65+.35*Math.sin(t*Math.PI));
+  E('individual-overlapping-ventral-scute-'+i,p[0],p[1]-.135*size,p[2]+.025*size,r,.035*size,.074*size,belly);
+ }
+ // Layered keeled scales follow the shoulders and flanks, in offset rows.
+ for(let i=3;i<=27;i++){
+  const t=i/30,p=path[i],r=.17*size*(1-t*.55);
   for(const side of [-1,1]){
-   const x=p[0]+side*r*.72,y=p[1]+r*.48,z=p[2];
-   E('overlapping-keeled-dorsal-scale-'+i+'-'+side,x,y,z,.058*size,.039*size,.073*size,i%3===0?gold:dark);
+   const x=p[0]+side*r*.73,y=p[1]+r*.54,z=p[2]+.018*size;
+   E('overlapping-keeled-dorsal-scale-'+i+'-'+side,x,y,z,.064*size,.043*size,.073*size,i%4===0?gold:dark);
+   if(i%2===0)E('fine-side-scale-'+i+'-'+side,x+side*.025*size,y-.065*size,z,.043*size,.029*size,.052*size,main);
   }
  }
  // Head sits at the forward end; muzzle, jaw, brow and eyes have distinct anatomy.
@@ -65,11 +84,16 @@ window.NUSAJIWA_SCULPT100=function(group,body,M,id,phase,T,ell,tube){
  E('broad-reptilian-cranium',hx,hy+.12*size,hz,.32*size,.23*size,.31*size,main);
  E('elongated-blunt-muzzle',hx,hy+.035*size,hz+.28*size,.245*size,.115*size,.30*size,main);
  E('defined-lower-jaw',hx,hy-.075*size,hz+.29*size,.23*size,.055*size,.25*size,belly);
+ // Cheek plates, nasal bridge and layered brows give the face a readable reptilian structure.
+ E('nasal-bridge',hx,hy+.105*size,hz+.36*size,.145*size,.082*size,.205*size,main);
  for(const d of [-1,1]){
+  E('temporal-cheek-plate-'+d,hx+d*.225*size,hy+.005*size,hz+.08*size,.12*size,.105*size,.17*size,dark);
+  E('jaw-corner-scale-'+d,hx+d*.175*size,hy-.065*size,hz+.31*size,.075*size,.035*size,.11*size,gold);
   E('raised-brow-ridge-'+d,hx+d*.155*size,hy+.20*size,hz+.12*size,.12*size,.055*size,.16*size,dark);
   E('amber-eye-'+d,hx+d*.205*size,hy+.145*size,hz+.22*size,.064*size,.065*size,.045*size,gold);
   E('vertical-reptile-pupil-'+d,hx+d*.213*size,hy+.145*size,hz+.258*size,.019*size,.043*size,.014*size,eye);
-  E('nostril-'+d,hx+d*.105*size,hy+.045*size,hz+.515*size,.022*size,.018*size,.018*size,dark);
+  E('nostril-'+d,hx+d*.105*size,hy+.075*size,hz+.525*size,.022*size,.018*size,.018*size,dark);
+  E('nostril-rim-'+d,hx+d*.105*size,hy+.083*size,hz+.531*size,.032*size,.011*size,.022*size,main);
   // Two sensory whiskers taper away from the muzzle; curve differs by identity.
   L('sensory-whisker-'+d,[[hx+d*.19*size,hy+.02*size,hz+.28*size],
     [hx+d*.38*size,hy+.015*size,hz+.36*size],
@@ -116,8 +140,17 @@ window.NUSAJIWA_SCULPT100=function(group,body,M,id,phase,T,ell,tube){
   }
  }
  // Tail tip is lifted and differentiated by stage; it is never a detached spike.
- L('tapered-flexible-tail-tip',[path[24],path[27],path[29],[
-   path[30][0]-.12*size, path[30][1]+.18*size,path[30][2]+.42*size]],.055*size,main);
+ // The tail is at path[0], away from the head: taper it as a continuation, never as a head-side spike.
+ L('tapered-flexible-tail-tip',[
+  [path[0][0],path[0][1],path[0][2]],
+  [path[2][0]*.92,path[2][1]-.015*size,path[2][2]-.09*size],
+  [path[4][0]*.72,path[4][1]-.025*size,path[4][2]-.17*size],
+  [path[6][0]*.50,path[6][1]+.015*size,path[6][2]-.23*size]
+ ],.048*size,main);
+ for(let i=0;i<4;i++){
+  const p=path[i+2];
+  E('tail-keel-'+i,p[0],p[1]+.12*size,p[2],.045*size,.055*size,.07*size,i%2?gold:dark);
+ }
  // Legendary form gains controlled luminous markings, not a wholesale silhouette swap.
  if(s>=6){
   for(let j=0;j<7;j++){
