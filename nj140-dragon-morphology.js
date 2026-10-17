@@ -82,8 +82,17 @@ window.NUSAJIWA_SCULPT100=function(group,body,M,id,phase,T,ell,tube){
  // Head sits at the forward end; muzzle, jaw, brow and eyes have distinct anatomy.
  const hx=path[30][0],hy=path[30][1],hz=path[30][2]+.10*size;
  E('broad-reptilian-cranium',hx,hy+.12*size,hz,.32*size,.23*size,.31*size,main);
- E('elongated-blunt-muzzle',hx,hy+.035*size,hz+.28*size,.245*size,.115*size,.30*size,main);
- E('defined-lower-jaw',hx,hy-.075*size,hz+.29*size,.23*size,.055*size,.25*size,belly);
+ E('elongated-blunt-muzzle',hx,hy+.075*size,hz+.28*size,.245*size,.105*size,.30*size,main);
+ // Open, visible mouth cavity and separated lower jaw; Antaboga follows wayang naga features.
+ if(isAnanta){
+  E('open-mouth-cavity',hx,hy-.025*size,hz+.405*size,.185*size,.075*size,.205*size,dark);
+  E('lower-jaw-open-wayang',hx,hy-.145*size,hz+.37*size,.225*size,.055*size,.245*size,belly);
+  for(const d of [-1,1]){
+   C('visible-wayang-fang-'+d,hx+d*.13*size,hy-.045*size,hz+.53*size,.035*size,.105*size,white,d*.08,Math.PI);
+  }
+ }else{
+  E('defined-lower-jaw',hx,hy-.075*size,hz+.29*size,.23*size,.055*size,.25*size,belly);
+ }
  // Cheek plates, nasal bridge and layered brows give the face a readable reptilian structure.
  E('nasal-bridge',hx,hy+.105*size,hz+.36*size,.145*size,.082*size,.205*size,main);
  for(const d of [-1,1]){
@@ -99,20 +108,8 @@ window.NUSAJIWA_SCULPT100=function(group,body,M,id,phase,T,ell,tube){
     [hx+d*.38*size,hy+.015*size,hz+.36*size],
     [hx+d*.48*size,hy+.09*size,hz+.48*size]],.018*size,gold);
  }
- // Four weight-bearing limbs emerge from the trunk for adult and legendary stages.
- if(s>=3){
-  for(const z of [-.80,.06]){
-   for(const d of [-1,1]){
-    const x=(Math.sin((z+1.85)/3.02*Math.PI*2)*.68*coil)*size+d*.11*size;
-    const shoulderY=.40*size;
-    L('fore-or-hind-limb-'+z+'-'+d,[[x,shoulderY,path[Math.max(0,Math.min(30,Math.round((z+1.85)/3.02*30)))]?.[2]||z],
-      [x+d*.14*size,.22*size,z+.06*size],[x+d*.19*size,.105*size,z+.13*size]],.075*size,main);
-    E('three-clawed-foot-'+z+'-'+d,x+d*.19*size,.09*size,z+.16*size,.12*size,.055*size,.12*size,belly);
-    for(let claw=0;claw<3;claw++)C('curved-ivory-claw-'+z+'-'+d+'-'+claw,
-      x+d*(.13+claw*.06)*size,.055*size,z+(.19+claw*.035)*size,.025*size,.085*size,white,d*.12,Math.PI);
-   }
-  }
- }
+ // Traditional naga is a serpent-bodied being: no mammalian legs or clawed feet.
+ // Keep the entire silhouette continuous and low-slung; stage growth changes anatomy, not species.
  // Crown / mane / crest is identity-specific; all remain serpent silhouettes, not Western dragons.
  if(isBasuki){
   for(let j=0;j<9;j++){
@@ -121,15 +118,24 @@ window.NUSAJIWA_SCULPT100=function(group,body,M,id,phase,T,ell,tube){
   }
   if(s>=4)L('mountain-to-sea-water-halo',[[hx-.52*size,hy+.36*size,hz-.1],[hx-.25*size,hy+.56*size,hz-.2],[hx+.18*size,hy+.53*size,hz-.2],[hx+.52*size,hy+.32*size,hz-.1]],.026*size,belly);
  }else if(isAnanta){
-  for(let d of [-1,1]){
-   C('swept-royal-horn-'+d,hx+d*.22*size,hy+.39*size,hz-.02*size,.10*size,.39*size,gold,d*.38);
-   L('crown-branch-'+d,[[hx+d*.12*size,hy+.31*size,hz],[hx+d*.23*size,hy+.52*size,hz-.04*size],[hx+d*.33*size,hy+.59*size,hz-.10*size]],.027*size,gold);
+  // Wayang Antaboga: a tall three-tier jamang crown, not generic swept dragon horns.
+  for(let tier=0;tier<3;tier++){
+   const y=hy+(.265+tier*.085)*size;
+   E('three-tier-jamang-crown-band-'+tier,hx,y,hz-.055*size,(.245-tier*.055)*size,.035*size,.105*size,gold);
+   for(let j=0;j<5-tier;j++){
+    const dx=(j-(4-tier)/2)*.085*size;
+    C('crown-jamang-upright-'+tier+'-'+j,hx+dx,y+.055*size,hz-.055*size,.035*size,.115*size,tier%2?belly:gold,dx*1.4);
+   }
   }
-  for(let j=0;j<5;j++)E('crown-jewel-'+j,hx+(j-2)*.09*size,hy+.36*size,hz+.02*size,.035*size,.045*size,.025*size,j%2?belly:gold);
-  for(let j=0;j<8;j++){
-   const p=path[12+j*2];
-   C('royal-hood-ridge-'+j,p[0],p[1]+.17*size,p[2],.05*size,.20*size,gold,Math.sin(j)*.15);
+  // Garuda-mungkur is a rear crown emblem in wayang regalia, not a pair of horns.
+  E('garuda-mungkur-central-disc',hx,hy+.48*size,hz-.18*size,.105*size,.13*size,.055*size,gold);
+  for(const d of [-1,1]){
+   E('garuda-mungkur-wing-'+d,hx+d*.105*size,hy+.46*size,hz-.17*size,.105*size,.045*size,.045*size,belly).rotation.z=d*.45;
+   L('sumping-sekar-kluwih-'+d,[[hx+d*.25*size,hy+.14*size,hz],[hx+d*.34*size,hy+.20*size,hz-.02*size],[hx+d*.38*size,hy+.30*size,hz-.04*size]],.027*size,gold);
+   L('wayang-moustache-'+d,[[hx+d*.12*size,hy+.035*size,hz+.31*size],[hx+d*.22*size,hy+.01*size,hz+.34*size],[hx+d*.29*size,hy+.055*size,hz+.35*size]],.022*size,gold);
   }
+  for(let j=0;j<5;j++)E('crown-jewel-'+j,hx+(j-2)*.09*size,hy+.33*size,hz+.02*size,.027*size,.035*size,.022*size,j%2?belly:gold);
+  // The classic naga body remains scaled and serpentine; no fabricated hood frill.
  }else{
   for(let j=0;j<11;j++){
    const p=path[12+j];
@@ -147,6 +153,12 @@ window.NUSAJIWA_SCULPT100=function(group,body,M,id,phase,T,ell,tube){
   [path[4][0]*.72,path[4][1]-.025*size,path[4][2]-.17*size],
   [path[6][0]*.50,path[6][1]+.015*size,path[6][2]-.23*size]
  ],.048*size,main);
+ if(isAnanta){
+  // Traditional wayang naga may carry a ring-like niyamat ornament at the tail.
+  const tail=path[2];
+  const ring=new T.Mesh(new T.TorusGeometry(.105*size,.018*size,8,28),gold);
+  ring.name='wayang-tail-niyamat-ring';ring.position.set(tail[0],tail[1],tail[2]-.05*size);g.add(ring);
+ }
  for(let i=0;i<4;i++){
   const p=path[i+2];
   E('tail-keel-'+i,p[0],p[1]+.12*size,p[2],.045*size,.055*size,.07*size,i%2?gold:dark);
