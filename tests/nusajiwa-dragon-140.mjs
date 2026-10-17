@@ -11,8 +11,9 @@ class Mesh{
  constructor(geometry,material){this.geometry=geometry;this.material=material;this.visible=true;this.name='';this.position={set(){}};this.rotation={set(){},x:0,y:0,z:0};}
 }
 class ConeGeometry{constructor(radius,height,segments){this.radius=radius;this.height=height;this.segments=segments;}}
+class TorusGeometry{constructor(radius,tube,radialSegments,tubularSegments){this.radius=radius;this.tube=tube;this.radialSegments=radialSegments;this.tubularSegments=tubularSegments;}}
 class TGroup extends Group{}
-const T={Group:TGroup,Mesh,ConeGeometry};
+const T={Group:TGroup,Mesh,ConeGeometry,TorusGeometry};
 const material={main:{},light:{},dark:{},white:{},gold:{},eye:{}};
 const ell=(parent,x,y,z,sx,sy,sz,m)=>{const o=new Mesh({kind:'ell',coords:[x,y,z,sx,sy,sz]},m);parent.add(o);return o;};
 const tube=(parent,points,r,m)=>{const o=new Mesh({kind:'tube',points,r},m);parent.add(o);return o;};
