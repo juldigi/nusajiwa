@@ -9,7 +9,7 @@ const IDS=['naga_basuki','naga_antaboga','ular_naga'];
 const META={
  naga_basuki:{tradition:'Bali',design:'long water-serpent; flowing crest; no Western wings'},
  naga_antaboga:{tradition:'Jawa-Bali wayang',design:'crowned cosmic serpent; broad hood and ritual crown'},
- ular_naga:{tradition:'Nusantara / Taksaka motif',design:'curved serpent, swept mane, paired tendrils'}
+ ular_naga:{tradition:'Mahabharata / Nusantara Taksaka',design:'serpent-bodied naga with traditional wings; no bat-wing fantasy anatomy'}
 };
 window.NUSAJIWA_DRAGON140_META=Object.freeze(META);
 const prior=window.NUSAJIWA_SCULPT100;
@@ -112,11 +112,12 @@ window.NUSAJIWA_SCULPT100=function(group,body,M,id,phase,T,ell,tube){
  // Keep the entire silhouette continuous and low-slung; stage growth changes anatomy, not species.
  // Crown / mane / crest is identity-specific; all remain serpent silhouettes, not Western dragons.
  if(isBasuki){
-  for(let j=0;j<9;j++){
-   const t=j/8,p=path[Math.round(12+t*15)];
-   C('flowing-water-crest-spine-'+j,p[0],p[1]+.20*size,p[2],.065*size,.24*size,gold,Math.sin(t*2)*.12);
+  for(let j=0;j<7;j++){
+   const t=j/6,p=path[Math.round(12+t*13)];
+   C('basuki-water-current-crest-'+j,p[0],p[1]+.16*size,p[2],.045*size,.17*size,gold,Math.sin(t*2)*.12);
   }
-  if(s>=4)L('mountain-to-sea-water-halo',[[hx-.52*size,hy+.36*size,hz-.1],[hx-.25*size,hy+.56*size,hz-.2],[hx+.18*size,hy+.53*size,hz-.2],[hx+.52*size,hy+.32*size,hz-.1]],.026*size,belly);
+  // Nagamani, the jewel often shown on Basuki's head, is the defining head mark.
+  E('basuki-nagamani-jewel',hx,hy+.31*size,hz+.015*size,.085*size,.095*size,.065*size,M.glow||gold);
  }else if(isAnanta){
   // Wayang Antaboga: a tall three-tier jamang crown, not generic swept dragon horns.
   for(let tier=0;tier<3;tier++){
@@ -143,6 +144,24 @@ window.NUSAJIWA_SCULPT100=function(group,body,M,id,phase,T,ell,tube){
   }
   for(let d of [-1,1]){
    C('paired-temple-fin-'+d,hx+d*.23*size,hy+.20*size,hz-.12*size,.11*size,.32*size,gold,d*.7);
+  }
+  // Taksaka is commonly depicted winged. Use a feathered, ornamental naga wing,
+  // not a bat membrane or a Western dragon's anatomical wing.
+  for(const d of [-1,1]){
+   L('taksaka-wing-leading-edge-'+d,[
+    [path[20][0],path[20][1]+.12*size,path[20][2]],
+    [path[18][0]+d*.30*size,path[18][1]+.38*size,path[18][2]-.02*size],
+    [path[16][0]+d*.57*size,path[16][1]+.48*size,path[16][2]-.04*size],
+    [path[14][0]+d*.76*size,path[14][1]+.30*size,path[14][2]-.05*size]
+   ],.035*size,gold);
+   for(let feather=0;feather<5;feather++){
+    const t=feather/4;
+    const x=path[17][0]+d*(.22+t*.50)*size;
+    const y=path[17][1]+(.24+Math.sin(t*Math.PI)*.18)*size;
+    const z=path[17][2]-(.12+t*.10)*size;
+    const f=E('taksaka-ornamental-wing-feather-'+d+'-'+feather,x,y,z,.075*size,.20*size,.045*size,feather%2?belly:gold);
+    f.rotation.z=-d*(.25+t*.55);
+   }
   }
  }
  // Tail tip is lifted and differentiated by stage; it is never a detached spike.
