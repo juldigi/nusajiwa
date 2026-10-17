@@ -64,13 +64,13 @@ test('Tradition-specific features are distinct; none uses a Western winged-drago
  const basuki=build('naga_basuki',7).root.children.map(x=>x.name).join('|');
  const ananta=build('naga_antaboga',7).root.children.map(x=>x.name).join('|');
  const taksaka=build('ular_naga',7).root.children.map(x=>x.name).join('|');
- assert.ok(basuki.includes('flowing-water-crest-spine'));
+ assert.ok(basuki.includes('basuki-water-current-crest')&&basuki.includes('basuki-nagamani-jewel'));
  assert.ok(!basuki.includes('royal-hood-ridge'));
  assert.ok(ananta.includes('three-tier-jamang-crown-band')&&ananta.includes('garuda-mungkur')&&ananta.includes('sumping-sekar-kluwih')&&ananta.includes('open-mouth-cavity'));
  assert.ok(!ananta.includes('royal-hood-ridge')&&!ananta.includes('swept-royal-horn'));
  assert.ok(!ananta.includes('fore-or-hind-limb')&&!ananta.includes('three-clawed-foot'));
- assert.ok(taksaka.includes('swept-taksaka-mane-spine')&&taksaka.includes('paired-temple-fin'));
- for(const name of [basuki,ananta,taksaka])assert.ok(!name.includes('dragon-wing'));
+ assert.ok(taksaka.includes('swept-taksaka-mane-spine')&&taksaka.includes('paired-temple-fin')&&taksaka.includes('taksaka-wing-leading-edge')&&taksaka.includes('taksaka-ornamental-wing-feather'));
+ for(const name of [basuki,ananta,taksaka])assert.ok(!name.includes('western-dragon-wing')&&!name.includes('bat-membrane-wing'));
 });
 test('HTML loads the override after NJ100 and before the shared pet engine',()=>{
  const html=read('index.html');
